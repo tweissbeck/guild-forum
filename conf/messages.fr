@@ -1,0 +1,8 @@
+user.list.page.title=Liste des utilisateurs
+
+
+# #### FORMS
+# login
+form.login=Identifiant
+form.password=Mot de passe
+form.login.placeholder=Votre login ou votre email
