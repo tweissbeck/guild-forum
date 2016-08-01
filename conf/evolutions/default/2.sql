@@ -1,11 +1,8 @@
 # --- !Ups
 
-INSERT INTO TOPIC (to_title) VALUES ('Recrutement'), ('ABC');
 
-INSERT INTO Client (cl_id, cl_lastname, cl_firstname, cl_login, cl_mail, cl_createAt, cl_lastLogIn)
-VALUES (1, 'John', 'Malkovitch', 'tweissbeck', 'malkovitch@lyra-network.com', NOW(), NULL);
+INSERT INTO Client (cl_id, cl_lastname, cl_firstname, cl_login, cl_mail, cl_createAt, cl_lastLogIn, cl_admin)
+VALUES (1, 'Admin', 'Right', '@dmin', 'admin@forum.com', NOW(), NULL, TRUE);
 
 # --- !Downs
-
-DELETE FROM TOPIC;
 DELETE FROM Client;
