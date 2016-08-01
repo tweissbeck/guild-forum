@@ -39,8 +39,7 @@ class AuthenticationController @Inject()(db: Database,
 
   /**
    * POST : handle form submit, try to authenticate user.
-   * Redirect to home page when user is authenticate
-   *
+   * Redirect to home page when user is authenticated
    */
   def loginPost() = Action { implicit request =>
     loginForm.bindFromRequest.fold(
