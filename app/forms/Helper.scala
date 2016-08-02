@@ -1,11 +1,15 @@
 package forms
 
 import play.api.data.Form
+import play.api.i18n.MessagesApi
+
+import scala.xml.Elem
 
 /**
  * An helper that define commons function to get bootstrap classes related to forms.
  */
 object Helper {
+
 
   /**
    * Decorate the div with class form-group element with has-danger, has-success or nothing.
@@ -43,6 +47,9 @@ object Helper {
     }
   }
 
+  /**
+   * Add value="${form.value}" if data is filled in the form.
+   */
   def fieldValue[A <: AnyRef](form: Form[A], field: String): Option[String] = {
     if (filled(form, field)) {
       val value =
@@ -52,6 +59,16 @@ object Helper {
       Some(value)
     }
     else
+      None
+  }
+
+  def fieldFeedback(form: Form[LoginForm], field: String)(implicit messagesApi: MessagesApi): Option[Elem] = {
+    if (inError(form, field)) {
+      val html = <div class="form-control-feedback">
+        {messagesApi.apply(form.error(field).get.messages.head)}
+      </div>
+      Some(html)
+    } else
       None
   }
 

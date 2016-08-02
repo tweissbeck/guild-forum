@@ -2,7 +2,7 @@ package controllers
 
 import javax.inject.Inject
 
-import forms.LoginForm
+import forms.{LoginForm, SignInForm}
 import play.api.Logger
 import play.api.data.Forms._
 import play.api.data._
@@ -23,6 +23,16 @@ class AuthenticationController @Inject()(db: Database,
       "login" -> nonEmptyText,
       "pwd" -> nonEmptyText
     )(LoginForm.apply)(LoginForm.unapply)
+  )
+
+  val signInForm = Form(
+    mapping(
+      "firstName" -> nonEmptyText,
+      "lastName" -> nonEmptyText,
+      "login" -> OptionalMapping(text),
+      "mail" -> email,
+      "pwd" -> nonEmptyText
+    )(SignInForm.apply)(SignInForm.unapply)
   )
 
   /** GET login, display the form */
@@ -59,7 +69,7 @@ class AuthenticationController @Inject()(db: Database,
                   AuthenticationCookie.cookie(user.lastName)
                 ).addingToSession("sessionId" -> user.lastName)
             case None => {
-              Ok(views.html.user.login(loginForm.withError("loginForm", "NotAuthenticated")))
+              Ok(views.html.user.login(loginForm.withGlobalError("NotAuthenticated")))
                 .discardingCookies(DiscardingCookie("sessionId"))
             }
           }
