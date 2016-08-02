@@ -1,6 +1,6 @@
 @*FIXME in progress*@
-@import services.database.Client
-@(loggedInUser: Client, users: Seq[Client])(implicit messagesApi: MessagesApi)
+@import services.database.User
+@(loggedInUser: User, users: Seq[User])(implicit messagesApi: MessagesApi)
 
     @main(messagesApi.apply("user.list.page.title")) {
 
