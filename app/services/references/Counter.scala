@@ -23,7 +23,8 @@ trait Counter {
  * injected.
  */
 @Singleton
-class AtomicCounter extends Counter {  
+class AtomicCounter extends Counter {
   private val atomicCounter = new AtomicInteger()
+
   override def nextCount(): Int = atomicCounter.getAndIncrement()
 }

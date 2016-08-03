@@ -2,9 +2,8 @@ package controllers
 
 import javax.inject._
 
-import play.api.i18n.{I18nSupport, MessagesApi}
+import play.api.i18n.{I18nSupport, Messages, MessagesApi}
 import play.api.mvc._
-import play.api.i18n.Messages
 
 /**
  * This controller creates an `Action` to handle HTTP requests to the
@@ -24,7 +23,6 @@ class HomeController @Inject()(val messagesApi: MessagesApi) extends Controller 
 
     Ok(views.html.index("Your new application is ready."))
   }
-
 
 
 }

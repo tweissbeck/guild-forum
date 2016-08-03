@@ -47,6 +47,8 @@ object Helper {
     }
   }
 
+  private def inError[A <: AnyRef](form: Form[A], field: String): Boolean = form.error(field).isDefined
+
   /**
    * Add value="${form.value}" if data is filled in the form.
    */
@@ -62,6 +64,9 @@ object Helper {
       None
   }
 
+  private def filled[A <: AnyRef](form: Form[A], field: String): Boolean = form.data.get(field).isDefined && !form.data.get(field)
+    .get.isEmpty
+
   def fieldFeedback(form: Form[LoginForm], field: String)(implicit messagesApi: MessagesApi): Option[Elem] = {
     if (inError(form, field)) {
       val html = <div class="form-control-feedback">
@@ -71,9 +76,4 @@ object Helper {
     } else
       None
   }
-
-  private def inError[A <: AnyRef](form: Form[A], field: String): Boolean = form.error(field).isDefined
-
-  private def filled[A <: AnyRef](form: Form[A], field: String): Boolean = form.data.get(field).isDefined && !form.data.get(field)
-    .get.isEmpty
 }

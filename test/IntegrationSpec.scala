@@ -1,6 +1,4 @@
 import org.scalatestplus.play._
-import play.api.test._
-import play.api.test.Helpers._
 
 /**
  * add your integration spec here.
@@ -14,7 +12,7 @@ class IntegrationSpec extends PlaySpec with OneServerPerTest with OneBrowserPerT
 
       go to ("http://localhost:" + port)
 
-      pageSource must include ("Your new application is ready.")
+      pageSource must include("Your new application is ready.")
     }
   }
 }

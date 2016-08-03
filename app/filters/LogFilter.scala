@@ -1,15 +1,17 @@
 package filters
 
 import javax.inject.Inject
+
 import akka.util.ByteString
 import play.api.Logger
 import play.api.libs.streams.Accumulator
 import play.api.mvc._
+
 import scala.concurrent.ExecutionContext
 
 /**
-  * Created by tweissbeck on 22/06/2016.
-  */
+ * Created by tweissbeck on 22/06/2016.
+ */
 class LogFilter @Inject()(implicit ec: ExecutionContext) extends EssentialFilter {
   def apply(nextFilter: EssentialAction) = new EssentialAction {
     def apply(requestHeader: RequestHeader) = {

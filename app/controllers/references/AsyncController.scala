@@ -14,12 +14,12 @@ import scala.concurrent.{ExecutionContext, Future, Promise}
  * asynchronously delay sending a response for 1 second.
  *
  * @param actorSystem We need the `ActorSystem`'s `Scheduler` to
- * run code after a delay.
- * @param exec We need an `ExecutionContext` to execute our
- * asynchronous code.
+ *                    run code after a delay.
+ * @param exec        We need an `ExecutionContext` to execute our
+ *                    asynchronous code.
  */
 @Singleton
-class AsyncController @Inject() (actorSystem: ActorSystem)(implicit exec: ExecutionContext) extends Controller {
+class AsyncController @Inject()(actorSystem: ActorSystem)(implicit exec: ExecutionContext) extends Controller {
 
   /**
    * Create an Action that returns a plain text message after a delay
@@ -35,7 +35,9 @@ class AsyncController @Inject() (actorSystem: ActorSystem)(implicit exec: Execut
 
   private def getFutureMessage(delayTime: FiniteDuration): Future[String] = {
     val promise: Promise[String] = Promise[String]()
-    actorSystem.scheduler.scheduleOnce(delayTime) { promise.success("Hi!") }
+    actorSystem.scheduler.scheduleOnce(delayTime) {
+      promise.success("Hi!")
+    }
     promise.future
   }
 

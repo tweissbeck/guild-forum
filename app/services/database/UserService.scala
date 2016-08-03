@@ -9,15 +9,14 @@ import anorm._
 
 object UserService {
 
-  /* Table name*/
-  private val USER = "Client";
-
   val userParser = get[Long]("cl_id") ~ get[String]("cl_lastName") ~ get[String]("cl_firstName") ~
     get[String]("cl_mail") ~ get[Option[String]]("cl_login") ~ get[LocalDateTime]("cl_createAt") ~
     get[Option[LocalDateTime]]("cl_lastLogin") ~ get[Boolean]("cl_admin") map {
     case id ~ name ~ firstName ~ mail ~ login ~ createdAt ~ lastLogin ~ admin =>
       User(id, login, firstName, name, mail, createdAt, lastLogin, admin)
   }
+  /* Table name*/
+  private val USER = "Client";
 
   def list()(implicit c: Connection): Seq[User] = {
     val query =
