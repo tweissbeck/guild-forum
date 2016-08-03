@@ -9,6 +9,9 @@ CREATE TABLE Client (
   cl_admin     BOOLEAN,
   cl_createAt  DATETIME     NOT NULL,
   cl_lastLogIn DATETIME,
+  cl_password VARCHAR(2000) NOT NULL ,
+  cl_salt VARCHAR(1000) NOT NULL,
+  cl_alias VARCHAR(10) NOT NULL,
   UNIQUE (cl_mail),
   UNIQUE (cl_login),
   UNIQUE (cl_firstName, cl_lastName)
