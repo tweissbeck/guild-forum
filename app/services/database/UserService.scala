@@ -11,9 +11,10 @@ object UserService {
 
   val userParser = get[Long]("cl_id") ~ get[String]("cl_lastName") ~ get[String]("cl_firstName") ~
     get[String]("cl_mail") ~ get[Option[String]]("cl_login") ~ get[LocalDateTime]("cl_createAt") ~
-    get[Option[LocalDateTime]]("cl_lastLogin") ~ get[Boolean]("cl_admin") map {
-    case id ~ name ~ firstName ~ mail ~ login ~ createdAt ~ lastLogin ~ admin =>
-      User(id, login, firstName, name, mail, createdAt, lastLogin, admin)
+    get[Option[LocalDateTime]]("cl_lastLogin") ~ get[Boolean]("cl_admin") ~ get[String]("cl_password") ~
+    get[String]("cl_salt") ~ get[String]("cl_alias") map {
+    case id ~ name ~ firstName ~ mail ~ login ~ createdAt ~ lastLogin ~ admin ~ password ~ salt ~ alias =>
+      User(id, login, firstName, name, mail, createdAt, lastLogin, admin, password, salt, alias)
   }
   /* Table name*/
   private val USER = "Client";
@@ -46,8 +47,10 @@ object UserService {
   }
 }
 
-
+/** User with all database fields */
 case class User(id: Long, login: Option[String], firstName: String, lastName: String, mail: String, createdAt: LocalDateTime,
-                lastLogin: Option[LocalDateTime], admin: Boolean) {
+                lastLogin: Option[LocalDateTime], admin: Boolean, password: String, salt: String, alias: String) {
 }
+
+
 
