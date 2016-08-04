@@ -2,7 +2,8 @@
 * This template takes a single argument, a String containing a
 * message to display.
 *@
-@(message: String)
+@import services.database.User
+@(user : Option[User])
 @*
 * Call the `main` template with two arguments. The first
 * argument is a `String` with the title of the page, the second

@@ -4,6 +4,9 @@ import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
 import javax.inject.{Inject, Singleton}
 
+import forms.SignInForm
+import play.api.data.Forms._
+import play.api.data.{Form, OptionalMapping}
 import play.api.db.Database
 import play.api.i18n.{I18nSupport, MessagesApi}
 import play.api.libs.json._
@@ -13,6 +16,17 @@ import services.database.{User, UserService}
 
 @Singleton
 class UserController @Inject()(db: Database, implicit val messagesApi: MessagesApi) extends Controller with I18nSupport {
+
+  val signInForm = Form(
+    mapping(
+      "firstName" -> nonEmptyText(1, 60),
+      "lastName" -> nonEmptyText,
+      "login" -> OptionalMapping(text),
+      "mail" -> email,
+      "pwd" -> nonEmptyText
+    )(SignInForm.apply)(SignInForm.unapply)
+  )
+
 
   implicit val userWrites = new Writes[User] {
     def writes(user: User) = Json.obj(
@@ -26,7 +40,8 @@ class UserController @Inject()(db: Database, implicit val messagesApi: MessagesA
   }
 
   def list() = Action {
-    val loggedIn: User = User(0, Some("fakeLogin"), "", "", "aka@gmail.com", LocalDateTime.now(), None, false, "akka", "challenge", "01")
+    val loggedIn: User = User(0, Some("fakeLogin"), "", "", "aka@gmail.com", LocalDateTime.now(), None, false, "akka",
+      "challenge", "01")
 
     db.withConnection { implicit conn =>
       Ok(views.html.user.list(loggedIn, UserService.list()))
@@ -39,6 +54,22 @@ class UserController @Inject()(db: Database, implicit val messagesApi: MessagesA
       val json = Json.toJson(users)
       Ok(json)
     }
+  }
+
+  def signIn() = Action { implicit request =>
+    signInForm.bindFromRequest().fold(
+      formWithErrors => {
+        // binding failure, you retrieve the form containing errors:
+        BadRequest(views.html.user.signIn(formWithErrors))
+      },
+      data => {
+        db.withConnection { implicit conn =>
+          val createdUser = UserService.createUser(data)
+          Redirect(routes.HomeController.index())
+        }
+      }
+    )
+
   }
 
   def login() = Action {

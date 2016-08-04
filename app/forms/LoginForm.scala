@@ -1,6 +1,9 @@
 package forms
 
 /**
- * Created by tweissbeck on 27/07/2016.
+ * Login form: define two fields
+ *
+ * @param login : user login or mail
+ * @param pwd   : user password
  */
 case class LoginForm(login: String, pwd: String)

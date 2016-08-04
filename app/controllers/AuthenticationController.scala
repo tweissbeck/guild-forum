@@ -2,7 +2,7 @@ package controllers
 
 import javax.inject.Inject
 
-import forms.{LoginForm, SignInForm}
+import forms.LoginForm
 import play.api.Logger
 import play.api.data.Forms._
 import play.api.data._
@@ -25,15 +25,6 @@ class AuthenticationController @Inject()(db: Database,
     )(LoginForm.apply)(LoginForm.unapply)
   )
 
-  val signInForm = Form(
-    mapping(
-      "firstName" -> nonEmptyText,
-      "lastName" -> nonEmptyText,
-      "login" -> OptionalMapping(text),
-      "mail" -> email,
-      "pwd" -> nonEmptyText
-    )(SignInForm.apply)(SignInForm.unapply)
-  )
 
   /** GET login, display the form */
   def login() = Action { implicit request =>
