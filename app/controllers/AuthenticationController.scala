@@ -57,7 +57,7 @@ class AuthenticationController @Inject()(db: Database,
               Redirect(routes.HomeController.index())
                 .withNewSession
                 .withCookies(
-                  AuthenticationCookie.cookie(user.lastName)
+                  AuthenticationCookie.cookie(user)
                 ).addingToSession("sessionId" -> user.lastName)
             case None => {
               Ok(views.html.user.login(loginForm.withGlobalError("NotAuthenticated")))
@@ -68,15 +68,5 @@ class AuthenticationController @Inject()(db: Database,
       }
     )
   }
-
-  /**
-   * Helper to build a cookie that contains authentication data
-   */
-  object AuthenticationCookie {
-    val NAME = "sessionId"
-
-    def cookie(value: String): Cookie = Cookie(NAME, value, Some(16000), secure = false, httpOnly = true)
-  }
-
 
 }
