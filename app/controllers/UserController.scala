@@ -23,7 +23,7 @@ class UserController @Inject()(db: Database, implicit val messagesApi: MessagesA
       "lastName" -> nonEmptyText,
       "login" -> OptionalMapping(text),
       "mail" -> email,
-      "pwd" -> nonEmptyText
+      "password" -> nonEmptyText
     )(SignInForm.apply)(SignInForm.unapply)
   )
 
@@ -40,8 +40,7 @@ class UserController @Inject()(db: Database, implicit val messagesApi: MessagesA
   }
 
   def list() = Action {
-    val loggedIn: User = User(0, Some("fakeLogin"), "", "", "aka@gmail.com", LocalDateTime.now(), None, false, "akka",
-      "challenge", "01")
+    val loggedIn: User = User(0, Some("fakeLogin"), "", "", "aka@gmail.com", LocalDateTime.now(), None, false, "akka", "01")
 
     db.withConnection { implicit conn =>
       Ok(views.html.user.list(loggedIn, UserService.list()))
