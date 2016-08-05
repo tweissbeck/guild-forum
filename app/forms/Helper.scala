@@ -10,7 +10,6 @@ import scala.xml.Elem
  */
 object Helper {
 
-
   /**
    * Decorate the div with class form-group element with has-danger, has-success or nothing.
    *
@@ -67,7 +66,7 @@ object Helper {
   private def filled[A <: AnyRef](form: Form[A], field: String): Boolean = form.data.get(field).isDefined && !form.data.get(field)
     .get.isEmpty
 
-  def fieldFeedback(form: Form[LoginForm], field: String)(implicit messagesApi: MessagesApi): Option[Elem] = {
+  def fieldFeedback[A <: AnyRef](form: Form[A], field: String)(implicit messagesApi: MessagesApi): Option[Elem] = {
     if (inError(form, field)) {
       val html = <div class="form-control-feedback">
         {messagesApi.apply(form.error(field).get.messages.head)}
