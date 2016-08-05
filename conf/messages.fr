@@ -1,4 +1,6 @@
 user.list.page.title=Liste des utilisateurs
+
+
 # #### FORMS
 # login
 form.login.login=Identifiant
@@ -6,5 +8,15 @@ form.login.password=Mot de passe
 form.login.login.placeholder=Votre login ou votre email
 form.login.submit=Valider
 form.login.not.authenticated=Authentication échoué, merci de réessayer
+# sign in
+form.signIn.login=Identifiant
+form.signIn.mail = Adress email
+form.signIn.password =Mot de passe
+form.signIn.firstName=Prénom
+form.signIn.lastName=Nom
+
+
+
+
 # #### Validation error
 error.required=Ce champ ne doit pas être vide
