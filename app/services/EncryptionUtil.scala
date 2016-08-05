@@ -38,8 +38,8 @@ object Salt {
     val key = getKey(keyAlias)
     val c = Cipher.getInstance(ALGO)
     c.init(Cipher.DECRYPT_MODE, key)
-    val decrypted = c.doFinal(encryptedSalt.getBytes("UTF-8"))
-    DatatypeConverter.printHexBinary(decrypted)
+    val decrypted = c.doFinal(DatatypeConverter.parseHexBinary(encryptedSalt))
+    new String(decrypted, "UTF-8")
   }
 }
 
@@ -50,7 +50,7 @@ object Password {
    * @return true if the password marches the user password, false otherwise
    */
   def checkPassword(userPassword: String, user: User): Boolean = {
-    hash(userPassword, user.salt).equals(user.password)
+    hash(userPassword, Salt.decrypt(user.salt, "salt")).equalsIgnoreCase(user.password)
   }
 
   /**
@@ -59,6 +59,7 @@ object Password {
    * @return the hashed password
    */
   def hash(password: String, salt: String): String = {
+    println(s"salt = $salt")
     val messageDigest = MessageDigest.getInstance("SHA-256")
     val passwordWithSalt = s"$salt:$password"
     Codecs.toHexString(messageDigest.digest(passwordWithSalt.getBytes("UTF-8")))
