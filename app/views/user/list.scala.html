@@ -2,29 +2,38 @@
 @import services.database.User
 @(loggedInUser: User, users: Seq[User])(implicit messagesApi: MessagesApi)
 
-    @main(messagesApi.apply("user.list.page.title")) {
+@main(messagesApi.apply("user.list.page.title")) {
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-12">
+                <p>List of users</p>
+                <table class="table table-inverse table-sm">
+                    <thead>
+                        <tr>
+                            <th>Id</th>
+                            <th>First Name</th>
+                            <th>Mail</th>
+                            <th>Created at</th>
+                            <th>Password</th>
+                            <th>Salt</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                    @for(u <- users) {
+                        <tr>
+                            <th scope="row">@u.id</th>
+                            <td>@u.lastName</td>
+                            <td>@u.mail</td>
+                            <td>@u.createdAt</td>
+                            <td>@u.password</td>
+                            <td>@u.salt</td>
+                        </tr>
+                    }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
 
-        <p>List of users</p>
-        <table class="table table-inverse table-sm">
-            <thead>
-                <tr>
-                    <th>Id</th>
-                    <th>First Name</th>
-                    <th>Mail</th>
-                    <th>Created at</th>
-                </tr>
-            </thead>
-            <tbody>
-            @for(u <- users) {
-                <tr>
-                    <th scope="row">@u.id</th>
-                    <td>@u.lastName</td>
-                    <td>@u.mail</td>
-                    <td>@u.createdAt</td>
-                </tr>
-            }
-            </tbody>
-        </table>
-
-    }
+}
 
