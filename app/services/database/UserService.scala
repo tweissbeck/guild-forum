@@ -17,9 +17,9 @@ object UserService {
   val userParser = get[Long]("cl_id") ~ get[String]("cl_lastName") ~ get[String]("cl_firstName") ~
     get[String]("cl_mail") ~ get[Option[String]]("cl_login") ~ get[LocalDateTime]("cl_createAt") ~
     get[Option[LocalDateTime]]("cl_lastLogin") ~ get[Boolean]("cl_admin") ~ get[String]("cl_password") ~
-    get[String]("cl_salt") ~ get[String]("cl_alias") map {
-    case id ~ name ~ firstName ~ mail ~ login ~ createdAt ~ lastLogin ~ admin ~ password ~ salt ~ alias =>
-      User(id, login, firstName, name, mail, createdAt, lastLogin, admin, password, salt, alias)
+    get[String]("cl_salt") map {
+    case id ~ name ~ firstName ~ mail ~ login ~ createdAt ~ lastLogin ~ admin ~ password ~ salt =>
+      User(id, login, firstName, name, mail, createdAt, lastLogin, admin, password, salt)
   }
   /* Table name*/
   private val USER = "Client";
@@ -54,7 +54,7 @@ object UserService {
   def createUser(data: SignInForm)(implicit c: Connection): User = {
     val createdAt = LocalDateTime.now()
     val salt = Random.alphanumeric.take(50).mkString
-    val encryptedSalt = Salt.encrypt(salt, "00")
+    val encryptedSalt = Salt.encrypt(salt, "salt")
     val hashPassword = Password.hash(data.pwd, salt)
     val query =
       s"""
@@ -84,10 +84,9 @@ object UserService {
  * @param admin     true if user as admin right
  * @param password  hashed password (with salt)
  * @param salt      encrypted salt
- * @param alias     key alias used to encrypt salt
  */
 case class User(id: Long, login: Option[String], firstName: String, lastName: String, mail: String, createdAt: LocalDateTime,
-                lastLogin: Option[LocalDateTime], admin: Boolean, password: String, salt: String, alias: String) {
+                lastLogin: Option[LocalDateTime], admin: Boolean, password: String, salt: String) {
 }
 
 
