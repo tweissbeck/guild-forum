@@ -56,7 +56,17 @@ class UserController @Inject()(db: Database, implicit val messagesApi: MessagesA
     }
   }
 
-  def signIn() = Action { implicit request =>
+  /**
+   * GET SignIn
+   */
+  def signIn() = Action {
+    Ok(views.html.user.signIn(signInForm))
+  }
+
+  /**
+   * POST SignIn
+   */
+  def signInPost() = Action { implicit request =>
     signInForm.bindFromRequest().fold(
       formWithErrors => {
         // binding failure, you retrieve the form containing errors:
@@ -69,11 +79,6 @@ class UserController @Inject()(db: Database, implicit val messagesApi: MessagesA
         }
       }
     )
-
-  }
-
-  def login() = Action {
-    Ok("a")
   }
 
 }

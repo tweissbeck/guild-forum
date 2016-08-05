@@ -10,11 +10,13 @@ GET         /user/admin/list            controllers.UserController.list
 
 # JSON api
 GET         /api/user/admin/list        controllers.UserController.jsonList
-POST        /api/user/login             controllers.UserController.login
 
 # Authentication routes
 GET         /login                      controllers.AuthenticationController.login
 POST        /login                      controllers.AuthenticationController.loginPost
+GET         /signIn                     controllers.UserController.signIn
+POST        /signIn                     controllers.UserController.signInPost
+
 
 # Map static resources from the /public folder to the /assets URL path
 GET         /assets/*file               controllers.Assets.versioned(path="/public", file: Asset)
