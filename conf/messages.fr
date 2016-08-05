@@ -1,5 +1,13 @@
 user.list.page.title=Liste des utilisateurs
 
+# #### Main - Menu
+menu.home=Accueil
+menu.roster=Roster
+menu.forum=Forum
+menu.sign.off=Se déconnecter
+menu.login=Connexion
+menu.sign.in=Besoin d'un compte?
+
 
 # #### FORMS
 # login

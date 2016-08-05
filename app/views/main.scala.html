@@ -1,4 +1,5 @@
-@(title: String)(content: Html)
+@import services.database.User
+@(title: String, user: Option[User])(content: Html)(implicit messagesApi: MessagesApi)
 
 <!DOCTYPE html>
 <html lang="en">
@@ -18,12 +19,22 @@
                 <nav class="navbar navbar-dark bg-primary">
                     <div class="container">
                         <ul class="nav navbar-nav">
-                            <li class="nav-item"><a class="nav-link" href="/">Home</a></li>
-                            <li class="nav-item"><a class="nav-link" href="/guild">Guilde</a></li>
-                            <li class="nav-item"><a class="nav-link" href="/forum">Forum</a></li>
+                            <li class="nav-item"><a class="nav-link" href="/">@messagesApi.apply("menu.home")</a></li>
+                            <li class="nav-item"><a class="nav-link" href="/guild">@messagesApi.apply("menu.roster")</a></li>
+                            <li class="nav-item"><a class="nav-link" href="/forum">@messagesApi.apply("menu.forum")</a></li>
                         </ul>
                         <ul class="nav navbar-nav pull-xs-right">
-                            <li class="nav-item"><a class="nav-link" href="account">Account management</a></li>
+                        @user match {
+                            case Some(u) => {
+                                <li class="nav-item"><a class="nav-link" href="/">@messagesApi.apply("menu.sign.off")</a></li>
+                                <li class="nav-item"><a class="nav-link" href="/">@messagesApi.apply("menu.account")</a></li>
+                            }
+                            case None => {
+                                <li class="nav-item"><a class="nav-link" href="@routes.AuthenticationController.login()">@messagesApi.apply("menu.login")</a></li>
+                                <li class="nav-item"><a class="nav-link" href="@routes.UserController.signIn()">@messagesApi.apply("menu.sign.in")</a></li>
+                            }
+                        }
+
                         </ul>
                     </div>
                 </nav>

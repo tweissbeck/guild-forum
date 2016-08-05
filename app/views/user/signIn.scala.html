@@ -1,7 +1,7 @@
 @import forms.{Helper, SignInForm}
 @(form: Form[SignInForm])(implicit messagesApi: MessagesApi)
 
-@main("") {
+@main(messagesApi.apply("form.signIn.title"), None) {
     @utils.centerContent(6, 3) {
 
         <form action="@routes.UserController.signInPost()" method="POST">
