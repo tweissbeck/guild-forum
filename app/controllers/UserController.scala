@@ -76,8 +76,13 @@ class UserController @Inject()(db: Database, implicit val messagesApi: MessagesA
       },
       data => {
         db.withConnection { implicit conn =>
+          // create the user
+          // TODO handle exception like unique constraints
           val createdUser = UserService.createUser(data)
+          // Redirect the user to login page
           Redirect(routes.HomeController.index())
+            .withNewSession
+            .withCookies(AuthenticationCookie.cookie(createdUser))
         }
       }
     )
