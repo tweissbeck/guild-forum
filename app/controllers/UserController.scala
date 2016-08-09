@@ -42,7 +42,9 @@ class UserController @Inject()(db: Database, implicit val messagesApi: MessagesA
 
   def list() = Auth { request =>
     request.user match {
-      case Some(u) => Ok(views.html.user.list(u, UserService.list()))
+      case Some(u) => db.withConnection { implicit conn =>
+        Ok(views.html.user.list(u, UserService.list()))
+      }
       case None => Redirect(routes.AuthenticationController.login())
     }
 
