@@ -27,7 +27,6 @@ class ExampleFilter @Inject()(
     // Run the next filter in the chain. This will call other filters
     // and eventually call the action. Take the result and modify it
     // by adding a new header.
-    println("example filter")
     nextFilter(requestHeader).map { result =>
       result.withHeaders("X-ExampleFilter" -> "foo")
     }
