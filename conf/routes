@@ -16,6 +16,7 @@ GET         /login                      controllers.AuthenticationController.log
 POST        /login                      controllers.AuthenticationController.loginPost
 GET         /signIn                     controllers.UserController.signIn
 POST        /signIn                     controllers.UserController.signInPost
+GET         /logout                     controllers.AuthenticationController.logout
 
 
 # Map static resources from the /public folder to the /assets URL path

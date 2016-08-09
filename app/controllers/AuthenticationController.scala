@@ -2,20 +2,22 @@ package controllers
 
 import javax.inject.Inject
 
+import controllers.composition.Authenticated
 import forms.LoginForm
 import play.api.Logger
 import play.api.data.Forms._
 import play.api.data._
 import play.api.db.Database
 import play.api.i18n.{I18nSupport, MessagesApi}
-import play.api.mvc.{Action, Controller, Cookie, DiscardingCookie}
+import play.api.mvc.{Action, Controller, DiscardingCookie}
 import services.AuthenticationService
 
 /**
  * Authentication controller
  */
 class AuthenticationController @Inject()(db: Database,
-                                         implicit val messagesApi: MessagesApi) extends Controller with I18nSupport {
+                                         implicit val messagesApi: MessagesApi,
+                                         Auth: Authenticated) extends Controller with I18nSupport {
 
   /** Login form */
   val loginForm = Form(
@@ -26,7 +28,7 @@ class AuthenticationController @Inject()(db: Database,
   )
 
 
-  /** GET login, display the form */
+  /** GET login form, display the form */
   def login() = Action { implicit request =>
     val cookie = request.cookies.get(AuthenticationCookie.NAME)
     cookie match {
@@ -39,8 +41,8 @@ class AuthenticationController @Inject()(db: Database,
   }
 
   /**
-   * POST : handle form submit, try to authenticate user.
-   * Redirect to home page when user is authenticated
+   * POST : handle login form submit, try to authenticate user.
+   * Redirect to home page if user is authenticated
    */
   def loginPost() = Action { implicit request =>
     loginForm.bindFromRequest.fold(
@@ -67,6 +69,18 @@ class AuthenticationController @Inject()(db: Database,
         }
       }
     )
+  }
+
+  /**
+   * Disconnect the current user if any.
+   */
+  def logout = Auth { implicit request =>
+    request.user match {
+      case Some(u) => Redirect(routes.HomeController.index())
+        .discardingCookies(DiscardingCookie(AuthenticationCookie.NAME))
+        .withNewSession
+      case None => Redirect(routes.HomeController.index())
+    }
   }
 
 }
