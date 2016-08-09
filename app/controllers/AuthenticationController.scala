@@ -74,7 +74,7 @@ class AuthenticationController @Inject()(db: Database,
   /**
    * Disconnect the current user if any.
    */
-  def logout = Auth { implicit request =>
+  def logout() = Auth { implicit request =>
     request.user match {
       case Some(u) => Redirect(routes.HomeController.index())
         .discardingCookies(DiscardingCookie(AuthenticationCookie.NAME))
