@@ -11,9 +11,9 @@ import services.database.UserService
 import scala.concurrent.Future
 
 /**
- * Created by tweissbeck on 05/08/2016.
+ * Authenticated action builder: request an Option[User]
  */
-class Authenticated @Inject()(db: Database) extends ActionBuilder[AuthenticatedRequest] {
+class Authenticated @Inject()(implicit db: Database) extends ActionBuilder[AuthenticatedRequest] {
 
   val AUTHENTICATION_TOKEN_KEY = AuthenticationCookie.NAME
 
@@ -47,7 +47,5 @@ class Authenticated @Inject()(db: Database) extends ActionBuilder[AuthenticatedR
         }
       }
     }
-
-
   }
 }

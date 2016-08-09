@@ -1,9 +1,9 @@
 package controllers
 
-import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
 import javax.inject.{Inject, Singleton}
 
+import controllers.composition.Authenticated
 import forms.SignInForm
 import play.api.data.Forms._
 import play.api.data.{Form, OptionalMapping}
@@ -15,7 +15,8 @@ import services.database.{User, UserService}
 
 
 @Singleton
-class UserController @Inject()(db: Database, implicit val messagesApi: MessagesApi) extends Controller with I18nSupport {
+class UserController @Inject()(db: Database, implicit val messagesApi: MessagesApi,
+                               Auth: Authenticated) extends Controller with I18nSupport {
 
   val signInForm = Form(
     mapping(
@@ -27,7 +28,7 @@ class UserController @Inject()(db: Database, implicit val messagesApi: MessagesA
     )(SignInForm.apply)(SignInForm.unapply)
   )
 
-
+  /** JSON serialization of User writes */
   implicit val userWrites = new Writes[User] {
     def writes(user: User) = Json.obj(
       "id" -> user.id,
@@ -39,12 +40,12 @@ class UserController @Inject()(db: Database, implicit val messagesApi: MessagesA
     )
   }
 
-  def list() = Action {
-    val loggedIn: User = User(0, Some("fakeLogin"), "", "", "aka@gmail.com", LocalDateTime.now(), None, false, "akka", "01")
-
-    db.withConnection { implicit conn =>
-      Ok(views.html.user.list(loggedIn, UserService.list()))
+  def list() = Auth { request =>
+    request.user match {
+      case Some(u) => Ok(views.html.user.list(u, UserService.list()))
+      case None => Redirect(routes.AuthenticationController.login())
     }
+
   }
 
   def jsonList() = Action {
