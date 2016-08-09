@@ -7,6 +7,7 @@ GET         /                           controllers.HomeController.index
 
 # Users related routes for admin
 GET         /user/admin/list            controllers.UserController.list
+GET         /user/view                  controllers.UserController.view
 
 # JSON api
 GET         /api/user/admin/list        controllers.UserController.jsonList

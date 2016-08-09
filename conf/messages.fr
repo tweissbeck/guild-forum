@@ -7,6 +7,7 @@ menu.forum=Forum
 menu.sign.off=Se déconnecter
 menu.login=Connexion
 menu.sign.in=Besoin d'un compte?
+menu.account=Compte
 
 
 # #### FORMS
@@ -14,7 +15,7 @@ menu.sign.in=Besoin d'un compte?
 form.login.login=Identifiant
 form.login.password=Mot de passe
 form.login.login.placeholder=Votre login ou votre email
-form.login.submit=Valider
+form.login.submit=Se connecter
 form.login.not.authenticated=Authentication échoué, merci de réessayer
 # sign in
 form.signIn.login=Identifiant

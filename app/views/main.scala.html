@@ -26,8 +26,8 @@
                         <ul class="nav navbar-nav pull-xs-right">
                         @user match {
                             case Some(u) => {
-                                <li class="nav-item"><a class="nav-link" href="/">@messagesApi.apply("menu.sign.off")</a></li>
-                                <li class="nav-item"><a class="nav-link" href="/">@messagesApi.apply("menu.account")</a></li>
+                                <li class="nav-item"><a class="nav-link" href="@routes.AuthenticationController.logout()">@messagesApi.apply("menu.sign.off")</a></li>
+                                <li class="nav-item"><a class="nav-link" href="@routes.UserController.view()">@messagesApi.apply("menu.account")</a></li>
                             }
                             case None => {
                                 <li class="nav-item"><a class="nav-link" href="@routes.AuthenticationController.login()">@messagesApi.apply("menu.login")</a></li>

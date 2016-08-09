@@ -88,4 +88,13 @@ class UserController @Inject()(db: Database, implicit val messagesApi: MessagesA
     )
   }
 
+  def view() = Auth {
+    implicit request =>
+      request.user match {
+        case Some(u) =>
+          Ok(views.html.user.view(u, signInForm))
+        case None => Redirect(routes.AuthenticationController.login())
+      }
+  }
+
 }
