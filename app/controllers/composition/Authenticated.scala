@@ -2,7 +2,7 @@ package controllers.composition
 
 import javax.inject.Inject
 
-import controllers.AuthenticationCookie
+import controllers.{AuthenticationCookie, JWT}
 import play.api.Logger
 import play.api.db.Database
 import play.api.mvc.{ActionBuilder, Request, Result}
@@ -23,11 +23,19 @@ class Authenticated @Inject()(implicit db: Database) extends ActionBuilder[Authe
     authenticationCookie match {
       case Some(c) => {
         try {
-          val userId = c.value.toLong
-          db.withConnection { implicit conn =>
-            val user = UserService.findById(userId)
-            block(new AuthenticatedRequest[A](user, request))
+          val userId = JWT.validateJWT(c.value)
+          userId match {
+            case Some(id) =>
+              //val userId = c.value.toLong
+              db.withConnection { implicit conn =>
+                val user = UserService.findById(id)
+                block(new AuthenticatedRequest[A](user, request))
+              }
+            case None =>
+              Logger.info("JWT is not valid")
+              block(new AuthenticatedRequest[A](None, request))
           }
+
         }
         catch {
           case e: Exception => {

@@ -82,7 +82,7 @@ class UserController @Inject()(db: Database, implicit val messagesApi: MessagesA
           // Redirect the user to login page
           Redirect(routes.HomeController.index())
             .withNewSession
-            .withCookies(AuthenticationCookie.cookie(createdUser))
+            .withCookies(AuthenticationCookie.generateCookie(createdUser))
         }
       }
     )

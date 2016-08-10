@@ -59,8 +59,8 @@ class AuthenticationController @Inject()(db: Database,
               Redirect(routes.HomeController.index())
                 .withNewSession
                 .withCookies(
-                  AuthenticationCookie.cookie(user)
-                ).addingToSession("sessionId" -> user.lastName)
+                  AuthenticationCookie.generateCookie(user)
+                )
             case None => {
               Ok(views.html.user.login(loginForm.withGlobalError("NotAuthenticated")))
                 .discardingCookies(DiscardingCookie("sessionId"))
