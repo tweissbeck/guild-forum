@@ -24,3 +24,8 @@ target
 /.project
 /.settings
 /RUNNING_PID
+
+## Custom
+# The file reference.conf is ignored in this project to allow to define some custom properties that are not publish in
+# git repositories like api key for oauth.
+reference.conf
