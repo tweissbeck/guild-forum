@@ -32,6 +32,7 @@
                             case None => {
                                 <li class="nav-item"><a class="nav-link" href="@routes.AuthenticationController.login()">@messagesApi.apply("menu.login")</a></li>
                                 <li class="nav-item"><a class="nav-link" href="@routes.UserController.signIn()">@messagesApi.apply("menu.sign.in")</a></li>
+                                <li class="nav-item"><a class="nav-link" href="@routes.AuthenticationController.loginWithOauth()">Login with Discord account</a></li>
                             }
                         }
 

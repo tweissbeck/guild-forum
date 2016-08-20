@@ -2,6 +2,7 @@ package controllers
 
 import javax.inject.Inject
 
+import controllers.authentication.Discord
 import controllers.composition.Authenticated
 import forms.LoginForm
 import play.api.Logger
@@ -9,15 +10,18 @@ import play.api.data.Forms._
 import play.api.data._
 import play.api.db.Database
 import play.api.i18n.{I18nSupport, MessagesApi}
+import play.api.libs.ws.WSClient
 import play.api.mvc.{Action, Controller, DiscardingCookie}
 import services.AuthenticationService
+
+import scala.concurrent.ExecutionContext
 
 /**
  * Authentication controller
  */
-class AuthenticationController @Inject()(db: Database,
-                                         implicit val messagesApi: MessagesApi,
-                                         Auth: Authenticated) extends Controller with I18nSupport {
+class AuthenticationController @Inject()(db: Database, implicit val messagesApi: MessagesApi, val Auth: Authenticated,
+                                         val ws: WSClient, implicit val context: ExecutionContext)
+  extends Controller with I18nSupport with Discord {
 
   /** Login form */
   val loginForm = Form(

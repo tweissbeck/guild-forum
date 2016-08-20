@@ -3,22 +3,24 @@
 # ~~~~
 
 # Public routes
-GET         /                           controllers.HomeController.index
+GET         /                               controllers.HomeController.index
 
 # Users related routes for admin
-GET         /user/admin/list            controllers.UserController.list
-GET         /user/view                  controllers.UserController.view
+GET         /user/admin/list                controllers.UserController.list
+GET         /user/view                      controllers.UserController.view
 
 # JSON api
-GET         /api/user/admin/list        controllers.UserController.jsonList
+GET         /api/user/admin/list            controllers.UserController.jsonList
 
 # Authentication routes
-GET         /login                      controllers.AuthenticationController.login
-POST        /login                      controllers.AuthenticationController.loginPost
-GET         /signIn                     controllers.UserController.signIn
-POST        /signIn                     controllers.UserController.signInPost
-GET         /logout                     controllers.AuthenticationController.logout
+GET         /login                          controllers.AuthenticationController.login
+POST        /login                          controllers.AuthenticationController.loginPost
+GET         /signIn                         controllers.UserController.signIn
+POST        /signIn                         controllers.UserController.signInPost
+GET         /logout                         controllers.AuthenticationController.logout
+GET         /oauth/login                    controllers.AuthenticationController.loginWithOauth
+GET         /oauth/authorize/discord        controllers.AuthenticationController.handleAuthorize
 
 
 # Map static resources from the /public folder to the /assets URL path
-GET         /assets/*file               controllers.Assets.versioned(path="/public", file: Asset)
+GET         /assets/*file                   controllers.Assets.versioned(path="/public", file: Asset)
