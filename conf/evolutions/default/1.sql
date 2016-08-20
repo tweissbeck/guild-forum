@@ -38,7 +38,7 @@ CREATE TABLE Message (
   me_createdAt DATETIME NOT NULL ,
   me_author BIGINT NOT NULL,
   me_topic BIGINT NOT NULL,
-  FOREIGN KEY (me_author)
+  FOREIGN KEY (me_author) REFERENCES Client(cl_id)
 
 );
 
@@ -49,7 +49,6 @@ CREATE TABLE Topic (
   to_createdAt DATETIME     NOT NULL,
   to_category  BIGINT       NOT NULL,
   FOREIGN KEY (to_category) REFERENCES Category (ca_id),
-  FOREIGN KEY (to_message) REFERENCES Message (me_id),
   FOREIGN KEY (to_author) REFERENCES Client (cl_id)
 
 );
@@ -63,5 +62,9 @@ CREATE TABLE JoinCategoryRight (
 );
 
 # --- !Downs
-DROP TABLE Client;
-DROP TABLE Role;
+DROP TABLE IF EXISTS Client;
+DROP TABLE IF EXISTS Role;
+DROP TABLE IF EXISTS Category;
+DROP TABLE IF EXISTS Message;
+DROP TABLE IF EXISTS Topic;
+DROP TABLE IF EXISTS JoinCategoryRight;
