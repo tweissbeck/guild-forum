@@ -28,7 +28,8 @@ trait Discord extends Controller {
         val params: Map[String, Seq[String]] = Map("response_type" -> Seq("code"),
           "client_id" -> Seq(clientId),
           "redirect_uri" -> Seq("http://localhost:9000/oauth/authorize/discord"),
-          "scope" -> Seq(scopeParam)
+          "scope" -> Seq(scopeParam),
+          "client_secret" -> Seq("Rz1L6auRIJPZgTECBc2-CMYniDnuxNvK")
         )
         Redirect("https://discordapp.com/api/oauth2/authorize", params)
       }
@@ -37,26 +38,35 @@ trait Discord extends Controller {
   }
 
   /**
-   * Handle the oauth authorization response. Send the access token request then try to get the associated user in our
-   * database in order to authenticate him.
+   * Handle the oauth authorization response.<br/>
+   * If response contains the code, send the /token request to get the token.
+   * With the token, we access the user account and then try yo find this user in the data base.
    */
   def handleAuthorize() = Auth { implicit request =>
     request.user match {
       case None =>
         request.getQueryString("code") match {
           case Some(c) =>
+            Logger.info("code => " + c)
             val params: Map[String, Seq[String]] = Map(
               "grant_type" -> Seq("authorization_code"),
-              "code" -> Seq(c)//,
-              //"redirect_uri" -> Seq("http://localhost:9000/oauth/token/discord") //,
-              //"client_id" -> Seq(ConfigFactory.load().getString("authentication.oauth.client.id"))
+              "code" -> Seq(c),
+              "redirect_uri" -> Seq("http://localhost:9000/oauth/authorize/discord"),
+              "client_id" -> Seq(ConfigFactory.load().getString("authentication.oauth.client.id")),
+              "client_secret" -> Seq("Rz1L6auRIJPZgTECBc2-CMYniDnuxNvK")
             )
 
             val request = ws.url("https://discordapp.com/api/oauth2/token").withHeaders("Content-Type" -> "application/x-www-form-urlencoded").post(params)
             request.map {
               response =>
-                Logger.info("Status: "+response.status.toString)
-                Logger.info("Response body: "+response.body)
+                response.status match {
+                  case 200 => {
+
+                  }
+                  case _ => {
+
+                  }
+                }
             }
             Redirect(routes.HomeController.index())
           case None => Redirect(routes.AuthenticationController.login()).flashing("error" -> "oauth.error.code.missing")
@@ -66,6 +76,7 @@ trait Discord extends Controller {
   }
 
   def handleToken() = Auth { implicit request =>
-    ???
+    println(request.uri)
+    Redirect(routes.HomeController.index())
   }
 }

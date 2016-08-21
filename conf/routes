@@ -20,6 +20,7 @@ POST        /signIn                         controllers.UserController.signInPos
 GET         /logout                         controllers.AuthenticationController.logout
 GET         /oauth/login                    controllers.AuthenticationController.loginWithOauth
 GET         /oauth/authorize/discord        controllers.AuthenticationController.handleAuthorize
+GET         /oauth/token/discord            controllers.AuthenticationController.handleToken
 
 
 # Map static resources from the /public folder to the /assets URL path
