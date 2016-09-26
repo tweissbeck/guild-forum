@@ -44,9 +44,9 @@ trait DiscordApi {
   }
 
 
-  def getUser(token: Token): Future[WSResponse] = {
+  def getUserRueqest(token: Token): WSRequest = {
     val url = s"$discordHost/$userPath/"
-    ws.url(url).withHeaders("Authorization" -> token.toString).get()
+    ws.url(url).withHeaders("Authorization" -> token.toString)
   }
 
   /**

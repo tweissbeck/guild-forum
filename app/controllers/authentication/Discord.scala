@@ -7,6 +7,7 @@ import play.api.Logger
 import play.api.libs.json.{JsValue, Json}
 import play.api.libs.ws._
 import play.api.mvc._
+import services.discord.token.BearerToken
 import services.discord.{AccessToken, DiscordApi}
 
 import scala.concurrent.{ExecutionContext, Future}
@@ -85,6 +86,17 @@ trait Discord extends Controller {
 
             getToken(code) map {
               token: AccessToken => {
+                val userRequest = discordApi.getUserRueqest(new BearerToken(token.accessToken))
+                val userResponse = userRequest.get()
+                userResponse map {
+                  response =>
+                    Logger.info(userRequest.url)
+                    Logger.info(Json.prettyPrint(response.json))
+                    response.status match {
+                      case 200 => Logger.info("200")
+                      case _ => Logger.error(s"${response.status}")
+                    }
+                }
                 Redirect(routes.HomeController.index())
               }
             } recover { case t: Throwable =>
