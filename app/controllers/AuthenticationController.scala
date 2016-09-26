@@ -13,14 +13,15 @@ import play.api.i18n.{I18nSupport, MessagesApi}
 import play.api.libs.ws.WSClient
 import play.api.mvc.{Action, Controller, DiscardingCookie}
 import services.AuthenticationService
+import services.discord.DiscordService
 
 import scala.concurrent.ExecutionContext
 
 /**
- * Authentication controller
- */
+  * Authentication controller
+  */
 class AuthenticationController @Inject()(db: Database, implicit val messagesApi: MessagesApi, val Auth: Authenticated,
-                                         val ws: WSClient, implicit val context: ExecutionContext)
+                                         val ws: WSClient, implicit val context: ExecutionContext, val discordApi: DiscordService)
   extends Controller with I18nSupport with Discord {
 
   /** Login form */
@@ -45,9 +46,9 @@ class AuthenticationController @Inject()(db: Database, implicit val messagesApi:
   }
 
   /**
-   * POST : handle login form submit, try to authenticate user.
-   * Redirect to home page if user is authenticated
-   */
+    * POST : handle login form submit, try to authenticate user.
+    * Redirect to home page if user is authenticated
+    */
   def loginPost() = Action { implicit request =>
     loginForm.bindFromRequest.fold(
       formWithErrors => {
@@ -76,8 +77,8 @@ class AuthenticationController @Inject()(db: Database, implicit val messagesApi:
   }
 
   /**
-   * Disconnect the current user if any.
-   */
+    * Disconnect the current user if any.
+    */
   def logout() = Auth { implicit request =>
     request.user match {
       case Some(u) => Redirect(routes.HomeController.index())

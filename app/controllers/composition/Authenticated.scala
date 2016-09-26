@@ -5,7 +5,7 @@ import javax.inject.Inject
 import controllers.{AuthenticationCookie, JWT}
 import play.api.Logger
 import play.api.db.Database
-import play.api.mvc.{ActionBuilder, Request, Result}
+import play.api.mvc.{Action, ActionBuilder, Request, Result}
 import services.database.UserService
 
 import scala.concurrent.Future
@@ -29,7 +29,7 @@ class Authenticated @Inject()(implicit db: Database) extends ActionBuilder[Authe
               //val userId = c.value.toLong
               db.withConnection { implicit conn =>
                 val user = UserService.findById(id)
-                block(new AuthenticatedRequest[A](user, request))
+                  block(new AuthenticatedRequest[A](user, request))
               }
             case None =>
               Logger.info("JWT is not valid")

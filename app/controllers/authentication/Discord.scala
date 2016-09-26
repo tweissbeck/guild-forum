@@ -4,18 +4,21 @@ import com.typesafe.config.ConfigFactory
 import controllers.composition.Authenticated
 import controllers.routes
 import play.api.Logger
+import play.api.libs.json.{JsValue, Json}
 import play.api.libs.ws._
-import play.api.mvc.Controller
+import play.api.mvc._
+import services.discord.{AccessToken, DiscordApi}
 
-import scala.concurrent.ExecutionContext
+import scala.concurrent.{ExecutionContext, Future}
 
 /**
- * Created by Thierry on 20/08/2016.
- */
+  * Created by Thierry on 20/08/2016.
+  */
 trait Discord extends Controller {
 
   val Auth: Authenticated
   val ws: WSClient
+  val discordApi: DiscordApi
   implicit val context: ExecutionContext
 
 
@@ -31,52 +34,79 @@ trait Discord extends Controller {
           "scope" -> Seq(scopeParam),
           "client_secret" -> Seq("Rz1L6auRIJPZgTECBc2-CMYniDnuxNvK")
         )
-        Redirect("https://discordapp.com/api/oauth2/authorize", params)
+
+        Redirect(discordApi.getAuthorizeUrl(), params)
       }
       case Some(u) => Redirect(routes.HomeController.index())
     }
   }
 
   /**
-   * Handle the oauth authorization response.<br/>
-   * If response contains the code, send the /token request to get the token.
-   * With the token, we access the user account and then try yo find this user in the data base.
-   */
-  def handleAuthorize() = Auth { implicit request =>
+    * Handle the oauth authorization response.<br/>
+    * If response contains the code, send the /token request to get the token.
+    * With the token, we access the user account and then try yo find this user in the data base.
+    */
+  def handleAuthorize() = Auth.async(BodyParsers.parse.default) { implicit request =>
+
+    def getToken(code: String): Future[AccessToken] = {
+
+      def buildAccessToken(json: JsValue): AccessToken = {
+        AccessToken((json \ "access_token").get.as[String],
+          (json \ "expires_in").get.as[Long],
+          (json \ "refresh_token").get.as[String],
+          (json \ "token_type").get.as[String]
+        )
+      }
+
+      val request = discordApi.getAccessTokenRequest()
+      val response = discordApi.getAccessToken(request, code)
+      response.map {
+        resp => {
+          resp.status match {
+            case 200 => val json = resp.json
+              Logger.info(Json.prettyPrint(json))
+              val accessToken: AccessToken = buildAccessToken(json)
+              accessToken
+            case _ =>
+              throw new Exception(s"Access token request to ${request.url} failed with status ${resp.statusText}. Response: ${resp.json}")
+          }
+        }
+      }
+    }
+
+
     request.user match {
       case None =>
         request.getQueryString("code") match {
-          case Some(c) =>
-            Logger.info("code => " + c)
-            val params: Map[String, Seq[String]] = Map(
-              "grant_type" -> Seq("authorization_code"),
-              "code" -> Seq(c),
-              "redirect_uri" -> Seq("http://localhost:9000/oauth/authorize/discord"),
-              "client_id" -> Seq(ConfigFactory.load().getString("authentication.oauth.client.id")),
-              "client_secret" -> Seq("Rz1L6auRIJPZgTECBc2-CMYniDnuxNvK")
-            )
+          // find code parameter
+          case Some(code) => {
+            // access token request
+            Logger.info("code => " + code)
 
-            val request = ws.url("https://discordapp.com/api/oauth2/token").withHeaders("Content-Type" -> "application/x-www-form-urlencoded").post(params)
-            request.map {
-              response =>
-                response.status match {
-                  case 200 => {
-
-                  }
-                  case _ => {
-
-                  }
-                }
+            getToken(code) map {
+              token: AccessToken => {
+                Redirect(routes.HomeController.index())
+              }
+            } recover { case t: Throwable =>
+              Logger.error("Get token failed", t)
+              Redirect(routes.HomeController.index())
             }
-            Redirect(routes.HomeController.index())
-          case None => Redirect(routes.AuthenticationController.login()).flashing("error" -> "oauth.error.code.missing")
+          }
+          case None => {
+            Logger.error(s"Failed to get code from request: ${request.uri}")
+            Future(Redirect(routes.HomeController.index()))
+          }
         }
-      case Some(u) => Redirect(routes.HomeController.index())
+      case Some(_) => {
+        Future(Redirect(routes.HomeController.index()))
+      }
     }
+
   }
 
-  def handleToken() = Auth { implicit request =>
-    println(request.uri)
-    Redirect(routes.HomeController.index())
+  def handleToken() = Auth {
+    implicit request =>
+      println(request.uri)
+      Redirect(routes.HomeController.index())
   }
 }
