@@ -1,8 +1,12 @@
+organization := "com.hila"
 name := """forum"""
+version := "1.0.0-SNAPSHOT"
 
-version := "1.0-SNAPSHOT"
+lazy val root = (project in file("."))
+  .enablePlugins(PlayScala)
+  .aggregate(discord).dependsOn(discord)
 
-lazy val root = (project in file(".")).enablePlugins(PlayScala)
+lazy val discord = project
 
 scalaVersion := "2.11.7"
 
