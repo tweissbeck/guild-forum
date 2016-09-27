@@ -34,6 +34,9 @@ trait DiscordApi {
 
 
   protected val ws: WSClient
+  val userAgentUrl: String = "tw-scala-discord"
+  val userAgentVersion: String = "1.0.0-SNAPSHOT"
+  val userAgent: String = s"DiscordBot ($userAgentUrl, $userAgentVersion)"
   val discordHost = "https://discordapp.com/api"
   val userPath = "users"
   val accessTokenPath = "oauth2/token"
@@ -44,9 +47,9 @@ trait DiscordApi {
   }
 
 
-  def getUserRueqest(token: Token): WSRequest = {
-    val url = s"$discordHost/$userPath/"
-    ws.url(url).withHeaders("Authorization" -> token.toString)
+  def getUserRequest(token: Token): WSRequest = {
+    val url = s"$discordHost/$userPath/@me"
+    ws.url(url).withHeaders("Authorization" -> token.toString, "User-Agent" -> this.userAgent)
   }
 
   /**

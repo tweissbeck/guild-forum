@@ -86,7 +86,7 @@ trait Discord extends Controller {
 
             getToken(code) map {
               token: AccessToken => {
-                val userRequest = discordApi.getUserRueqest(new BearerToken(token.accessToken))
+                val userRequest = discordApi.getUserRequest(new BearerToken(token.accessToken))
                 val userResponse = userRequest.get()
                 userResponse map {
                   response =>
