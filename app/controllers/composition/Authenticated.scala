@@ -35,7 +35,6 @@ class Authenticated @Inject()(implicit db: Database) extends ActionBuilder[Authe
               Logger.info("JWT is not valid")
               block(new AuthenticatedRequest[A](None, request))
           }
-
         }
         catch {
           case e: Exception => {
