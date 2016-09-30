@@ -1,4 +1,4 @@
-package com.tw.discord.api
+package com.tw.discord.api.user
 
 /**
   * Scopes provide access to certain resources of a user's account. API client or service should only request scopes it requires for operation.

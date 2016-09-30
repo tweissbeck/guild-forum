@@ -2,6 +2,7 @@ package com.tw.discord.api
 
 import javax.inject.Inject
 
+import com.tw.discord.api.user.OAuth2DiscordScopes
 import play.api.libs.ws.{WSClient, WSRequest, WSResponse}
 import play.api.libs.json.{JsValue, Json}
 
