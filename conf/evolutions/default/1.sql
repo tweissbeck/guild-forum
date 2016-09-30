@@ -12,9 +12,18 @@ CREATE TABLE Client (
   cl_password   VARCHAR(2000) NOT NULL,
   cl_salt       VARCHAR(1000) NOT NULL,
   cl_postNumber INT           NOT NULL             DEFAULT 0,
+  cl_authentication BIGINT ,
   UNIQUE (cl_mail),
   UNIQUE (cl_login),
-  UNIQUE (cl_firstName, cl_lastName)
+  FOREIGN KEY (cl_authentication) REFERENCES Authentication (au_id)
+);
+
+CREATE TABLE Authentication (
+  au_id           BIGINT       NOT NULL PRIMARY KEY AUTO_INCREMENT,
+  au_token        VARCHAR(128) NOT NULL,
+  au_refreshToken VARCHAR(128),
+  au_createdAt    DATETIME     NOT NULL,
+  au_expireIn     INT
 );
 
 
@@ -32,13 +41,13 @@ CREATE TABLE Category (
 );
 
 CREATE TABLE Message (
-  me_id      BIGINT         NOT NULL  PRIMARY KEY AUTO_INCREMENT,
-  me_message VARCHAR(64000) NOT NULL              DEFAULT '',
-  me_order  INT NOT NULL ,
-  me_createdAt DATETIME NOT NULL ,
-  me_author BIGINT NOT NULL,
-  me_topic BIGINT NOT NULL,
-  FOREIGN KEY (me_author) REFERENCES Client(cl_id)
+  me_id        BIGINT         NOT NULL  PRIMARY KEY AUTO_INCREMENT,
+  me_message   VARCHAR(64000) NOT NULL              DEFAULT '',
+  me_order     INT            NOT NULL,
+  me_createdAt DATETIME       NOT NULL,
+  me_author    BIGINT         NOT NULL,
+  me_topic     BIGINT         NOT NULL,
+  FOREIGN KEY (me_author) REFERENCES Client (cl_id)
 
 );
 
