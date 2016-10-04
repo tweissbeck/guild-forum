@@ -26,4 +26,6 @@ libraryDependencies ++= Seq(
   "org.bitbucket.b_c" % "jose4j" % "0.5.1"
 )
 
+// The Typesafe repository
+resolvers += "Typesafe repository" at "https://repo.typesafe.com/typesafe/maven-releases/"
 resolvers += "scalaz-bintray" at "http://dl.bintray.com/scalaz/releases"
