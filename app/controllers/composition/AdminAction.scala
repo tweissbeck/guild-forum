@@ -2,12 +2,13 @@ package controllers.composition
 
 import javax.inject.Inject
 
+import controllers.routes
 import play.api.db.Database
-import play.api.mvc.{ActionBuilder, Request, Result}
-import play.mvc.Controller
+import play.api.mvc.{ActionBuilder, Request, Result, Results}
 import services.database.{AdminUser, UserService}
 
 import scala.concurrent.Future
+import scala.concurrent.ExecutionContext.Implicits.global
 
 /**
   * Action builder for action accessible by admin.
@@ -16,8 +17,10 @@ class AdminAction @Inject()(implicit db: Database) extends ActionBuilder[AdminRe
   override def invokeBlock[A](request: Request[A], block: (AdminRequest[A]) => Future[Result]): Future[Result] = {
 
     def handleForbidden(): Future[Result] = {
-      play.api.mvc.Results.Forbidden()
-      ???
+      Future {
+        Results.Redirect(routes.AuthenticationController.login())
+          .flashing("actionRequested" -> s"${request.uri}")
+      }
     }
     val userId = getUserFromRequest(request)
     userId match {

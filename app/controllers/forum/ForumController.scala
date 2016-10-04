@@ -12,7 +12,7 @@ class ForumController @Inject()(val Auth: Authenticated) extends Controller {
 
   def index() = Auth {
     implicit request => {
-      Ok()
+      Ok
     }
   }
 }

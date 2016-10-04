@@ -31,9 +31,16 @@ package object composition {
     def fromHeader(): Option[Long] = {
       val header = request.headers.get(AUTHENTICATION_HEADER_KEY)
       try {
-        header.fold(None[Long])(value => Some(value.toLong))
+        header match {
+          case Some(h) => Some(h.toLong)
+          case None => None
+        }
+        //header.fold(None)(value => Some(value.toLong))
       } catch {
-        case e: NumberFormatException => None
+        case e: NumberFormatException => {
+          Logger.error("Failed to parse ", e);
+          None
+        }
       }
     }
     fromCookie().orElse(fromHeader())

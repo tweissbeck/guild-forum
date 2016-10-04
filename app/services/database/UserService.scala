@@ -17,8 +17,14 @@ object UserService {
     get[String]("cl_mail") ~ get[Option[String]]("cl_login") ~ get[LocalDateTime]("cl_createdAt") ~
     get[Option[LocalDateTime]]("cl_lastLogin") ~ get[Boolean]("cl_admin") ~ get[String]("cl_password") ~
     get[String]("cl_salt") map {
-    case id ~ name ~ firstName ~ mail ~ login ~ createdAt ~ lastLogin ~ admin ~ password ~ salt =>
-      User(id, login, firstName, name, mail, createdAt, lastLogin, admin, password, salt)
+    case id ~ name ~ firstName ~ mail ~ login ~ createdAt ~ lastLogin ~ admin ~ password ~ salt => {
+      if(admin){
+        AdminUser(id, login, firstName, name, mail, createdAt, lastLogin, password, salt)
+      }else{
+        CommonUser(id, login, firstName, name, mail, createdAt, lastLogin, password, salt)
+      }
+    }
+
   }
   /* Table name*/
   private val USER = "Client";
@@ -86,35 +92,7 @@ object UserService {
   }
 }
 
-abstract case class User(id: Long, login: Option[String], firstName: String, lastName: String, mail: String,
-                           createdAt: LocalDateTime, lastLogin: Option[LocalDateTime], admin: Boolean,
-                           password: String, salt: String)
 
-
-/**
-  * User with all database fields
-  *
-  * @param id        user data base id
-  * @param login     user login, may be empty
-  * @param firstName user first name
-  * @param lastName  user last name
-  * @param mail      user mail adress
-  * @param createdAt user creation date
-  * @param lastLogin last user's login datef
-  * @param password  hashed password (with salt)
-  * @param salt      encrypted salt
-  */
-case class CommonUser(override val id: Long, override val login: Option[String], override val firstName: String,
-                override val lastName: String, override val mail: String, override val createdAt: LocalDateTime,
-                override val lastLogin: Option[LocalDateTime], override val password: String, override val salt: String)
-  extends User(id, login, firstName, lastName, mail, createdAt, lastLogin, false, password, salt) {
-}
-
-case class AdminUser(override val id: Long, override val login: Option[String], override val firstName: String,
-                     override val lastName: String, override val mail: String, override val createdAt: LocalDateTime,
-                     override val lastLogin: Option[LocalDateTime], override val password: String,
-                     override val salt: String)
-  extends User(id, login, firstName, lastName, mail, createdAt, lastLogin, true, password, salt)
 
 
 
