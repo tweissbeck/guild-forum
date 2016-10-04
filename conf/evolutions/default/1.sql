@@ -1,5 +1,14 @@
 # --- !Ups
 
+
+CREATE TABLE Authentication (
+  au_id           BIGINT       NOT NULL PRIMARY KEY AUTO_INCREMENT,
+  au_token        VARCHAR(128) NOT NULL,
+  au_refreshToken VARCHAR(128),
+  au_createdAt    DATETIME     NOT NULL,
+  au_expireIn     INT
+);
+
 CREATE TABLE Client (
   cl_id         BIGINT        NOT NULL PRIMARY KEY AUTO_INCREMENT,
   cl_lastName   VARCHAR(60)   NOT NULL,
@@ -16,14 +25,6 @@ CREATE TABLE Client (
   UNIQUE (cl_mail),
   UNIQUE (cl_login),
   FOREIGN KEY (cl_authentication) REFERENCES Authentication (au_id)
-);
-
-CREATE TABLE Authentication (
-  au_id           BIGINT       NOT NULL PRIMARY KEY AUTO_INCREMENT,
-  au_token        VARCHAR(128) NOT NULL,
-  au_refreshToken VARCHAR(128),
-  au_createdAt    DATETIME     NOT NULL,
-  au_expireIn     INT
 );
 
 
