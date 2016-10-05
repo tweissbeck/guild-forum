@@ -19,11 +19,15 @@ form.login.submit=Se connecter
 form.login.not.authenticated=Authentication échoué, merci de réessayer
 # sign in
 form.signIn.login=Identifiant
-form.signIn.mail = Adress email
+form.signIn.mail = Email
 form.signIn.password =Mot de passe
 form.signIn.firstName=Prénom
 form.signIn.lastName=Nom
 
+# edit
+user.id=Id
+user.createdAt=Date de création
+user.salt=Salt
 
 
 

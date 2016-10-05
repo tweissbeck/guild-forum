@@ -3,8 +3,8 @@ package controllers
 import java.time.format.DateTimeFormatter
 import javax.inject.{Inject, Singleton}
 
-import controllers.composition.Authenticated
-import forms.SignInForm
+import controllers.composition.{AdminAction, Authenticated}
+import forms.{AdminEditForm, SignInForm}
 import play.api.data.Forms._
 import play.api.data.{Form, OptionalMapping}
 import play.api.db.Database
@@ -16,7 +16,7 @@ import services.database.{User, UserService}
 
 @Singleton
 class UserController @Inject()(db: Database, implicit val messagesApi: MessagesApi,
-                               Auth: Authenticated) extends Controller with I18nSupport {
+                               Auth: Authenticated, Admin: AdminAction) extends Controller with I18nSupport {
 
   val signInForm = Form(
     mapping(
@@ -27,6 +27,17 @@ class UserController @Inject()(db: Database, implicit val messagesApi: MessagesA
       "password" -> nonEmptyText
     )(SignInForm.apply)(SignInForm.unapply)
   )
+
+  val editForm = Form(
+  mapping(
+    "id" -> longNumber,
+    "lastName" -> nonEmptyText,
+    "firstName" -> nonEmptyText,
+    "login" -> OptionalMapping(text),
+    "email" -> nonEmptyText,
+    "password" -> OptionalMapping(text),
+    "isAdmin" -> boolean
+  )(AdminEditForm.apply)(AdminEditForm.unapply))
 
   /** JSON serialization of User writes */
   implicit val userWrites = new Writes[User] {
@@ -40,14 +51,33 @@ class UserController @Inject()(db: Database, implicit val messagesApi: MessagesA
     )
   }
 
-  def list() = Auth { request =>
-    request.user match {
-      case Some(u) => db.withConnection { implicit conn =>
-        Ok(views.html.user.list(u, UserService.list()))
-      }
-      case None => Redirect(routes.AuthenticationController.login())
-    }
+  def convertUserToEdit(user: User): AdminEditForm = {
+    ???
+  }
 
+  /** ******************************************************************************************************************
+    * Action
+    * *****************************************************************************************************************/
+
+  def list() = Admin { request =>
+    db.withConnection { implicit conn =>
+      Ok(views.html.user.list(request.admin, UserService.list()))
+    }
+  }
+
+  def edit(id: String) = Admin { request =>
+    db.withConnection { implicit conn =>
+      try {
+        val user: Option[User] = UserService.findById(id.toLong)
+        user match {
+          case Some(_) => Ok(views.html.user.admin.edit(request.admin, convertUserToEdit(user)))
+          case None => NotFound
+        }
+      } catch {
+        case e: NumberFormatException => ???
+      }
+
+    }
   }
 
   def jsonList() = Action {
@@ -59,15 +89,15 @@ class UserController @Inject()(db: Database, implicit val messagesApi: MessagesA
   }
 
   /**
-   * GET SignIn
-   */
+    * GET SignIn
+    */
   def signIn() = Action {
     Ok(views.html.user.signIn(signInForm))
   }
 
   /**
-   * POST SignIn
-   */
+    * POST SignIn
+    */
   def signInPost() = Action { implicit request =>
     signInForm.bindFromRequest().fold(
       formWithErrors => {
@@ -86,15 +116,6 @@ class UserController @Inject()(db: Database, implicit val messagesApi: MessagesA
         }
       }
     )
-  }
-
-  def view() = Auth {
-    implicit request =>
-      request.user match {
-        case Some(u) =>
-          Ok(views.html.user.view(u, signInForm))
-        case None => Redirect(routes.AuthenticationController.login())
-      }
   }
 
 }

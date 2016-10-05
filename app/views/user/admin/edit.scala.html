@@ -1,0 +1,7 @@
+@import forms.AdminEditForm
+@import services.database.User
+@(user: User, form: Form[AdminEditForm])(implicit messagesApi: MessagesApi)
+
+@main(messagesApi.apply("user.view.title"), Some(user)) {
+    <p>@messagesApi.apply("user.view.p")</p>
+}

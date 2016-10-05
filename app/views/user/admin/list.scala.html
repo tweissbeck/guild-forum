@@ -10,19 +10,23 @@
                 <table class="table table-inverse table-sm">
                     <thead>
                         <tr>
-                            <th>Id</th>
-                            <th>First Name</th>
-                            <th>Mail</th>
-                            <th>Created at</th>
-                            <th>Password</th>
-                            <th>Salt</th>
+                            <th></th>
+                            <th>@messagesApi.apply("user.id")</th>
+                            <th>@messagesApi.apply("form.signIn.lastName")</th>
+                            <th>@messagesApi.apply("form.signIn.firstName")</th>
+                            <th>@messagesApi.apply("form.signIn.mail")</th>
+                            <th>@messagesApi.apply("user.createdAt")</th>
+                            <th>@messagesApi.apply("form.signIn.password")</th>
+                            <th>@messagesApi.apply("user.salt")</th>
                         </tr>
                     </thead>
                     <tbody>
                     @for(u <- users) {
                         <tr>
+                            <td><a href="@routes.UserController.edit()"></a></td>
                             <th scope="row">@u.id</th>
-                            <td>@u.lastName</td>
+                            <td>@u.lastLogin</td>
+                            <td>@u.firstName</td>
                             <td>@u.mail</td>
                             <td>@u.createdAt</td>
                             <td>@u.password</td>
