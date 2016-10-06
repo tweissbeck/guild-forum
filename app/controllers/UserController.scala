@@ -29,15 +29,15 @@ class UserController @Inject()(db: Database, implicit val messagesApi: MessagesA
   )
 
   val editForm = Form(
-  mapping(
-    "id" -> longNumber,
-    "lastName" -> nonEmptyText,
-    "firstName" -> nonEmptyText,
-    "login" -> OptionalMapping(text),
-    "email" -> nonEmptyText,
-    "password" -> OptionalMapping(text),
-    "isAdmin" -> boolean
-  )(AdminEditForm.apply)(AdminEditForm.unapply))
+    mapping(
+      "id" -> longNumber,
+      "lastName" -> nonEmptyText,
+      "firstName" -> nonEmptyText,
+      "login" -> OptionalMapping(text),
+      "email" -> nonEmptyText,
+      "password" -> OptionalMapping(text),
+      "isAdmin" -> boolean
+    )(AdminEditForm.apply)(AdminEditForm.unapply))
 
   /** JSON serialization of User writes */
   implicit val userWrites = new Writes[User] {
@@ -52,7 +52,7 @@ class UserController @Inject()(db: Database, implicit val messagesApi: MessagesA
   }
 
   def convertUserToEdit(user: User): AdminEditForm = {
-    ???
+    AdminEditForm(user.id, user.lastName, user.firstName, user.login, user.mail, None, user.admin)
   }
 
   /** ******************************************************************************************************************
@@ -61,7 +61,7 @@ class UserController @Inject()(db: Database, implicit val messagesApi: MessagesA
 
   def list() = Admin { request =>
     db.withConnection { implicit conn =>
-      Ok(views.html.user.list(request.admin, UserService.list()))
+      Ok(views.html.user.admin.list(request.admin, UserService.list()))
     }
   }
 
@@ -70,15 +70,18 @@ class UserController @Inject()(db: Database, implicit val messagesApi: MessagesA
       try {
         val user: Option[User] = UserService.findById(id.toLong)
         user match {
-          case Some(_) => Ok(views.html.user.admin.edit(request.admin, convertUserToEdit(user)))
+          case Some(_) => Ok(views.html.user.admin.edit(request.admin, editForm.fill(convertUserToEdit(user.get))))
           case None => NotFound
         }
       } catch {
         case e: NumberFormatException => ???
       }
-
     }
   }
+
+  def persistModification() = TODO
+
+  def delete(id: String) = TODO
 
   def jsonList() = Action {
     db.withConnection { implicit conn =>

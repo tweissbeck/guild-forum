@@ -71,8 +71,24 @@ CREATE TABLE JoinCategoryRight (
   PRIMARY KEY (jcr_category, jcr_right)
 );
 
+INSERT INTO Client (
+  cl_id,
+  cl_lastName,
+  cl_firstName,
+  cl_login,
+  cl_mail,
+  cl_admin,
+  cl_createdAt,
+  cl_lastLogIn,
+  cl_password,
+  cl_salt,
+  cl_postNumber,
+  cl_authentication
+) VALUES (1, 'admin', 'admin', 'admin', 'admin@fake.com', true, now(), null, '123', '123', 0, NULL);
+
 # --- !Downs
 DROP TABLE IF EXISTS Client;
+DROP TABLE IF EXISTS Authentication;
 DROP TABLE IF EXISTS Role;
 DROP TABLE IF EXISTS Category;
 DROP TABLE IF EXISTS Message;

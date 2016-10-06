@@ -7,7 +7,7 @@
         <div class="row">
             <div class="col-lg-12">
                 <p>List of users</p>
-                <table class="table table-inverse table-sm">
+                <table class="table table-sm">
                     <thead>
                         <tr>
                             <th></th>
@@ -16,21 +16,22 @@
                             <th>@messagesApi.apply("form.signIn.firstName")</th>
                             <th>@messagesApi.apply("form.signIn.mail")</th>
                             <th>@messagesApi.apply("user.createdAt")</th>
-                            <th>@messagesApi.apply("form.signIn.password")</th>
-                            <th>@messagesApi.apply("user.salt")</th>
+                            <th>@messagesApi.apply("user.admin")</th>
                         </tr>
                     </thead>
                     <tbody>
                     @for(u <- users) {
                         <tr>
-                            <td><a href="@routes.UserController.edit()"></a></td>
+                            <td>
+                                <a class="btn btn-primary" href="@routes.UserController.edit(u.id + "")" role="button">Edit</a>
+                                <button class="btn btn-danger">Delete</button>
+                            </td>
                             <th scope="row">@u.id</th>
                             <td>@u.lastLogin</td>
                             <td>@u.firstName</td>
                             <td>@u.mail</td>
                             <td>@u.createdAt</td>
-                            <td>@u.password</td>
-                            <td>@u.salt</td>
+                            <td>@u.admin</td>
                         </tr>
                     }
                     </tbody>

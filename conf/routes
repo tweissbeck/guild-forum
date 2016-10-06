@@ -6,12 +6,14 @@
 GET         /                               controllers.HomeController.index
 
 # Users related routes for admin
-GET         /user/admin/list                controllers.UserController.list
-GET         /user/admin/edit/{id}           controllers.UserController.edit(id)
-GET         /user/view                      controllers.UserController.view
+GET         /admin/user/list                controllers.UserController.list
+GET         /admin/user/edit/:id            controllers.UserController.edit(id: String)
+POST        /admin/user/edit/               controllers.UserController.persistModification
+GET         /admin/user/delete/:id          controllers.UserController.delete(id: String)
+
 
 # JSON api
-GET         /api/user/admin/list            controllers.UserController.jsonList
+GET         /api/admin/user/list            controllers.UserController.jsonList
 
 # Authentication routes
 GET         /login                          controllers.AuthenticationController.login
