@@ -12,24 +12,27 @@ import services.database.User
 import services.{IdEncryptionUtil, KeyUser}
 
 /**
- * Created by tweissbeck on 05/08/2016.
- */
+  * Created by tweissbeck on 05/08/2016.
+  */
 package object controllers {
 
   /**
-   * Helper to build a cookie that contains authentication data
-   *
-   */
+    * Helper to build a cookie that contains authentication data
+    *
+    */
   object AuthenticationCookie {
     val NAME = "token"
 
     def generateCookie(user: User): Cookie = Cookie(NAME, JWT.build(user), Some(16000), secure = false, httpOnly = true)
   }
 
+  object FlashConstant {
+    val requestedResource = "actionRequested"
+  }
 
   /**
-   * JWT builder and validato
-   */
+    * JWT builder and validation
+    */
   object JWT extends KeyUser {
 
 
@@ -50,18 +53,18 @@ package object controllers {
     val ISSUER: String = "#GUILD-FORUM"
 
     /**
-     * Build a JSON WEB TOKEN. The JWT is only signed for now.<br/>
-     * For reference : [[https://bitbucket.org/b_c/jose4j/wiki/JWT%20Examples]]
-     *
-     * @param user the user to authenticate in the JWT
-     * @return the generated JWT as String
-     */
+      * Build a JSON WEB TOKEN. The JWT is only signed for now.<br/>
+      * For reference : [[https://bitbucket.org/b_c/jose4j/wiki/JWT%20Examples]]
+      *
+      * @param user the user to authenticate in the JWT
+      * @return the generated JWT as String
+      */
     def build(user: User): String = {
       /**
-       * Build claim
-       *
-       * @return the built claim
-       */
+        * Build claim
+        *
+        * @return the built claim
+        */
       def buildClaim(): JwtClaims = {
         // Create the Claims, which will be the content of the JWT
         val claims = new JwtClaims();
@@ -105,11 +108,11 @@ package object controllers {
     }
 
     /**
-     * Validate the JWT and return the user id when possible.
-     *
-     * @param jwt the JWT as String
-     * @return
-     */
+      * Validate the JWT and return the user id when possible.
+      *
+      * @param jwt the JWT as String
+      * @return
+      */
     def validateJWT(jwt: String): Option[Long] = {
       // Use JwtConsumerBuilder to construct an appropriate JwtConsumer, which will
       // be used to validate and process the JWT.

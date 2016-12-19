@@ -10,18 +10,18 @@ CREATE TABLE Authentication (
 );
 
 CREATE TABLE Client (
-  cl_id         BIGINT        NOT NULL PRIMARY KEY AUTO_INCREMENT,
-  cl_lastName   VARCHAR(60)   NOT NULL,
-  cl_firstName  VARCHAR(60)   NOT NULL,
-  cl_login      VARCHAR(128),
-  cl_mail       VARCHAR(128)  NOT NULL,
-  cl_admin      BOOLEAN       NOT NULL,
-  cl_createdAt  DATETIME      NOT NULL,
-  cl_lastLogIn  DATETIME,
-  cl_password   VARCHAR(2000) NOT NULL,
-  cl_salt       VARCHAR(1000) NOT NULL,
-  cl_postNumber INT           NOT NULL             DEFAULT 0,
-  cl_authentication BIGINT ,
+  cl_id             BIGINT        NOT NULL PRIMARY KEY AUTO_INCREMENT,
+  cl_lastName       VARCHAR(60)   NOT NULL,
+  cl_firstName      VARCHAR(60)   NOT NULL,
+  cl_login          VARCHAR(128),
+  cl_mail           VARCHAR(128)  NOT NULL,
+  cl_admin          BOOLEAN       NOT NULL,
+  cl_createdAt      DATETIME      NOT NULL,
+  cl_lastLogIn      DATETIME,
+  cl_password       VARCHAR(2000) NOT NULL,
+  cl_salt           VARCHAR(1000) NOT NULL,
+  cl_postNumber     INT           NOT NULL             DEFAULT 0,
+  cl_authentication BIGINT,
   UNIQUE (cl_mail),
   UNIQUE (cl_login),
   FOREIGN KEY (cl_authentication) REFERENCES Authentication (au_id)
@@ -31,13 +31,15 @@ CREATE TABLE Client (
 CREATE TABLE Role (
   ri_id    BIGINT      NOT NULL  PRIMARY KEY AUTO_INCREMENT,
   ri_label VARCHAR(60) NOT NULL,
+
   UNIQUE (ri_label)
 );
 
 CREATE TABLE Category (
-  ca_id     BIGINT       NOT NULL  PRIMARY KEY AUTO_INCREMENT,
-  ca_label  VARCHAR(100) NOT NULL,
-  ca_parent BIGINT,
+  ca_id        BIGINT       NOT NULL  PRIMARY KEY AUTO_INCREMENT,
+  ca_label     VARCHAR(100) NOT NULL,
+  -- ca_childType ENUM ('BOTH', 'MESSAGE', 'CATEGORY'),
+  ca_parent    BIGINT,
   FOREIGN KEY (ca_parent) REFERENCES Category (ca_id)
 );
 
@@ -66,6 +68,10 @@ CREATE TABLE Topic (
 CREATE TABLE JoinCategoryRight (
   jcr_category BIGINT NOT NULL,
   jcr_right    BIGINT NOT NULL,
+  jcr_view     BOOLEAN DEFAULT FALSE,
+  jcr_new      BOOLEAN DEFAULT FALSE,
+
+
   FOREIGN KEY (jcr_category) REFERENCES Category (ca_id),
   FOREIGN KEY (jcr_right) REFERENCES Role (ri_id),
   PRIMARY KEY (jcr_category, jcr_right)
@@ -84,7 +90,14 @@ INSERT INTO Client (
   cl_salt,
   cl_postNumber,
   cl_authentication
-) VALUES (1, 'admin', 'admin', 'admin', 'admin@fake.com', true, now(), null, '123', '123', 0, NULL);
+) VALUES (1, 'admin', 'admin', 'admin', 'admin@fake.com', TRUE, now(), NULL, '123', '123', 0, NULL);
+
+INSERT INTO Role (
+  ri_label
+
+) VALUES ('Guild Master'), ('Officer'), ('Raid Member'), ('Member'), ('Apply'), ('Public');
+
+
 
 # --- !Downs
 DROP TABLE IF EXISTS Client;

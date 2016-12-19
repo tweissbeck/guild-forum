@@ -37,7 +37,7 @@ trait KeyUser {
    */
   protected def cipher(mode: Int, key: Key, data: String,
                        transformInput: (String) => Array[Byte],
-                       outputTransform: (Array[Byte]) => String)(implicit algo: String) = {
+                       outputTransform: (Array[Byte]) => String)(implicit algo: String): String = {
     val c = Cipher.getInstance(algo)
     c.init(mode.toInt, key)
     outputTransform(c.doFinal(transformInput(data)))
@@ -75,7 +75,6 @@ object Password {
    * @return the hashed password
    */
   def hash(password: String, salt: String): String = {
-    println(s"salt = $salt")
     val messageDigest = MessageDigest.getInstance("SHA-256")
     val passwordWithSalt = s"$salt:$password"
     Codecs.toHexString(messageDigest.digest(passwordWithSalt.getBytes("UTF-8")))

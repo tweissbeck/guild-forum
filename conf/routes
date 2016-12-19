@@ -15,6 +15,8 @@ GET         /admin/user/delete/:id          controllers.UserController.delete(id
 # JSON api
 GET         /api/admin/user/list            controllers.UserController.jsonList
 
+POST        /api/login                      controllers.AuthenticationController.loginApi
+
 # Authentication routes
 GET         /login                          controllers.AuthenticationController.login
 POST        /login                          controllers.AuthenticationController.loginPost
