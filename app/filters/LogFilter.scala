@@ -10,8 +10,8 @@ import play.api.mvc._
 import scala.concurrent.ExecutionContext
 
 /**
- * Created by tweissbeck on 22/06/2016.
- */
+  * Created by tweissbeck on 22/06/2016.
+  */
 class LogFilter @Inject()(implicit ec: ExecutionContext) extends EssentialFilter {
   def apply(nextFilter: EssentialAction) = new EssentialAction {
     def apply(requestHeader: RequestHeader) = {
@@ -24,10 +24,11 @@ class LogFilter @Inject()(implicit ec: ExecutionContext) extends EssentialFilter
 
         val endTime = System.currentTimeMillis
         val requestTime = endTime - startTime
-
-        Logger.info(s"${requestHeader.method} ${requestHeader.uri} took ${requestTime}ms and returned ${result.header.status}")
-        result.withHeaders("Request-Time" -> requestTime.toString)
-
+        if (!requestHeader.uri.contains("assets/")) {
+          Logger.info(
+            s"${requestHeader.method} ${requestHeader.uri} took ${requestTime}ms and returned ${result.header.status}")
+        }
+        result
       }
     }
   }
