@@ -8,6 +8,7 @@ menu.sign.off=Se déconnecter
 menu.login=Connexion
 menu.sign.in=Besoin d'un compte?
 menu.account=Compte
+menu.join.us=Nous rejoindre
 
 
 # #### FORMS
