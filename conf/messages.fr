@@ -30,6 +30,26 @@ user.id=Id
 user.createdAt=Date de création
 user.salt=Salt
 
+# Join us form
+join.us.irl= Mais qui es-tu ?
+join.us.pseudo= Vore prénom/pseudo
+join.us.age=Votre âge
+join.us.share=Ce que vous avez envie de partager avec nous
+
+join.us.in.game=Et toi à quoi tu joues ?
+join.us.char.name=Nom de votre personnage
+join.us.char.armory=Lien vers l''armurerie
+join.us.char.strength.and.weakness=Force et faiblesse de votre personnage/spécialisation
+join.us.addons=Vos addons
+join.us.ui.link=Un lien vers une capture d'écran de votre UI en raid
+
+join.us.you.and.us=Pourquoi es-tu ici ?
+join.us.why=Pourquoi nous rejoindre ?
+join.us.attempt=Quelles sont vos attentes vis à vis du PvE HL au sein de notre guilde ?
+join.us.why.you=Que pouvez vous apportez à notre guilde ? (ou comment vous décririez-vous en tant que joueur?)
+join.us.charte=Avez vous lu la Charte de guilde ?
+
+
 
 
 # #### Validation error

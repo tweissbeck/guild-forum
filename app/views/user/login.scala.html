@@ -2,7 +2,7 @@
 
 @(form: Form[LoginForm])(implicit messagesApi: MessagesApi)
 
-@main(messagesApi.apply("form.login.title"), None) {
+@main(messagesApi.apply("form.login.title"), None, None) {
     @utils.centerContent(6, 3) {
         <form action="@routes.AuthenticationController.loginPost()" method="POST">
             @if(form.hasGlobalErrors && form.globalError.get.message.equals("NotAuthenticated")) {

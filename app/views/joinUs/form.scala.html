@@ -1,0 +1,128 @@
+@import forms.FormConfig
+@import views.Section
+@(config: FormConfig)(implicit messapeApi: MessagesApi)
+@main(messapeApi.apply(""), None, Section.JOIN_US) {
+    <div class="container">
+        <form action="@routes.JoinUsController.post()" method="post">
+            @* IRL presentation *@
+            <div class="row">
+                <h3>@messapeApi.apply("join.us.irl")</h3>
+            </div>
+            <div class="row">
+                <div class="col-sm-4">
+                    <div class="form-group">
+                        <label for="name">@messapeApi("join.us.pseudo")</label>
+                        <input type="text" class="form-control" id="name"/>
+                    </div>
+                </div>
+                <div class="col-sm-2 offset-sm-1">
+                    <div class="form-group">
+                        <label for="age">@messapeApi("join.us.age")</label>
+                        <input type="text" class="form-control" id="age"/>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-sm-11">
+                    <div class="form-group">
+                        <label for="share">@messapeApi("join.us.share")</label>
+                        <textarea class="form-control" rows="3" id="share"></textarea>
+                    </div>
+                </div>
+            </div>
+
+            @* In game presentation *@
+            <div class="row">
+                <h3>@messapeApi.apply("join.us.in.game")</h3>
+            </div>
+            <div class="row">
+                <div class="col-sm-3">
+                    <div class="form-group">
+                        <label for="charName">@messapeApi("join.us.char.name")</label>
+                        <input type="text" class="form-control" id="charName"/>
+                    </div>
+                </div>
+                <div class="col-sm-7 offset-sm-1">
+                    <div class="form-group">
+                        <label for="charArmory">@messapeApi("join.us.char.armory")</label>
+                        <input type="text" class="form-control" id="charArmory"/>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-sm-11">
+                    <div class="form-group">
+                        <label for="charStrengthAndWeakness">@messapeApi("join.us.char.strength.and.weakness")</label>
+                        <textarea class="form-control" rows="3" id="charStrengthAndWeakness"></textarea>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-sm-8">
+                    <div class="form-group">
+                        <label for="addons">@messapeApi("join.us.addons")</label>
+                        <input type="text" class="form-control" id="addons"/>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-sm-8">
+                    <div class="form-group">
+                        <label for="uiLink">@messapeApi("join.us.ui.link")</label>
+                        <input type="text" class="form-control" id="uiLink"/>
+                    </div>
+                </div>
+            </div>
+
+            @* Guild related *@
+            <div class="row">
+                <h3>@messapeApi.apply("join.us.you.and.us")</h3>
+            </div>
+            <div class="row">
+                <div class="col-sm-11">
+                    <div class="form-group">
+                        <label for="why">@messapeApi("join.us.why")</label>
+                        <textarea class="form-control" rows="3" id="why"></textarea>
+                    </div>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-sm-11">
+                    <div class="form-group">
+                        <label for="attempt">@messapeApi("join.us.attempt")</label>
+                        <textarea class="form-control" rows="3" id="attempt"></textarea>
+                    </div>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-sm-11">
+                    <div class="form-group">
+                        <label for="attempt">@messapeApi("join.us.why.you")</label>
+                        <textarea class="form-control" rows="3" id="attempt"></textarea>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-sm-3">
+                    <div class="form-check">
+                        <label class="form-check-label">
+                            <input type="checkbox" class="form-check-input">
+                            @messapeApi("join.us.charte")
+                        </label>
+                    </div>
+                </div>
+
+            </div>
+            @if(config.recaptchaConfig.recaptchaEnabled) {
+                <div class="row">
+                    <div class="col-sm-5">
+                        <div class="g-recaptcha" data-sitekey="@config.recaptchaConfig.publicKey"></div>
+                    </div>
+                </div>
+            }
+            <button type="submit" class="btn btn-primary">@messapeApi.apply("join.us.submit")</button>
+        </form>
+    </div>
+}

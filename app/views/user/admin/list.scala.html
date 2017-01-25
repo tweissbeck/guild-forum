@@ -2,7 +2,7 @@
 @import services.database.User
 @(user: User, users: Seq[User])(implicit messagesApi: MessagesApi)
 
-@main(messagesApi.apply("user.list.page.title"), Some(user)) {
+@main(messagesApi.apply("user.list.page.title"), Some(user), None) {
     <div class="container">
         <div class="row">
             <div class="col-lg-12">

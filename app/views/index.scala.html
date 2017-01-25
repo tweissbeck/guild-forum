@@ -1,6 +1,7 @@
 @import services.database.User
+@import views.Section
 @(user: Option[User])(implicit messagesApi: MessagesApi)
 
-@main("Beta - Forum", user) {
+@main("Beta - Forum", user, Section.HOME) {
 
 }

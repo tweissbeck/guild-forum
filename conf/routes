@@ -27,6 +27,10 @@ GET         /oauth/login                    controllers.AuthenticationController
 GET         /oauth/authorize/discord        controllers.AuthenticationController.handleAuthorize
 GET         /oauth/token/discord            controllers.AuthenticationController.handleToken
 
+#Join us
+GET         /joinUs                         controllers.JoinUsController.get
+POST         /joinUs                        controllers.JoinUsController.post
+
 
 # Map static resources from the /public folder to the /assets URL path
 GET         /assets/*file                   controllers.Assets.versioned(path="/public", file: Asset)
