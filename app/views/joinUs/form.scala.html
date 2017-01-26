@@ -1,6 +1,10 @@
-@import forms.FormConfig
+@import commons.form._
+@import forms.{ApplyForm, FormConfig, Helper}
 @import views.Section
-@(config: FormConfig)(implicit messapeApi: MessagesApi)
+
+
+@(config: FormConfig, form: Form[ApplyForm])(implicit messapeApi: MessagesApi)
+
 @main(messapeApi.apply(""), None, Section.JOIN_US) {
     <div class="container">
         <form action="@routes.JoinUsController.post()" method="post">
@@ -10,24 +14,21 @@
             </div>
             <div class="row">
                 <div class="col-sm-4">
-                    <div class="form-group">
-                        <label for="name">@messapeApi("join.us.pseudo")</label>
-                        <input type="text" class="form-control" id="name"/>
-                    </div>
+                @inputText("name", "name", "join.us.pseudo", None, Helper.decorateFormGroup(form, "name", true), Helper.value(form, "name"), Helper.decorateField(form, "name")) {
+                    @Helper.fieldFeedback(form, "name")
+                }
                 </div>
-                <div class="col-sm-2 offset-sm-1">
-                    <div class="form-group">
-                        <label for="age">@messapeApi("join.us.age")</label>
-                        <input type="text" class="form-control" id="age"/>
-                    </div>
+                <div class="col-sm-4 offset-sm-1">
+                @inputText("age", "age", "join.us.age", None, Helper.decorateFormGroup(form, "age", true), Helper.value(form, "age"), Helper.decorateField(form, "age")) {
+                    @Helper.fieldFeedback(form, "age")
+                }
                 </div>
             </div>
             <div class="row">
                 <div class="col-sm-11">
-                    <div class="form-group">
-                        <label for="share">@messapeApi("join.us.share")</label>
-                        <textarea class="form-control" rows="3" id="share"></textarea>
-                    </div>
+                @textArea(3, "share", "share", "join.us.share", None, Helper.decorateFormGroup(form, "share", true), Helper.value(form, "share"), Helper.decorateField(form, "share")) {
+                    @Helper.fieldFeedback(form, "share")
+                }
                 </div>
             </div>
 
@@ -37,40 +38,35 @@
             </div>
             <div class="row">
                 <div class="col-sm-3">
-                    <div class="form-group">
-                        <label for="charName">@messapeApi("join.us.char.name")</label>
-                        <input type="text" class="form-control" id="charName"/>
-                    </div>
+                @inputText("charName", "charName", "join.us.char.name", None, Helper.decorateFormGroup(form, "charName", true), Helper.value(form, "charName"), Helper.decorateField(form, "charName")) {
+                    @Helper.fieldFeedback(form, "charName")
+                }
                 </div>
                 <div class="col-sm-7 offset-sm-1">
-                    <div class="form-group">
-                        <label for="charArmory">@messapeApi("join.us.char.armory")</label>
-                        <input type="text" class="form-control" id="charArmory"/>
-                    </div>
+                @inputText("charArmory", "charArmory", "join.us.char.armory", None, Helper.decorateFormGroup(form, "charArmory", true), Helper.value(form, "charArmory"), Helper.decorateField(form, "charArmory")) {
+                    @Helper.fieldFeedback(form, "charArmory")
+                }
                 </div>
             </div>
             <div class="row">
                 <div class="col-sm-11">
-                    <div class="form-group">
-                        <label for="charStrengthAndWeakness">@messapeApi("join.us.char.strength.and.weakness")</label>
-                        <textarea class="form-control" rows="3" id="charStrengthAndWeakness"></textarea>
-                    </div>
+                @textArea(3, "charStrengthAndWeakness", "charStrengthAndWeakness", "join.us.char.strength.and.weakness", None, Helper.decorateFormGroup(form, "charStrengthAndWeakness", true), Helper.value(form, "charStrengthAndWeakness"), Helper.decorateField(form, "charStrengthAndWeakness")) {
+                    @Helper.fieldFeedback(form, "charStrengthAndWeakness")
+                }
                 </div>
             </div>
             <div class="row">
                 <div class="col-sm-8">
-                    <div class="form-group">
-                        <label for="addons">@messapeApi("join.us.addons")</label>
-                        <input type="text" class="form-control" id="addons"/>
-                    </div>
+                @inputText("addons", "addons", "join.us.addons", None, Helper.decorateFormGroup(form, "addons", true), Helper.value(form, "addons"), Helper.decorateField(form, "addons")) {
+                    @Helper.fieldFeedback(form, "addons")
+                }
                 </div>
             </div>
             <div class="row">
                 <div class="col-sm-8">
-                    <div class="form-group">
-                        <label for="uiLink">@messapeApi("join.us.ui.link")</label>
-                        <input type="text" class="form-control" id="uiLink"/>
-                    </div>
+                @inputText("uiLink", "uiLink", "join.us.ui.link", None, Helper.decorateFormGroup(form, "uiLink", true), Helper.value(form, "uiLink"), Helper.decorateField(form, "uiLink")) {
+                    @Helper.fieldFeedback(form, "uiLink")
+                }
                 </div>
             </div>
 
@@ -81,8 +77,9 @@
             <div class="row">
                 <div class="col-sm-11">
                     <div class="form-group">
-                        <label for="why">@messapeApi("join.us.why")</label>
-                        <textarea class="form-control" rows="3" id="why"></textarea>
+                    @textArea(3, "why", "why", "join.us.why", None, Helper.decorateFormGroup(form, "why", true), Helper.value(form, "why"), Helper.decorateField(form, "why")) {
+                        @Helper.fieldFeedback(form, "addons")
+                    }
                     </div>
                 </div>
             </div>
@@ -90,8 +87,9 @@
             <div class="row">
                 <div class="col-sm-11">
                     <div class="form-group">
-                        <label for="attempt">@messapeApi("join.us.attempt")</label>
-                        <textarea class="form-control" rows="3" id="attempt"></textarea>
+                    @textArea(3, "attempt", "attempt", "join.us.attempt", None, Helper.decorateFormGroup(form, "attempt", true), Helper.value(form, "attempt"), Helper.decorateField(form, "attempt")) {
+                        @Helper.fieldFeedback(form, "attempt")
+                    }
                     </div>
                 </div>
             </div>
@@ -99,18 +97,22 @@
             <div class="row">
                 <div class="col-sm-11">
                     <div class="form-group">
-                        <label for="attempt">@messapeApi("join.us.why.you")</label>
-                        <textarea class="form-control" rows="3" id="attempt"></textarea>
+                    @textArea(3, "whyYou", "whyYou", "join.us.why.you", None, Helper.decorateFormGroup(form, "whyYou", true), Helper.value(form, "whyYou"), Helper.decorateField(form, "whyYou")) {
+                        @Helper.fieldFeedback(form, "attempt")
+                    }
                     </div>
                 </div>
             </div>
             <div class="row">
                 <div class="col-sm-3">
-                    <div class="form-check">
+                    <div class="form-check @Helper.decorateFormGroup(form, "charte", true)">
                         <label class="form-check-label">
-                            <input type="checkbox" class="form-check-input">
+                            <input @if(Helper.checked(form, "charte")) {
+                                checked="checked"
+                            } value="true" name="charte" id="charte" type="checkbox" class="form-check-input">
                             @messapeApi("join.us.charte")
                         </label>
+                        @Helper.fieldFeedback(form, "charte")
                     </div>
                 </div>
 
@@ -122,7 +124,9 @@
                     </div>
                 </div>
             }
-            <button type="submit" class="btn btn-primary">@messapeApi.apply("join.us.submit")</button>
+            <div class="row">
+                <button type="submit" class="btn btn-primary">@messapeApi.apply("join.us.submit")</button>
+            </div>
         </form>
     </div>
 }

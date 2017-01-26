@@ -48,9 +48,12 @@ join.us.why=Pourquoi nous rejoindre ?
 join.us.attempt=Quelles sont vos attentes vis à vis du PvE HL au sein de notre guilde ?
 join.us.why.you=Que pouvez vous apportez à notre guilde ? (ou comment vous décririez-vous en tant que joueur?)
 join.us.charte=Avez vous lu la Charte de guilde ?
+join.us.submit=Valider
 
 
 
 
 # #### Validation error
 error.required=Ce champ ne doit pas être vide
+error.number=Un nombre est attendu ici
+error.charte=Merci de lire la charte!

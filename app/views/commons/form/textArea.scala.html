@@ -1,0 +1,12 @@
+@(cols: Int, name: String, id: String, key: String, placeHolderKey: Option[String], formGroupClass: Option[String], fieldValue: Option[String], fieldClass: Option[String])(content: Html)(implicit messageApi: MessagesApi)
+
+<div class="form-group @if(formGroupClass.isDefined) {@formGroupClass.get}">
+    <label class="form-control-label" for="@id">@messageApi(key)</label>
+    <textarea cols="@cols" name="@name" @if(fieldValue.isDefined) {
+        value="@fieldValue.get"
+    } class="form-control @if(fieldClass.isDefined) {@fieldClass.get}" id="@id" >
+        @*Keep this closing tag to avoid a bug where the rest of the content is embedded in this text area *@
+    </textarea>
+    @content
+
+</div>
