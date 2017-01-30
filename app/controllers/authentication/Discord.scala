@@ -2,7 +2,6 @@ package controllers.authentication
 
 import com.typesafe.config.ConfigFactory
 import controllers.composition.Authenticated
-import controllers.routes
 import play.api.Logger
 import play.api.libs.json.{JsValue, Json}
 import play.api.libs.ws._
@@ -38,7 +37,7 @@ trait Discord extends Controller {
 
         Redirect(discordApi.getAuthorizeUrl(), params)
       }
-      case Some(u) => Redirect(routes.HomeController.index())
+      case Some(u) => Redirect(controllers.routes.HomeController.index())
     }
   }
 
@@ -69,7 +68,8 @@ trait Discord extends Controller {
               val accessToken: AccessToken = buildAccessToken(json)
               accessToken
             case _ =>
-              throw new Exception(s"Access token request to ${request.url} failed with status ${resp.statusText}. Response: ${resp.json}")
+              throw new Exception(
+                s"Access token request to ${request.url} failed with status ${resp.statusText}. Response: ${resp.json}")
           }
         }
       }
@@ -97,20 +97,20 @@ trait Discord extends Controller {
                       case _ => Logger.error(s"${response.status}")
                     }
                 }
-                Redirect(routes.HomeController.index())
+                Redirect(controllers.routes.HomeController.index())
               }
             } recover { case t: Throwable =>
               Logger.error("Get token failed", t)
-              Redirect(routes.HomeController.index())
+              Redirect(controllers.routes.HomeController.index())
             }
           }
           case None => {
             Logger.error(s"Failed to get code from request: ${request.uri}")
-            Future(Redirect(routes.HomeController.index()))
+            Future(Redirect(controllers.routes.HomeController.index()))
           }
         }
       case Some(_) => {
-        Future(Redirect(routes.HomeController.index()))
+        Future(Redirect(controllers.routes.HomeController.index()))
       }
     }
 
@@ -119,6 +119,6 @@ trait Discord extends Controller {
   def handleToken() = Auth {
     implicit request =>
       println(request.uri)
-      Redirect(routes.HomeController.index())
+      Redirect(controllers.routes.HomeController.index())
   }
 }

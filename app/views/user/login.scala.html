@@ -4,7 +4,7 @@
 
 @main(messagesApi.apply("form.login.title"), None, None) {
     @utils.centerContent(6, 3) {
-        <form action="@routes.AuthenticationController.loginPost()" method="POST">
+        <form action="@controllers.authentication.routes.AuthenticationController.loginPost()" method="POST">
             @if(form.hasGlobalErrors && form.globalError.get.message.equals("NotAuthenticated")) {
                 <div class="alert alert-danger" role="alert">
                 @messagesApi.apply("form.login.not.authenticated")

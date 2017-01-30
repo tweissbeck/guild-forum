@@ -1,11 +1,11 @@
-package controllers
+package controllers.authentication
 
 import javax.inject.Inject
 
-import api.{ErrorResponse, Response}
 import api.authentication.LoginResponse
-import controllers.authentication.Discord
+import api.{ErrorResponse, Response}
 import controllers.composition.Authenticated
+import controllers.{AuthenticationCookie, FlashConstant, JWT, routes}
 import forms.LoginForm
 import play.api.Logger
 import play.api.data.Forms._
@@ -43,7 +43,7 @@ class AuthenticationController @Inject()(db: Database, implicit val messagesApi:
     cookie match {
       case Some(cookie) => {
         Logger.info("User already logged")
-        Redirect(routes.HomeController.index())
+        Redirect(controllers.routes.HomeController.index())
       }
       case None => {
         val uri = request.flash.get(FlashConstant.requestedResource)
@@ -77,7 +77,7 @@ class AuthenticationController @Inject()(db: Database, implicit val messagesApi:
               if (request.flash.get(FlashConstant.requestedResource).nonEmpty) {
                 applyCookie(Redirect(request.flash.get(FlashConstant.requestedResource).get))
               } else {
-                applyCookie(Redirect(routes.HomeController.index()))
+                applyCookie(Redirect(controllers.routes.HomeController.index()))
               }
             case None => {
               Ok(views.html.user.login(loginForm.withGlobalError("NotAuthenticated")))
@@ -94,10 +94,10 @@ class AuthenticationController @Inject()(db: Database, implicit val messagesApi:
     */
   def logout() = Auth { implicit request =>
     request.user match {
-      case Some(u) => Redirect(routes.HomeController.index())
+      case Some(u) => Redirect(controllers.routes.HomeController.index())
         .discardingCookies(DiscardingCookie(AuthenticationCookie.NAME))
         .withNewSession
-      case None => Redirect(routes.HomeController.index())
+      case None => Redirect(controllers.routes.HomeController.index())
     }
   }
 

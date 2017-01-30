@@ -25,7 +25,7 @@ class AdminAction @Inject()(implicit db: Database) extends ActionBuilder[AdminRe
           case None => Logger.info(s"${request.uri} redirected to login page cause no user")
         }
 
-        Results.Redirect(routes.AuthenticationController.login())
+        Results.Redirect(controllers.authentication.routes.AuthenticationController.login())
           .flashing("actionRequested" -> s"${request.uri}")
       }
     }

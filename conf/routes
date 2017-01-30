@@ -15,17 +15,17 @@ GET         /admin/user/delete/:id          controllers.UserController.delete(id
 # JSON api
 GET         /api/admin/user/list            controllers.UserController.jsonList
 
-POST        /api/login                      controllers.AuthenticationController.loginApi
+POST        /api/login                      controllers.authentication.AuthenticationController.loginApi
 
 # Authentication routes
-GET         /login                          controllers.AuthenticationController.login
-POST        /login                          controllers.AuthenticationController.loginPost
+GET         /login                          controllers.authentication.AuthenticationController.login
+POST        /login                          controllers.authentication.AuthenticationController.loginPost
 GET         /signIn                         controllers.UserController.signIn
 POST        /signIn                         controllers.UserController.signInPost
-GET         /logout                         controllers.AuthenticationController.logout
-GET         /oauth/login                    controllers.AuthenticationController.loginWithOauth
-GET         /oauth/authorize/discord        controllers.AuthenticationController.handleAuthorize
-GET         /oauth/token/discord            controllers.AuthenticationController.handleToken
+GET         /logout                         controllers.authentication.AuthenticationController.logout
+GET         /oauth/login                    controllers.authentication.AuthenticationController.loginWithOauth
+GET         /oauth/authorize/discord        controllers.authentication.AuthenticationController.handleAuthorize
+GET         /oauth/token/discord            controllers.authentication.AuthenticationController.handleToken
 
 #Join us
 GET         /joinUs                         controllers.JoinUsController.get
