@@ -7,8 +7,8 @@ import play.api.Logger
 import play.api.libs.json.{JsValue, Json}
 import play.api.libs.ws._
 import play.api.mvc._
-import services.discord.token.BearerToken
-import services.discord.{AccessToken, DiscordApi}
+import services.extern.discord.token.BearerToken
+import services.extern.discord.{AccessToken, DiscordApi}
 
 import scala.concurrent.{ExecutionContext, Future}
 

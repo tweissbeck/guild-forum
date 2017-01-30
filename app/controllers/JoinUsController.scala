@@ -8,7 +8,7 @@ import play.api.data.Forms._
 import play.api.data._
 import play.api.i18n.{I18nSupport, MessagesApi}
 import play.api.mvc.{Action, Controller}
-import services.CaptchaValidator
+import services.extern.captcha.CaptchaValidator
 
 import scala.concurrent.Await
 import scala.concurrent.duration.Duration

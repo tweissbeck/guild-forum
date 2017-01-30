@@ -6,7 +6,7 @@ import controllers.routes
 import play.api.Logger
 import play.api.db.Database
 import play.api.mvc.{ActionBuilder, Request, Result, Results}
-import services.database.{AdminUser, User, UserService}
+import services.intern.database.{AdminUser, User, UserService}
 
 import scala.concurrent.Future
 import scala.concurrent.ExecutionContext.Implicits.global

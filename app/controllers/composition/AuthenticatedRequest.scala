@@ -1,7 +1,7 @@
 package controllers.composition
 
 import play.api.mvc.{Request, WrappedRequest}
-import services.database.User
+import services.intern.database.User
 
 /** *
   * A request that hold a user if a logged in user can be find on request (header/cookie)

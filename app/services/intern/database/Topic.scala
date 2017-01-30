@@ -1,4 +1,4 @@
-package services.database
+package services.intern.database
 
 import java.sql.Connection
 import anorm.SqlParser._

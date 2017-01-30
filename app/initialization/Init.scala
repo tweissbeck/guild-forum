@@ -5,7 +5,7 @@ import javax.inject.{Inject, Singleton}
 import com.typesafe.config.ConfigFactory
 import play.api.Logger
 import play.api.db.Database
-import services.database.UserService
+import services.intern.database.UserService
 
 /**
   * Created by tweissbeck on 05/10/2016.

@@ -11,7 +11,7 @@ import play.api.db.Database
 import play.api.i18n.{I18nSupport, MessagesApi}
 import play.api.libs.json._
 import play.api.mvc.{Action, Controller}
-import services.database.{User, UserService}
+import services.intern.database.{User, UserService}
 
 
 @Singleton

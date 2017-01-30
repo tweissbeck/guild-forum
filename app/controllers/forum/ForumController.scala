@@ -5,7 +5,7 @@ import javax.inject.Inject
 import controllers.composition.Authenticated
 import play.api.db.Database
 import play.api.mvc.Controller
-import services.database.Topic
+import services.intern.database.Topic
 
 /**
   * Controller that handle forum pages

@@ -15,8 +15,8 @@ import play.api.i18n.{I18nSupport, MessagesApi}
 import play.api.libs.json.{JsResultException, JsValue, Json, Writes}
 import play.api.libs.ws.WSClient
 import play.api.mvc.{Action, Controller, DiscardingCookie, Result}
-import services.AuthenticationService
-import services.discord.DiscordService
+import services.extern.discord.DiscordService
+import services.intern.AuthenticationService
 
 import scala.concurrent.ExecutionContext
 

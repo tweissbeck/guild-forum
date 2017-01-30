@@ -1,9 +1,10 @@
-package services
+package services.intern
 
 import java.sql.Connection
 
 import play.api.Logger
-import services.database.{User, UserService}
+import services.Password
+import services.intern.database.{User, UserService}
 
 
 object AuthenticationService {

@@ -1,4 +1,4 @@
-package services.discord.token
+package services.extern.discord.token
 
 /**
  * Created by Thierry on 20/08/2016.

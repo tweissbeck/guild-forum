@@ -6,7 +6,7 @@ import controllers.{AuthenticationCookie, JWT}
 import play.api.Logger
 import play.api.db.Database
 import play.api.mvc._
-import services.database.UserService
+import services.intern.database.UserService
 
 import scala.concurrent.Future
 

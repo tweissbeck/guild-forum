@@ -1,7 +1,7 @@
 package forms
 
 import forms.config.RecaptchaConfig
-import services.RecaptchaHelper
+import services.extern.captcha.RecaptchaHelper
 
 /**
   * This bean is used to handle form configuration that will affect the render of form in views.html files.

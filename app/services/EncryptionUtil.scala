@@ -7,7 +7,7 @@ import javax.xml.bind.DatatypeConverter
 
 import com.typesafe.config.ConfigFactory
 import play.api.libs.Codecs
-import services.database.User
+import services.intern.database.User
 
 /**
  * Define an helper to get a SecretKey from its alias and its algorithm

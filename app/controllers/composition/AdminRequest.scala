@@ -1,7 +1,7 @@
 package controllers.composition
 
 import play.api.mvc.{Request, WrappedRequest}
-import services.database.AdminUser
+import services.intern.database.AdminUser
 
 /**
   * Created by tweissbeck on 30/09/2016.

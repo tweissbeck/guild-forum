@@ -1,5 +1,5 @@
 @*FIXME in progress*@
-@import services.database.User
+@import services.intern.database.User
 @(user: User, users: Seq[User])(implicit messagesApi: MessagesApi)
 
 @main(messagesApi.apply("user.list.page.title"), Some(user), None) {

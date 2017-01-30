@@ -8,7 +8,7 @@ import org.jose4j.jwt.JwtClaims
 import org.jose4j.jwt.consumer.{InvalidJwtException, JwtConsumerBuilder}
 import play.api.Logger
 import play.api.mvc.Cookie
-import services.database.User
+import services.intern.database.User
 import services.{IdEncryptionUtil, KeyUser}
 
 /**

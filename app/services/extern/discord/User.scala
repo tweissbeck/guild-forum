@@ -1,4 +1,4 @@
-package services.discord
+package services.extern.discord
 
 /**
   * Discord User <br/>

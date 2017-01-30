@@ -1,11 +1,11 @@
-package services.discord
+package services.extern.discord
 
 import javax.inject.Inject
 
 import com.google.inject.Singleton
 import com.typesafe.config.ConfigFactory
 import play.api.libs.ws._
-import services.discord.token.Token
+import services.extern.discord.token.Token
 
 import scala.concurrent.Future
 
