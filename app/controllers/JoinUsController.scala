@@ -1,5 +1,6 @@
 package controllers
 
+import java.util.concurrent.TimeUnit
 import javax.inject.Inject
 
 import forms.{ApplyForm, FormConfig}
@@ -7,11 +8,16 @@ import play.api.data.Forms._
 import play.api.data._
 import play.api.i18n.{I18nSupport, MessagesApi}
 import play.api.mvc.{Action, Controller}
+import services.CaptchaValidator
+
+import scala.concurrent.Await
+import scala.concurrent.duration.Duration
 
 /**
   * Created by tweissbeck on 24/01/2017.
   */
-class JoinUsController @Inject()(implicit val messagesApi: MessagesApi) extends Controller with I18nSupport {
+class JoinUsController @Inject()(implicit val messagesApi: MessagesApi, captchaValidator: CaptchaValidator)
+  extends Controller with I18nSupport {
 
   val applyForm = Form(
     mapping(
@@ -41,14 +47,16 @@ class JoinUsController @Inject()(implicit val messagesApi: MessagesApi) extends 
     implicit request =>
       applyForm.bindFromRequest().fold(
         withErrors => {
-          // binding failure, you retrieve the form containing errors:
-          println(withErrors.error("name"))
-          println(withErrors.error("age"))
-          println(withErrors.error("share"))
+          // binding failure, you retrieve the form containing errors
           BadRequest(views.html.joinUs.form(FormConfig(), withErrors))
         },
         data => {
-          Ok("Apply ok")
+          if (Await
+            .result(captchaValidator.validate(data.recaptcha, request.remoteAddress), Duration(3, TimeUnit.SECONDS))) {
+            Ok("Apply ok")
+          } else {
+            Ok("Captcha KO")
+          }
         }
       )
   }
