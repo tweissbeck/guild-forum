@@ -5,6 +5,7 @@ import java.time.LocalDateTime
 
 import anorm.SqlParser._
 import anorm._
+import com.tw.discord.api.user.DiscordUser
 import forms.SignInForm
 import services.{Password, Salt}
 
@@ -12,6 +13,7 @@ import scala.util.Random
 
 
 object UserService {
+
 
   private val SALT_KEY = "salt"
   val userParser = get[Long]("cl_id") ~ get[String]("cl_lastName") ~ get[String]("cl_firstName") ~
@@ -64,6 +66,40 @@ object UserService {
         WHERE cl_id = {id}
       """
     SQL(query).on("id" -> userId).as(userParser.singleOpt)
+  }
+
+  /**
+    * Create new user from discord credentials
+    *
+    * @param user
+    * @param password
+    * @param connection
+    * @return
+    */
+  def createUser(user: DiscordUser, password: String)(implicit connection: Connection): User = {
+    val createdAt = LocalDateTime.now()
+    val salt = Random.alphanumeric.take(50).mkString
+    val encryptedSalt = Salt.encrypt(salt, SALT_KEY)
+    val hashPassword = Password.hash(password, salt)
+    val query =
+      s"""
+        INSERT INTO $USER
+        (cl_firstName, cl_lastName, cl_login, cl_mail, cl_password, cl_salt, cl_createdAt, cl_admin)
+        VALUES
+        ({lastName}, {firstName}, {login}, {mail}, {password}, {salt}, {createdAt}, {admin})
+      """
+    val userId: Option[Long] = SQL(query).
+      on(
+        "lastName" -> "",
+        "firstName" -> "",
+        "salt" -> encryptedSalt,
+        "password" -> hashPassword,
+        "createdAt" -> createdAt,
+        "login" -> user.id,
+        "mail" -> user.email.get,
+        "admin" -> false
+      ).executeInsert()
+    findById(userId.get).get
   }
 
   def createUser(data: SignInForm, admin: Boolean = false)(implicit c: Connection): User = {

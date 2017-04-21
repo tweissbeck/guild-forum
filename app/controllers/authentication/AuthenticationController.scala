@@ -4,8 +4,10 @@ import javax.inject.Inject
 
 import api.authentication.LoginResponse
 import api.{ErrorResponse, Response}
+import com.tw.discord.api.DiscordApi
+import com.typesafe.config.{Config, ConfigFactory}
 import controllers.composition.Authenticated
-import controllers.{AuthenticationCookie, FlashConstant, JWT, routes}
+import controllers.{AuthenticationCookie, FlashConstant, JWT}
 import forms.LoginForm
 import play.api.Logger
 import play.api.data.Forms._
@@ -15,7 +17,6 @@ import play.api.i18n.{I18nSupport, MessagesApi}
 import play.api.libs.json.{JsResultException, JsValue, Json, Writes}
 import play.api.libs.ws.WSClient
 import play.api.mvc.{Action, Controller, DiscardingCookie, Result}
-import services.extern.discord.DiscordService
 import services.intern.AuthenticationService
 
 import scala.concurrent.ExecutionContext
@@ -23,11 +24,12 @@ import scala.concurrent.ExecutionContext
 /**
   * Authentication controller
   */
-class AuthenticationController @Inject()(db: Database, implicit val messagesApi: MessagesApi, val Auth: Authenticated,
-                                         val ws: WSClient, implicit val context: ExecutionContext,
-                                         val discordApi: DiscordService)
+class AuthenticationController @Inject()(val db: Database, implicit val messagesApi: MessagesApi,
+                                         val Auth: Authenticated,
+                                         val ws: WSClient, implicit val context: ExecutionContext )
   extends Controller with I18nSupport with Discord {
 
+  // Let api retrieve discord credential from config
   /** Login form */
   val loginForm = Form(
     mapping(
@@ -74,6 +76,7 @@ class AuthenticationController @Inject()(db: Database, implicit val messagesApi:
               def applyCookie(result: Result): Result = {
                 result.withNewSession.withCookies(AuthenticationCookie.generateCookie(user))
               }
+
               if (request.flash.get(FlashConstant.requestedResource).nonEmpty) {
                 applyCookie(Redirect(request.flash.get(FlashConstant.requestedResource).get))
               } else {

@@ -36,10 +36,10 @@ CREATE TABLE Role (
 );
 
 CREATE TABLE Category (
-  ca_id        BIGINT       NOT NULL  PRIMARY KEY AUTO_INCREMENT,
-  ca_label     VARCHAR(100) NOT NULL,
+  ca_id     BIGINT       NOT NULL  PRIMARY KEY AUTO_INCREMENT,
+  ca_label  VARCHAR(100) NOT NULL,
   -- ca_childType ENUM ('BOTH', 'MESSAGE', 'CATEGORY'),
-  ca_parent    BIGINT,
+  ca_parent BIGINT,
   FOREIGN KEY (ca_parent) REFERENCES Category (ca_id)
 );
 
@@ -65,16 +65,18 @@ CREATE TABLE Topic (
 
 );
 
-CREATE TABLE JoinCategoryRight (
+CREATE TABLE JoinCategoryRole (
   jcr_category BIGINT NOT NULL,
-  jcr_right    BIGINT NOT NULL,
+  jcr_role     BIGINT NOT NULL,
+  -- can view topic with this role in this category ?
   jcr_view     BOOLEAN DEFAULT FALSE,
+  -- can create with this role in this category new topic ?
   jcr_new      BOOLEAN DEFAULT FALSE,
 
 
   FOREIGN KEY (jcr_category) REFERENCES Category (ca_id),
-  FOREIGN KEY (jcr_right) REFERENCES Role (ri_id),
-  PRIMARY KEY (jcr_category, jcr_right)
+  FOREIGN KEY (jcr_role) REFERENCES Role (ri_id),
+  PRIMARY KEY (jcr_category, jcr_role)
 );
 
 INSERT INTO Client (
@@ -97,8 +99,6 @@ INSERT INTO Role (
 
 ) VALUES ('Guild Master'), ('Officer'), ('Raid Member'), ('Member'), ('Apply'), ('Public');
 
-
-
 # --- !Downs
 DROP TABLE IF EXISTS Client;
 DROP TABLE IF EXISTS Authentication;
@@ -106,4 +106,4 @@ DROP TABLE IF EXISTS Role;
 DROP TABLE IF EXISTS Category;
 DROP TABLE IF EXISTS Message;
 DROP TABLE IF EXISTS Topic;
-DROP TABLE IF EXISTS JoinCategoryRight;
+DROP TABLE IF EXISTS JoinCategoryRole;

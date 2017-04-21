@@ -4,10 +4,11 @@ package com.tw.discord.api.user
   * Scopes provide access to certain resources of a user's account. API client or service should only request scopes it requires for operation.
   */
 object OAuth2DiscordScopes extends Enumeration {
+  type OAuth2DiscordScopes = Value
   /**
     * allows /users/@me without email
     */
-  val IDENTITY = Value("identity")
+  val IDENTITY = Value("identify")
   /**
     * enables /users/@me to return an email
     */

@@ -1,43 +1,58 @@
 package com.tw.discord.api
 
-import java.nio.file.Paths
+import com.tw.discord.api.authorize.{BearerToken, BotToken, Token}
+import com.tw.discord.api.user.DiscordUser
+import play.api.libs.functional.syntax._
+import play.api.libs.json.{JsPath, Reads}
+import play.api.libs.ws.{WSClient, WSRequest}
 
-import com.typesafe.config.{Config, ConfigFactory}
-import play.api.libs.json.JsValue
-import play.api.libs.ws.{WSClient, WSRequest, WSResponse}
-
+import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
 
 /**
-  * Discord api entry point
+  * This class define helper to interface with discord OAuth API.
+  *
+  * @param ws Http helper
+  * @param agentUrl the agent url used in userAgent header.
+  * @param version  the version of the client used in userAgent header.
+  * @param clientId discord client id
+  * @param secret   discord client secret
   */
-abstract class DiscordApi(val _agentUrl: Option[String], val _version: Option[String], val _clientId: Option[String],
-                          val _secret: Option[String]) {
+class DiscordApi(val ws: WSClient, val agentUrl: String, val version: String,
+                 val clientId: String,
+                 val secret: String) {
 
-  val ws: WSClient
-  private val config: Config = ConfigFactory.load()
-  private val userAgentUrl: String = if (_agentUrl.isDefined) _agentUrl.get else config
-    .getString("discord.user.agent.url")
-  private val userAgentVersion: String = if (_version.isDefined) _version.get else config
-    .getString("discord.user.agent.version")
-  private val userAgent: String = s"DiscordBot ($userAgentUrl, $userAgentVersion)"
+  private val userAgent: String = s"DiscordBot ($agentUrl, $version)"
   private val discordHost = "https://discordapp.com/api"
 
-  private val userPath = "users"
-  private val accessTokenPath = "oauth2/token"
-  private val authorizePath = "oauth2/authorize"
-  private val clientId: String = if (_clientId.isDefined) _clientId.get else config.getString("discord.client.id")
-  private val secret: String = if (_secret.isDefined) _secret.get else config.getString("discord.client.secret")
+  private val accessTokenPath = "/oauth2/token"
+  private val authorizePath = "/oauth2/authorize"
+  private val requestUserPath = "/users/@me"
+
+  val OAuth2Helper = new OAuth2(clientId, secret, userAgent)
 
   /**
+    * Step 1: redirect user to discord Oauth2 authentication page<br/>
+    * Return the authorize url.
+    *
+    * @see [[OAuth2Helper.buildAuthorizeParam()]] an helper to build authorize params
+    */
+  val authorizeUrl: String = {
+    discordHost + authorizePath
+  }
+
+  /**
+    * Step 2: server to server call that give access to user token <br/>
     * Build access token request and send it to discord.
     *
     * @param code        [[String]]:     the code given buy OAuth2 provider
     * @param redirectUrl [[String]]: have to be the same provided in [[OAuth2.buildAuthorizeParam()]]
     * @param f           function ([[WSRequest]] => [[WSRequest]]) default to identity. Can be use to customize request
-    * @return the response the [[WSResponse]] as a [[scala.concurrent.Future]]
+    * @return the access token
     */
-  def accessToken(code: String, redirectUrl: String, f: (WSRequest => WSRequest) = it => it): Future[WSResponse] = {
+  @throws(classOf[RequestFailedException]) // when request failed
+  def callAccessToken(code: String, redirectUrl: String,
+                      f: (WSRequest => WSRequest) = it => it): Future[AccessToken] = {
     val params: Map[String, Seq[String]] = Map(
       "grant_type" -> Seq("authorization_code"),
       "code" -> Seq(code),
@@ -45,30 +60,60 @@ abstract class DiscordApi(val _agentUrl: Option[String], val _version: Option[St
       "client_id" -> Seq(clientId),
       "client_secret" -> Seq(secret)
     )
-    val tokenUrl = Paths.get(discordHost, accessTokenPath).toUri.toURL.toExternalForm
-    println(tokenUrl)
+    val tokenUrl = discordHost + accessTokenPath
     val request = ws.url(tokenUrl).withHeaders("Content-Type" -> "application/x-www-form-urlencoded")
-    f(request).post(params)
-
+    val response = f(request).post(params)
+    response map {
+      resp => {
+        resp.status match {
+          case 200 => val json = resp.json
+            val accessToken: AccessToken = OAuth2Helper.parseAccessToken(json)
+            accessToken
+          case s =>
+            throw new RequestFailedException(s, request.url, Some(resp.body))
+        }
+      }
+    }
   }
 
   /**
-    * Parse the access token response
+    * Call discord to retrieve user data
     *
-    * @param json the response as [[JsValue]]
-    * @return an instance of [[AccessToken]]
+    * @param accessToken token returned by provider
+    * @throws com.tw.discord.api.RequestFailedException
     */
-  def parseAccessToken(json: JsValue): AccessToken = {
-    AccessToken((json \ "access_token").get.as[String],
-      (json \ "expires_in").get.as[Long],
-      (json \ "refresh_token").get.as[String],
-      (json \ "token_type").get.as[String]
-    )
+  @throws(classOf[RequestFailedException]) // when request failed
+  def getDiscordUser(accessToken: AccessToken): Future[DiscordUser] = {
+    implicit val discordUserReader: Reads[DiscordUser] = (
+      (JsPath \ "id").read[String] and
+        (JsPath \ "username").read[String] and
+        (JsPath \ "discriminator").read[String] and
+        (JsPath \ "avatar").read[String] and
+        (JsPath \ "bot").read[Boolean] and
+        (JsPath \ "mfa_enabled").read[Boolean] and
+        (JsPath \ "verified").readNullable[Boolean] and
+        (JsPath \ "email").readNullable[String]
+      ) (DiscordUser.apply _)
+
+    val token: Token = accessToken.tokenType match {
+      case BearerToken.TYPE => new BearerToken(accessToken.accessToken)
+      case BotToken.TYPE => new BotToken(accessToken.accessToken)
+      case _ => throw new IllegalArgumentException(s"Token of type ${accessToken.tokenType} is unknown")
+    }
+    val request = OAuth2Helper.includeHeaders(ws.url(discordHost + requestUserPath), token)
+    request.get() map {
+      resp => {
+        resp.status match {
+          case 200 => val user = discordUserReader.reads(resp.json).asOpt
+            user match {
+              case Some(u) => u
+              case None => throw new RequestFailedException(resp.status, request.url,
+                Some(s"Failed to parse ${resp.json} as valid DiscordUser"))
+            }
+          case s => throw new RequestFailedException(s, request.url, Some(resp.body))
+        }
+      }
+    }
   }
 
-  def getUser(token: AccessToken): Future[WSResponse] = {
-    val url = s"$discordHost/$userPath/@me"
-    val request = ws.url(url).withHeaders("Authorization" -> token.toString, "User-Agent" -> this.userAgent)
-    request.get()
-  }
 }
