@@ -1,6 +1,6 @@
 package controllers.authentication
 
-import com.tw.discord.api.DiscordApi
+import com.tw.discord.api.{DiscordApi, RequestFailedException}
 import com.tw.discord.api.user.DiscordUser
 import com.typesafe.config.{Config, ConfigFactory}
 import controllers.AuthenticationCookie
@@ -65,6 +65,7 @@ trait Discord extends Controller {
                 val userFuture = discordApi.getDiscordUser(token)
                 userFuture map {
                   user: DiscordUser => {
+                    Logger.debug(s"Discord user: $user")
                     // We ask discord for email
                     db.withConnection(implicit conn => {
                       val dbUser = UserService.findByLoginOrMail(user.email.get)
@@ -73,6 +74,7 @@ trait Discord extends Controller {
                           Redirect(controllers.routes.HomeController.index()).withNewSession
                             .withCookies(AuthenticationCookie.generateCookie(u))
                         case None => {
+                          Logger.info(s"Create new user from discord credentials: $user")
                           // todo randomize password generation
                           val createdUser: User = UserService.createUser(user, "123")
                           NotificationService.notify("New user created")
@@ -82,7 +84,8 @@ trait Discord extends Controller {
                       }
                     })
                   }
-                } recover { case t: Throwable =>
+                } recover { case t: RequestFailedException =>
+                  Logger.error("Failed to call access token", t)
                   Redirect(controllers.routes.HomeController.index())
                 }
             }

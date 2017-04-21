@@ -95,7 +95,7 @@ object UserService {
         "salt" -> encryptedSalt,
         "password" -> hashPassword,
         "createdAt" -> createdAt,
-        "login" -> user.id,
+        "login" -> (user.username + '#' + user.discriminator),
         "mail" -> user.email.get,
         "admin" -> false
       ).executeInsert()

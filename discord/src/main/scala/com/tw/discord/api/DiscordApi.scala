@@ -12,7 +12,7 @@ import scala.concurrent.Future
 /**
   * This class define helper to interface with discord OAuth API.
   *
-  * @param ws Http helper
+  * @param ws       Http helper
   * @param agentUrl the agent url used in userAgent header.
   * @param version  the version of the client used in userAgent header.
   * @param clientId discord client id
@@ -70,7 +70,7 @@ class DiscordApi(val ws: WSClient, val agentUrl: String, val version: String,
             val accessToken: AccessToken = OAuth2Helper.parseAccessToken(json)
             accessToken
           case s =>
-            throw new RequestFailedException(s, request.url, Some(resp.body))
+            throw RequestFailedException(s, request.url, resp.body)
         }
       }
     }
@@ -80,7 +80,7 @@ class DiscordApi(val ws: WSClient, val agentUrl: String, val version: String,
     * Call discord to retrieve user data
     *
     * @param accessToken token returned by provider
-    * @throws com.tw.discord.api.RequestFailedException
+    * @throws RequestFailedException
     */
   @throws(classOf[RequestFailedException]) // when request failed
   def getDiscordUser(accessToken: AccessToken): Future[DiscordUser] = {
@@ -89,7 +89,7 @@ class DiscordApi(val ws: WSClient, val agentUrl: String, val version: String,
         (JsPath \ "username").read[String] and
         (JsPath \ "discriminator").read[String] and
         (JsPath \ "avatar").read[String] and
-        (JsPath \ "bot").read[Boolean] and
+        (JsPath \ "bot").readNullable[Boolean] and
         (JsPath \ "mfa_enabled").read[Boolean] and
         (JsPath \ "verified").readNullable[Boolean] and
         (JsPath \ "email").readNullable[String]
@@ -107,10 +107,10 @@ class DiscordApi(val ws: WSClient, val agentUrl: String, val version: String,
           case 200 => val user = discordUserReader.reads(resp.json).asOpt
             user match {
               case Some(u) => u
-              case None => throw new RequestFailedException(resp.status, request.url,
-                Some(s"Failed to parse ${resp.json} as valid DiscordUser"))
+              case None => throw RequestFailedException(resp.status, request.url,
+                s"Failed to parse ${resp.json} as valid DiscordUser")
             }
-          case s => throw new RequestFailedException(s, request.url, Some(resp.body))
+          case s => throw RequestFailedException(s, request.url, resp.body)
         }
       }
     }
