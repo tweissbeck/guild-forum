@@ -4,8 +4,6 @@ import javax.inject.Inject
 
 import api.authentication.LoginResponse
 import api.{ErrorResponse, Response}
-import com.tw.discord.api.DiscordApi
-import com.typesafe.config.{Config, ConfigFactory}
 import controllers.composition.Authenticated
 import controllers.{AuthenticationCookie, FlashConstant, JWT}
 import forms.LoginForm
@@ -26,7 +24,7 @@ import scala.concurrent.ExecutionContext
   */
 class AuthenticationController @Inject()(val db: Database, implicit val messagesApi: MessagesApi,
                                          val Auth: Authenticated,
-                                         val ws: WSClient, implicit val context: ExecutionContext )
+                                         val ws: WSClient, implicit val context: ExecutionContext)
   extends Controller with I18nSupport with Discord {
 
   // Let api retrieve discord credential from config
@@ -107,14 +105,15 @@ class AuthenticationController @Inject()(val db: Database, implicit val messages
   implicit val responseWrite = new Writes[Response] {
     override def writes(response: Response): JsValue = {
       // Is there a better way to do this ? Using instance of is not cool.
-      if (response.isInstanceOf[LoginResponse]) {
-        loginResponseWrites.writes(response.asInstanceOf[LoginResponse])
-      } else if (response.isInstanceOf[ErrorResponse]) {
-        errorResponseWrites.writes(response.asInstanceOf[ErrorResponse])
-      } else {
-        Json.obj(
-          "code" -> response.code
-        )
+      response match {
+        case login: LoginResponse =>
+          loginResponseWrites.writes(login)
+        case error: ErrorResponse =>
+          errorResponseWrites.writes(error)
+        case _ =>
+          Json.obj(
+            "code" -> response.code
+          )
       }
     }
   }
