@@ -24,9 +24,11 @@ class LogFilter @Inject()(implicit ec: ExecutionContext) extends EssentialFilter
 
         val endTime = System.currentTimeMillis
         val requestTime = endTime - startTime
-        if (!requestHeader.uri.contains("assets/")) {
-          Logger.info(
-            s"${requestHeader.method} ${requestHeader.uri} took ${requestTime}ms and returned ${result.header.status}")
+        val requestUri = requestHeader.uri
+        val filteredUri = Seq("/javascripts/", "/images/")
+        if (!filteredUri.filter(uri => uri.containsSlice(requestUri)).isEmpty) {
+          Logger.debug(
+            s"${requestHeader.method} ${requestUri} took ${requestTime}ms and returned ${result.header.status}")
         }
         result
       }
