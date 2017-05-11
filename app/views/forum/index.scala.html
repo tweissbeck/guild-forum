@@ -1,0 +1,32 @@
+@import controllers.forum.RootCategory
+@import services.intern.database.User
+@import views.Section
+@(user: Option[User], categories: Seq[RootCategory])(implicit messagesApi: MessagesApi)
+
+@main(messagesApi.apply("forum.index.title"), user, Section.FORUM) {
+    <div class="container">
+        <div class="row">
+        @for(cat <- categories) {
+            <div class="forum-categories">
+                <div class="forum-root-category">
+                @cat.categoryName
+                </div>
+                @if(!cat.childs.isEmpty) {
+                    @for(child <- cat.childs) {
+                        <div class="forum-sub-category">
+                        @child
+                        </div>
+                    }
+                }
+                @if(!cat.messages.isEmpty) {
+                    @for(topic <- cat.messages) {
+                        <div class="forum-topic-tittle">
+                        @topic
+                        </div>
+                    }
+                }
+            </div>
+        }
+        </div>
+    </div>
+}

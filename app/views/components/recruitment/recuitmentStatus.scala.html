@@ -1,0 +1,25 @@
+@* Recruitment status component display the list of class and the status of each of theirs spec *@
+@import business.recruitment.RecruitmentStatus
+@(recruitments: Seq[RecruitmentStatus])
+
+<table>
+    <tbody>
+        @for(r <- recruitments) {
+            <tr>
+                <td>
+                    <img src="@routes.Assets.at(s"classes/${r.classCode}.png")" alt="@{
+                        r.classCode
+                    }" height="36px" width="36px" class="recruitment-class"/>
+                    @{
+                        r.className
+                    }
+                </td>
+                @for(spec: (String, Boolean) <- r.specStatus) {
+                    <td @if(spec._2) {
+                        class="spec-needed"} >@spec._1</td>
+                }
+            </tr>
+        }
+
+    </tbody>
+</table>

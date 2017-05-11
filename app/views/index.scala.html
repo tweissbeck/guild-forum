@@ -1,15 +1,19 @@
+@import business.recruitment.RecruitmentStatus
 @import services.intern.database.User
 @import views.Section
-@(user: Option[User])(implicit messagesApi: MessagesApi)
+@(user: Option[User], recruitmentStatus: Seq[RecruitmentStatus])(implicit messagesApi: MessagesApi)
 
 @main("Beta - Forum", user, Section.HOME) {
-
-    <div class="row">
-        <div class="col-md-4">
-            @*TODO Put the class recruiting here*@
-        </div>
-        <div class="col-md-8">
-            @* TODO Put the last post here *@
+    <div class="container">
+        <div class="row">
+            <div class="col-md-4">
+                <div class="row">
+                @* @components.recruitment.recuitmentStatus(recruitmentStatus) *@
+                </div>
+            </div>
+            <div class="col-md-8">
+                @* TODO Put the last post here *@
+            </div>
         </div>
     </div>
 }

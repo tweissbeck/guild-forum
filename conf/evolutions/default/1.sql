@@ -1,5 +1,6 @@
 # --- !Ups
 
+-- Schema
 
 CREATE TABLE Authentication (
   au_id           BIGINT       NOT NULL PRIMARY KEY AUTO_INCREMENT,
@@ -79,6 +80,8 @@ CREATE TABLE JoinCategoryRole (
   PRIMARY KEY (jcr_category, jcr_role)
 );
 
+-- INSERT some test data here
+
 INSERT INTO Client (
   cl_id,
   cl_lastName,
@@ -98,6 +101,26 @@ INSERT INTO Role (
   ri_label
 
 ) VALUES ('Guild Master'), ('Officer'), ('Raid Member'), ('Member'), ('Apply'), ('Public');
+
+INSERT INTO Category (ca_label, ca_parent)
+VALUES
+  ('Recrutement', NULL),
+  ('Taverne', NULL),
+  ('Abscences', NULL);
+INSERT INTO Category (
+  ca_label, ca_parent
+) VALUES
+  ('Etat du recrutement', (SELECT ca_id
+                           FROM Category
+                           WHERE ca_label = 'Recrutement'));
+
+INSERT INTO JoinCategoryRole (jcr_category, jcr_role)
+VALUES
+  ((SELECT ca_id
+    FROM Category
+    WHERE ca_label = 'Recrutement'), (SELECT ri_id
+                                      FROM Role
+                                      WHERE ri_label = 'Public'));
 
 # --- !Downs
 DROP TABLE IF EXISTS Client;
