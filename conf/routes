@@ -31,6 +31,9 @@ GET         /oauth/token/discord            controllers.authentication.Authentic
 GET         /joinUs                         controllers.JoinUsController.get
 POST        /joinUs                         controllers.JoinUsController.post
 
+# Forum
+GET         /forum                          controllers.forum.ForumController.index
+
 
 # Map static resources from the /public folder to the /assets URL path
 GET         /javascripts/*file              controllers.Assets.versioned(path="/public", file: Asset)
