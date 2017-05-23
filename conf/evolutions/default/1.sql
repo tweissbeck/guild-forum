@@ -80,6 +80,14 @@ CREATE TABLE JoinCategoryRole (
   PRIMARY KEY (jcr_category, jcr_role)
 );
 
+CREATE TABLE JoinUserRole (
+  jur_user BIGINT NOT NULL,
+  jur_role BIGINT NOT NULL,
+  FOREIGN KEY (jur_user) REFERENCES Client (cl_id),
+  FOREIGN KEY (jur_user) REFERENCES Role (ri_id),
+  UNIQUE (jur_user) -- user can only have one role in application. If existing role doesn't fi, just create new roles was latch better
+);
+
 -- INSERT some test data here
 
 INSERT INTO Client (
@@ -97,22 +105,32 @@ INSERT INTO Client (
   cl_authentication
 ) VALUES (1, 'admin', 'admin', 'admin', 'admin@fake.com', TRUE, now(), NULL, '123', '123', 0, NULL);
 
-INSERT INTO Role (
-  ri_label
+INSERT INTO Role (ri_label)
+VALUES
+  ('Guild Master'), ('Officer'), ('Raid Member'), ('Member'), ('Apply'), ('Public');
 
-) VALUES ('Guild Master'), ('Officer'), ('Raid Member'), ('Member'), ('Apply'), ('Public');
+
+INSERT INTO JoinUserRole
+VALUES
+  (1, (SELECT ri_id
+       FROM Role
+       WHERE ri_label = 'Guild Master'));
 
 INSERT INTO Category (ca_label, ca_parent)
 VALUES
   ('Recrutement', NULL),
   ('Taverne', NULL),
   ('Abscences', NULL);
-INSERT INTO Category (
-  ca_label, ca_parent
-) VALUES
+
+-- sub categories
+INSERT INTO Category (ca_label, ca_parent)
+VALUES
   ('Etat du recrutement', (SELECT ca_id
                            FROM Category
-                           WHERE ca_label = 'Recrutement'));
+                           WHERE ca_label = 'Recrutement')),
+  ('Recrutement en cours', (SELECT ca_id
+                            FROM Category
+                            WHERE ca_label = 'Recrutement'));
 
 INSERT INTO JoinCategoryRole (jcr_category, jcr_role)
 VALUES
@@ -120,7 +138,37 @@ VALUES
     FROM Category
     WHERE ca_label = 'Recrutement'), (SELECT ri_id
                                       FROM Role
-                                      WHERE ri_label = 'Public'));
+                                      WHERE ri_label = 'Public')),
+  ((SELECT ca_id
+    FROM Category
+    WHERE ca_label = 'Recrutement'), (SELECT ri_id
+                                      FROM Role
+                                      WHERE ri_label = 'Apply')),
+  ((SELECT ca_id
+    FROM Category
+    WHERE ca_label = 'Recrutement'), (SELECT ri_id
+                                      FROM Role
+                                      WHERE ri_label = 'Member')),
+  ((SELECT ca_id
+    FROM Category
+    WHERE ca_label = 'Recrutement'), (SELECT ri_id
+                                      FROM Role
+                                      WHERE ri_label = 'Raid Member')),
+  ((SELECT ca_id
+    FROM Category
+    WHERE ca_label = 'Recrutement'), (SELECT ri_id
+                                      FROM Role
+                                      WHERE ri_label = 'Officer')),
+  ((SELECT ca_id
+    FROM Category
+    WHERE ca_label = 'Recrutement'), (SELECT ri_id
+                                      FROM Role
+                                      WHERE ri_label = 'Guild Master')),
+  ((SELECT ca_id
+    FROM Category
+    WHERE ca_label = 'Taverne'), (SELECT ri_id
+                                  FROM Role
+                                  WHERE ri_label = 'Guild Master'));
 
 # --- !Downs
 DROP TABLE IF EXISTS Client;
