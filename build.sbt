@@ -13,7 +13,7 @@ scalaVersion := "2.11.7"
 libraryDependencies ++= Seq(
   // DATA BASE
   jdbc, //jdbc is not compatible with play slick
-  "com.typesafe.play" %% "anorm" % "2.5.0",
+  "com.typesafe.play" %% "anorm" % "2.5.2",
   "com.h2database" % "h2" % "1.4.192",
   evolutions,
 
