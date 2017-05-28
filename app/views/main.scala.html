@@ -18,15 +18,16 @@
     <body>
         <header>
 
-            <nav class="navbar navbar-full bg-inverse navbar-dark">
+            <nav class="navbar navbar-toggleable-md navbar-inverse bg-inverse">
                 <div class="container">
-                    <ul class="nav navbar-nav">
+                    @* mr-auto allow to introduce a margin after this component *@
+                    <ul class="navbar-nav mr-auto">
                         <li class="nav-item@if(section.isDefined && section.equals(Section.HOME)) { active}"><a class="nav-link" href="/">@messagesApi.apply("menu.home")</a></li>
                         <li class="nav-item@if(section.isDefined && section.equals(Section.ROSTER)) { active}"><a class="nav-link" href="/guild">@messagesApi.apply("menu.roster")</a></li>
                         <li class="nav-item@if(section.isDefined && section.equals(Section.FORUM)) { active}"><a class="nav-link" href="/forum">@messagesApi.apply("menu.forum")</a></li>
                         <li class="nav-item@if(section.isDefined && section.equals(Section.JOIN_US)) { active}"><a class="nav-link" href="/joinUs">@messagesApi.apply("menu.join.us")</a></li>
                     </ul>
-                    <ul class="nav navbar-nav pull-xs-right">
+                    <ul class="navbar-nav">
                     @user match {
                         case Some(u) => {
                             <li class="nav-item"><a class="nav-link" href="@controllers.authentication.routes.AuthenticationController.logout()">@messagesApi.apply("menu.sign.off")</a></li>
