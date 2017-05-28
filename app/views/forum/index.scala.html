@@ -1,7 +1,7 @@
-@import controllers.forum.RootCategory
+@import controllers.forum.Category
 @import services.intern.database.User
 @import views.Section
-@(user: Option[User], categories: Seq[RootCategory])(implicit messagesApi: MessagesApi)
+@(user: Option[User], categories: Seq[Category])(implicit messagesApi: MessagesApi)
 
 @main(messagesApi.apply("forum.index.title"), user, Section.FORUM) {
     <div class="container">
@@ -9,12 +9,12 @@
         @for(cat <- categories) {
             <div class="forum-categories">
                 <div class="forum-root-category">
-                @cat.categoryName
+                @cat.label.toUpperCase
                 </div>
                 @if(!cat.childs.isEmpty) {
                     @for(child <- cat.childs) {
                         <div class="forum-sub-category">
-                            <a href="#">@child</a>
+                            <a href="@controllers.forum.routes.ForumController.category(child.encoded())">@child.label</a>
                         </div>
                     }
                 }

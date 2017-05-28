@@ -33,6 +33,7 @@ POST        /joinUs                         controllers.JoinUsController.post
 
 # Forum
 GET         /forum                          controllers.forum.ForumController.index
+GET         /forum/cat/:id                  controllers.forum.ForumController.category(id: String)
 
 
 # Map static resources from the /public folder to the /assets URL path

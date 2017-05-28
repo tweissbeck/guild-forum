@@ -86,7 +86,7 @@ object Password {
  */
 object IdEncryptionUtil extends KeyUser {
   implicit val ALGO = "AES"
-  val key = getKey("id")
+  val key: Key = getKey("id")
 
   private def stringToByte: String => Array[Byte] = {
     s => s.getBytes("utf-8")
