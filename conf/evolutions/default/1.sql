@@ -141,6 +141,11 @@ VALUES
                                       WHERE ri_label = 'Public')),
   ((SELECT ca_id
     FROM Category
+    WHERE ca_label = 'Etat du recrutement'), (SELECT ri_id
+                                      FROM Role
+                                      WHERE ri_label = 'Public')),
+  ((SELECT ca_id
+    FROM Category
     WHERE ca_label = 'Recrutement'), (SELECT ri_id
                                       FROM Role
                                       WHERE ri_label = 'Apply')),

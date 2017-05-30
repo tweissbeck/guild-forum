@@ -39,9 +39,15 @@ class ForumController @Inject()(db: Database, Auth: Authenticated, implicit val 
    * @return
    */
   def category(id: String) = Auth {
-    implicit  request => {
-      Logger.info(s"Category: $id => ${IdEncryptionUtil.decodeLong(id)}")
-      Ok(views.html.forum.index(request.user, Seq()))
+    implicit request => {
+      Logger.debug(s"Category: $id => ${IdEncryptionUtil.decodeLong(id)}")
+      db.withConnection {
+        connection =>
+          val category: Option[Category] = Topic.getCategory(IdEncryptionUtil.decodeLong(id), request.user)(connection)
+          category.fold(Ok(views.html.forum.index(request.user, Seq()))) { cat =>
+            Ok(views.html.forum.index(request.user, Seq(cat)))
+          }
+      }
     }
   }
 }

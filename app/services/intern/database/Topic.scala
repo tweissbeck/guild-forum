@@ -92,7 +92,9 @@ object Topic {
               c.ca_id AS cat_id,
               c.ca_label AS cat_label,
               childCategory.ca_label AS childCat_label,
-              topic.to_label as topic_label
+              childCategory.ca_id AS chieldCat_id,
+              topic.to_label as topic_label,
+              topic.to_id AS topic_id
             FROM
               JoinUserRole jur,
               JoinCategoryRole jcr,
@@ -128,5 +130,69 @@ object Topic {
         transformToCategory(currentCategoryRows, tuple)
     }).toSeq
     rootCategories
+  }
+
+  def getCategory(categoryId: Long, user: Option[User])(implicit connection: Connection): Option[Category] = {
+
+    val query = if (user.isDefined)
+      SQL(
+        """
+        SELECT
+           c.ca_id AS cat_id,
+           c.ca_label AS cat_label,
+           childCategory.ca_label AS childCat_label,
+           childCategory.ca_id AS chieldCat_id,
+           topic.to_label as topic_label,
+           topic.to_id AS topic_id
+         FROM
+           JoinUserRole jur,
+           JoinCategoryRole jcr,
+           Role r,
+           Category AS c
+         LEFT JOIN Topic AS topic ON c.ca_id = Topic.to_category
+         LEFT JOIN Category AS childCategory ON c.ca_id = childCategory.ca_parent
+         WHERE
+           jur.jur_user = {userId}
+         AND
+           jur.jur_role = r.ri_id
+         AND
+           jcr.jcr_role = r.ri_id
+         AND
+           jcr.jcr_category = c.ca_id
+         AND
+           c.ca_id = {id}
+      """).on('id -> categoryId, 'userId -> user.get.id)
+    else
+      SQL(
+        """
+        SELECT
+          c.ca_id AS cat_id,
+          c.ca_label AS cat_label,
+          childCategory.ca_label AS childCat_label,
+          childCategory.ca_id AS chieldCat_id,
+          topic.to_label as topic_label,
+          topic.to_id AS topic_id
+        FROM
+          JoinCategoryRole jcr,
+          Role r,
+          Category AS c
+        LEFT JOIN Topic AS topic ON c.ca_id = Topic.to_category
+        LEFT JOIN Category AS childCategory ON c.ca_id = childCategory.ca_parent
+        WHERE
+          r.ri_label = 'Public'
+        AND
+          jcr.jcr_role = r.ri_id
+        AND
+          jcr.jcr_category = c.ca_id
+        AND
+          c.ca_id = {id}
+      """).on('id -> categoryId)
+    val result: List[CategoryParser] = query.as(rootCategoryParser)
+    // The logged in user should not right on this topic or the primary key do not exist.
+    if (result.isEmpty) {
+      None
+    } else {
+      Some(transformToCategory(result, (categoryId, result.head._2)));
+    }
   }
 }
