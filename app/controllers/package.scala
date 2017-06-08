@@ -133,7 +133,7 @@ package object controllers {
       try {
         //  Validate the JWT and process it to the Claims
         val jwtClaims = jwtConsumer.processToClaims(jwt)
-        Logger.info(s"JWT is valid, user: ${jwtClaims.getSubject} - ${jwtClaims.getClaimValue("id")}")
+        Logger.debug(s"JWT is valid, user: ${jwtClaims.getSubject} - ${jwtClaims.getClaimValue("id")}")
         val userId: Long = IdEncryptionUtil.decodeLong(jwtClaims.getStringClaimValue("id"))
         Some(userId)
       }
