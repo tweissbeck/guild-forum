@@ -8,10 +8,10 @@ import controllers.forum.{Category, DisplayableElement}
 import play.api.Logger
 
 /**
- * This object give access to Topic data.
- *
- * @author tweissbeck
- */
+  * This object give access to Topic data.
+  *
+  * @author tweissbeck
+  */
 object Topic {
 
   type CategoryParser = (Long, String, Option[Long], Option[String], Option[Long],
@@ -79,12 +79,12 @@ object Topic {
   }
 
   /**
-   * Return root topic that are visible for the user given in parameter
-   *
-   * @param user       the current login user
-   * @param connection data base connection
-   * @return list of RootCategory
-   */
+    * Return root topic that are visible for the user given in parameter
+    *
+    * @param user       the current login user
+    * @param connection data base connection
+    * @return list of RootCategory
+    */
   def getRoot(user: User)(implicit connection: Connection): Seq[Category] = {
     val sql =
       """
