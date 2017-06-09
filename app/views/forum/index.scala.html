@@ -13,22 +13,28 @@
 }
     <div class="row">
     }
-        <div class="col-4 forum-categories">
-            @categories(i).label.toUpperCase
-            @if(!categories(i).childs.isEmpty) {
-                @for(child <- categories(i).childs) {
-                    <div class="forum-sub-category">
-                        <a href="@controllers.forum.routes.ForumController.category(child.encoded())">@child.label</a>
-                    </div>
-                }
-            }
-            @if(!categories(i).messages.isEmpty) {
-                @for(topic <- categories(i).messages) {
-                    <div class="forum-topic-tittle">
-                    @topic
-                    </div>
-                }
-            }
+        <div class="col-4 forum-categories rounded">
+            <div class="forum-categories rounded" style="border: 1px solid #333333;
+                padding-right: 7px;">
+                <div style ="padding: 10px">
+                    <span class="category-title">@categories(i).label.toUpperCase</span>
+                    @if(!categories(i).childs.isEmpty) {
+                        @for(child <- categories(i).childs) {
+                            <div class="forum-sub-category">
+                                <a href="@controllers.forum.routes.ForumController.category(child.encoded())">@child.label</a>
+                            </div>
+                        }
+                    }
+                    @if(!categories(i).messages.isEmpty) {
+                        @for(topic <- categories(i).messages) {
+                            <div class="forum-topic-tittle">
+                            @topic
+                            </div>
+                        }
+                    }
+                </div>
+            </div>
+
         </div>
     }
     </div>
