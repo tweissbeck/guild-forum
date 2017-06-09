@@ -1,0 +1,7 @@
+@import services.intern.database.forum.Category
+@import services.intern.database.{Role, User}
+@import views.Section
+@(user: Option[User], categoryToRole: Seq[(Category, Role, Boolean)])(implicit messagesApi: MessagesApi)
+@main("", user, Section.ADMIN_ASSOCIATE_CATEGORY_ROLE) {
+    <span>TODO</span>
+}

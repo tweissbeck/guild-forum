@@ -6,13 +6,14 @@ import anorm.SqlParser._
 import anorm._
 import controllers.forum.{Category, DisplayableElement}
 import play.api.Logger
+import services.intern.database.forum.CategoryRole
 
 /**
   * This object give access to Topic data.
   *
   * @author tweissbeck
   */
-object Topic {
+object Forum {
 
   type CategoryParser = (Long, String, Option[Long], Option[String], Option[Long],
     Option[String])
@@ -34,7 +35,7 @@ object Topic {
       subCategories.map(subCategory => new DisplayableElement(subCategory._2, subCategory._1) {}))
   }
 
-  def getPublic()(implicit connection: Connection): Seq[Category] = {
+  def getPublicCategories()(implicit connection: Connection): Seq[Category] = {
     val sql =
       """
         SELECT
@@ -85,7 +86,7 @@ object Topic {
     * @param connection data base connection
     * @return list of RootCategory
     */
-  def getRoot(user: User)(implicit connection: Connection): Seq[Category] = {
+  def getRootCategories(user: User)(implicit connection: Connection): Seq[Category] = {
     val sql =
       """
             SELECT
@@ -194,5 +195,37 @@ object Topic {
     } else {
       Some(transformToCategory(result, (categoryId, result.head._2)));
     }
+  }
+
+  /**
+    * Return list of categories with their associate roles
+    */
+  def getCategoriesWithAssociateRoles()(implicit connection: Connection): Seq[CategoryRole] = {
+    val query = SQL(
+      """
+        |SELECT
+        | ca_label,
+        | ca_id,
+        | ri_label,
+        | ri_id
+        |FROM Category, Role, JoinCategoryRole
+        |WHERE
+        | ca_id = jcr_category
+        |AND
+        | jcr_role = ri_id
+        |
+      """.stripMargin)
+    query.as(Macro.namedParser[CategoryRole].*)
+  }
+
+  /**
+    * Return all category
+    *
+    * @param connection
+    * @return [[Seq]] of [[forum.Category]]
+    */
+  def getCategories()(implicit connection: Connection): Seq[forum.Category] = {
+    val query = SQL("SELECT * FROM Role")
+    query.as(Macro.namedParser[forum.Category].*)
   }
 }

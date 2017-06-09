@@ -9,4 +9,6 @@ object Section {
   val HOME = Some("home")
   val FORUM = Some("forum")
   val ROSTER = Some("roster")
+
+  val ADMIN_ASSOCIATE_CATEGORY_ROLE = Some("admin_categoryRole")
 }
