@@ -4,7 +4,7 @@ import services.IdEncryptionUtil
 
 
 /**
- * @param id the id of diplayed entity. This id is private because we don't want to expose such data base data. Use [[encoded()]] to link this entity in views.
+ * @param id the id of displayed entity. This id is private because we don't want to expose such data base data. Use [[encoded()]] to link this entity in views.
  */
 abstract class DisplayableElement(val label: String, private val id: Long) {
 
