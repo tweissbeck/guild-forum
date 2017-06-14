@@ -2,10 +2,11 @@ package controllers.forum
 
 import javax.inject.Inject
 
+import controllers.FlashConstant
 import controllers.composition.Authenticated
 import play.api.Logger
 import play.api.db.Database
-import play.api.i18n.MessagesApi
+import play.api.i18n.{I18nSupport, MessagesApi}
 import play.api.mvc.Controller
 import services.IdEncryptionUtil
 import services.intern.database.{Forum, Role}
@@ -14,7 +15,7 @@ import services.intern.database.{Forum, Role}
   * Controller that handle forum pages. Restrict display according to connected user right on category.
   */
 class ForumController @Inject()(db: Database, Auth: Authenticated, implicit val messagesApi: MessagesApi)
-  extends Controller {
+  extends Controller with I18nSupport {
 
   /**
     * "Index" displays root category
@@ -51,6 +52,11 @@ class ForumController @Inject()(db: Database, Auth: Authenticated, implicit val 
     }
   }
 
+
+  /**
+    * Display the matrix of categories with right.
+    * Require admin right.
+    */
   def listJoinCategoryRole() = Auth {
     implicit request => {
       request.user match {
@@ -58,18 +64,24 @@ class ForumController @Inject()(db: Database, Auth: Authenticated, implicit val 
           if (u.admin) {
             db.withConnection {
               implicit conn =>
-                val roles = Role.getAll()
-                val categories = Forum.getCategories()
+                val roles: Seq[Role] = Role.getAll()
+                val categories: Seq[services.intern.database.forum.Category] = Forum.getCategories()
                 val cats = Forum.getCategoriesWithAssociateRoles()
                 val result = for (cat <- categories; role <- roles)
-                  yield (cat, role, cats.exists(catRole => catRole.catId == cat.id && catRole.roleId == role.id))
-                Ok(views.html.forum.admin.associateCategoryToRole(request.user, result))
-                ???
+                  yield (cat, role, cats.exists(catRole => catRole.ca_id == cat.ca_id && catRole.ri_id == role.id))
+                Ok(views.html.forum.admin.associateCategoryToRole(request.user, categories, roles, result))
             }
           } else {
-            ???
+            Logger.debug(s"User ${request.user} is not admin and cannot have access to resource ${
+              controllers.forum.routes.ForumController.listJoinCategoryRole().url
+            }")
+            Redirect(controllers.routes.HomeController.index()).flashing(FlashConstant.MISSING_PERMISSION -> messagesApi
+              .apply("flash.missing.right",
+                controllers.forum.routes.ForumController.listJoinCategoryRole().url))
           }
-        case None => ???
+        // No user, lets redirect to login page with requested url in flash
+        case None => Redirect(controllers.authentication.routes.AuthenticationController.login()).flashing(
+          FlashConstant.REQUESTED_RESOURCE -> controllers.forum.routes.ForumController.listJoinCategoryRole().url)
       }
     }
   }

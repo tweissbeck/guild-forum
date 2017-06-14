@@ -3,26 +3,26 @@ package services.intern.database.forum
 /**
   * Association between category and role
   *
-  * @param catId         category primary key
-  * @param categoryLabel category label
-  * @param roleId        role primary key
-  * @param roleLabel     role label
+  * @param ca_id    category primary key
+  * @param ca_label category label
+  * @param ri_id    role primary key
+  * @param ri_label role label
   */
-case class CategoryRole(catId: Long, categoryLabel: String, roleId: Long, roleLabel: String) {
+case class CategoryRole(ca_id: Long, ca_label: String, ri_id: Long, ri_label: String) {
 
 }
 
 /**
   * Association between category and role
   *
-  * @param catId         category primary key
-  * @param categoryLabel category label
-  * @param roleId        role primary key
-  * @param roleLabel     role label
-  * @param create        can the role view topic under its category
-  * @param view          can the role create new topic under its category
+  * @param ca_id    category primary key
+  * @param ca_label category label
+  * @param ri_id    role primary key
+  * @param ri_label role label
+  * @param create   can the role view topic under its category
+  * @param view     can the role create new topic under its category
   */
-case class CategoryRoleWithRights(catId: Long, categoryLabel: String, roleId: Long, roleLabel: String, view: Boolean,
+case class CategoryRoleWithRights(ca_id: Long, ca_label: String, ri_id: Long, ri_label: String, view: Boolean,
                                   create: Boolean) {
 
 }

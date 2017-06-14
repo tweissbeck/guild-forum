@@ -1,7 +1,47 @@
 @import services.intern.database.forum.Category
 @import services.intern.database.{Role, User}
 @import views.Section
-@(user: Option[User], categoryToRole: Seq[(Category, Role, Boolean)])(implicit messagesApi: MessagesApi)
+@(user: Option[User], categories: Seq[Category], roles: Seq[Role], categoryToRole: Seq[(Category, Role, Boolean)])(implicit messagesApi: MessagesApi, flash: Flash)
 @main("", user, Section.ADMIN_ASSOCIATE_CATEGORY_ROLE) {
-    <span>TODO</span>
+    <div class="container">
+        <div class="row">
+            <div class="col">
+                <table class="table table-striped">
+                    <thead>
+                        <tr>
+                            <th>@messagesApi.apply("admin.category.association.table.category")</th>
+                            @for(role <- roles) {
+                                <th>@role.label</th>
+                            }
+                        </tr>
+                    </thead>
+                    <tbody>
+                    @for(cat <- categories) {
+                        <tr>
+                            <td scope="row">@cat.ca_label</td>
+                            @for(role <- roles) {
+                                <td>
+                                @if(categoryToRole.contains((cat, role, true))) {
+                                    <input type="checkbox" id="joinCat_@{
+                                        cat.ca_id
+                                    }_Role_@{
+                                        role.id
+                                    }" checked />
+                                } else {
+                                    <input type="checkbox" id="joinCat_@{
+                                        cat.ca_id
+                                    }_Role_@{
+                                        role.id
+                                    }" />
+                                }
+                                </td>
+                            }
+                        </tr>
+                    }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+    </div>
 }

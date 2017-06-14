@@ -9,6 +9,11 @@ menu.login=Connexion
 menu.sign.in=Besoin d'un compte?
 menu.account=Compte
 menu.join.us=Nous rejoindre
+menu.admin.dropdown=Administration
+menu.admin.category=Category
+
+##### Flash
+flash.missing.right=Vous n''avez pas les droits suffisant pour accéder à la resource {0}.
 
 
 # #### FORMS
@@ -50,10 +55,16 @@ join.us.why.you=Que pouvez vous apportez à notre guilde ? (ou comment vous déc
 join.us.charte=Avez vous lu la Charte de guilde ?
 join.us.submit=Valider
 
+# ### ADMIN
 
+# Join forum category to role page
+admin.category.association.table.category=Liste des catégories de forum
 
 
 # #### Validation error
 error.required=Ce champ ne doit pas être vide
 error.number=Un nombre est attendu ici
 error.charte=Merci de lire la charte!
+
+# ### FLASH message
+flash.error=Une erreur s'est produite lors du traitement de votre requête.

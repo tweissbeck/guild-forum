@@ -48,7 +48,7 @@ class Authenticated @Inject()(implicit db: Database) extends ActionBuilder[Authe
         }
         catch {
           case e: Exception => {
-            Logger.error(s"Fail to parse cookie: ${c.value}", e)
+            Logger.error(s"Fail handle request", e)
             block(new AuthenticatedRequest[A](None, request))
           }
         }

@@ -1,7 +1,7 @@
 @import controllers.forum.Category
 @import services.intern.database.User
 @import views.Section
-@(user: Option[User], categories: Seq[Category])(implicit messagesApi: MessagesApi)
+@(user: Option[User], categories: Seq[Category])(implicit messagesApi: MessagesApi, flash: Flash)
 
 
 @main(messagesApi.apply("forum.index.title"), user, Section.FORUM) {

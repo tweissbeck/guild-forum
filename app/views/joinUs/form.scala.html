@@ -3,7 +3,7 @@
 @import views.Section
 
 
-@(config: FormConfig, form: Form[ApplyForm])(implicit messapeApi: MessagesApi)
+@(config: FormConfig, form: Form[ApplyForm])(implicit messapeApi: MessagesApi, flash: Flash)
 
 @main(messapeApi.apply(""), None, Section.JOIN_US) {
     <div class="container">

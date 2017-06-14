@@ -1,5 +1,5 @@
 @import forms.{Helper, SignInForm}
-@(form: Form[SignInForm])(implicit messagesApi: MessagesApi)
+@(form: Form[SignInForm])(implicit messagesApi: MessagesApi, flash: Flash)
 
 @main(messagesApi.apply("form.signIn.title"), None, None) {
     @utils.centerContent(6, 3) {

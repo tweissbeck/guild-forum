@@ -59,13 +59,13 @@ class UserController @Inject()(db: Database, implicit val messagesApi: MessagesA
     * Action
     * *****************************************************************************************************************/
 
-  def list() = Admin { request =>
+  def list() = Admin { implicit request =>
     db.withConnection { implicit conn =>
       Ok(views.html.user.admin.list(request.admin, UserService.list()))
     }
   }
 
-  def edit(id: String) = Admin { request =>
+  def edit(id: String) = Admin { implicit request =>
     db.withConnection { implicit conn =>
       try {
         val user: Option[User] = UserService.findById(id.toLong)
@@ -94,7 +94,7 @@ class UserController @Inject()(db: Database, implicit val messagesApi: MessagesA
   /**
     * GET SignIn
     */
-  def signIn() = Action {
+  def signIn() = Action { implicit request =>
     Ok(views.html.user.signIn(signInForm))
   }
 

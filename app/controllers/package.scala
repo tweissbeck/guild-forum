@@ -16,6 +16,10 @@ import services.{IdEncryptionUtil, KeyUser}
   */
 package object controllers {
 
+  object FLASH_SCOPE {
+    val MISSING_RIGHT = "missingRight"
+  }
+
   /**
     * Helper to build a cookie that contains authentication data
     *
@@ -27,7 +31,8 @@ package object controllers {
   }
 
   object FlashConstant {
-    val requestedResource = "actionRequested"
+    val REQUESTED_RESOURCE = "actionRequested"
+    val MISSING_PERMISSION = "missingPerm"
   }
 
   /**

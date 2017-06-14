@@ -225,7 +225,7 @@ object Forum {
     * @return [[Seq]] of [[forum.Category]]
     */
   def getCategories()(implicit connection: Connection): Seq[forum.Category] = {
-    val query = SQL("SELECT * FROM Role")
+    val query = SQL("SELECT * FROM Category")
     query.as(Macro.namedParser[forum.Category].*)
   }
 }

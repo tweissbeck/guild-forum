@@ -46,10 +46,10 @@ class AuthenticationController @Inject()(val db: Database, implicit val messages
         Redirect(controllers.routes.HomeController.index())
       }
       case None => {
-        val uri = request.flash.get(FlashConstant.requestedResource)
+        val uri = request.flash.get(FlashConstant.REQUESTED_RESOURCE)
         val result = Ok(views.html.user.login(loginForm))
         uri match {
-          case Some(_) => result.flashing(FlashConstant.requestedResource -> uri.get)
+          case Some(_) => result.flashing(FlashConstant.REQUESTED_RESOURCE -> uri.get)
           case None => result
         }
       }
@@ -75,8 +75,8 @@ class AuthenticationController @Inject()(val db: Database, implicit val messages
                 result.withNewSession.withCookies(AuthenticationCookie.generateCookie(user))
               }
 
-              if (request.flash.get(FlashConstant.requestedResource).nonEmpty) {
-                applyCookie(Redirect(request.flash.get(FlashConstant.requestedResource).get))
+              if (request.flash.get(FlashConstant.REQUESTED_RESOURCE).nonEmpty) {
+                applyCookie(Redirect(request.flash.get(FlashConstant.REQUESTED_RESOURCE).get))
               } else {
                 applyCookie(Redirect(controllers.routes.HomeController.index()))
               }

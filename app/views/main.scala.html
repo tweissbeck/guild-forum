@@ -1,6 +1,7 @@
+@import controllers.FlashConstant
 @import services.intern.database.User
 @import views.Section
-@(title: String, user: Option[User], section: Option[String])(content: Html)(implicit messagesApi: MessagesApi)
+@(title: String, user: Option[User], section: Option[String])(content: Html)(implicit messagesApi: MessagesApi, flash: Flash)
 
 <!DOCTYPE html>
 <html lang="en">
@@ -20,39 +21,67 @@
 
             <nav class="navbar navbar-toggleable-md navbar-inverse bg-inverse">
                 <div class="container">
-                    @* mr-auto allow to introduce a margin after this component *@
-                    <ul class="navbar-nav mr-auto">
-                        <li class="nav-item@if(section.isDefined && section.equals(Section.HOME)) { active}"><a class="nav-link" href="/">@messagesApi.apply("menu.home")</a></li>
-                        <li class="nav-item@if(section.isDefined && section.equals(Section.ROSTER)) { active}"><a class="nav-link" href="/guild">@messagesApi.apply("menu.roster")</a></li>
-                        <li class="nav-item@if(section.isDefined && section.equals(Section.FORUM)) { active}"><a class="nav-link" href="/forum">@messagesApi.apply("menu.forum")</a></li>
-                        <li class="nav-item@if(section.isDefined && section.equals(Section.JOIN_US)) { active}"><a class="nav-link" href="/joinUs">@messagesApi.apply("menu.join.us")</a></li>
-                    </ul>
-                    <ul class="navbar-nav">
-                    @user match {
-                        case Some(u) => {
-                            <li class="nav-item"><a class="nav-link" href="@controllers.authentication.routes.AuthenticationController.logout()">@messagesApi.apply("menu.sign.off")</a></li>
-                        }
-                        case None => {
-                            <li class="nav-item"><a class="nav-link" href="@controllers.authentication.routes.AuthenticationController.login()">@messagesApi.apply("menu.login")</a></li>
-                            <li class="nav-item"><a class="nav-link" href="@routes.UserController.signIn()">@messagesApi.apply("menu.sign.in")</a></li>
-                            <li class="nav-item"><a class="nav-link" href="@controllers.authentication.routes.AuthenticationController.loginWithOauth()">Login with Discord account</a></li>
-                        }
-                    }
+                    <div class="collapse navbar-collapse" id="navbarNavDropdown">
+                        @* mr-auto allow to introduce a margin after this component *@
+                        <ul class="navbar-nav mr-auto">
+                            @user match {
+                                case Some(u) => {
+                                    @if(u.admin) {
+                                        <li class="nav-item dropdown">
+                                            <a class="nav-link dropdown-toggle" href="" id="navbarDropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                            @messagesApi.apply("menu.admin.dropdown")
+                                            </a>
+                                            <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
+                                                <a class="dropdown-item" href="@controllers.forum.routes.ForumController.listJoinCategoryRole()">
+                                                @messagesApi.apply("menu.admin.category")</a>
+                                            </div>
+                                        </li>
+                                    }
+                                }
+                                case None => {}
 
-                    </ul>
+                            }
+                            <li class="nav-item @if(section.isDefined && section.equals(Section.HOME)) { active}"><a class="nav-link" href="/">@messagesApi.apply("menu.home")</a></li>
+                            <li class="nav-item @if(section.isDefined && section.equals(Section.ROSTER)) { active}"><a class="nav-link" href="/guild">@messagesApi.apply("menu.roster")</a></li>
+                            <li class="nav-item @if(section.isDefined && section.equals(Section.FORUM)) { active}"><a class="nav-link" href="/forum">@messagesApi.apply("menu.forum")</a></li>
+                            <li class="nav-item @if(section.isDefined && section.equals(Section.JOIN_US)) { active}"><a class="nav-link" href="/joinUs">@messagesApi.apply("menu.join.us")</a></li>
+                        </ul>
+                        <ul class="navbar-nav">
+                        @user match {
+                            case Some(u) => {
+                                <li class="nav-item"><a class="nav-link" href="@controllers.authentication.routes.AuthenticationController.logout()">@messagesApi.apply("menu.sign.off")</a></li>
+                            }
+                            case None => {
+                                <li class="nav-item"><a class="nav-link" href="@controllers.authentication.routes.AuthenticationController.login()">@messagesApi.apply("menu.login")</a></li>
+                                <li class="nav-item"><a class="nav-link" href="@routes.UserController.signIn()">@messagesApi.apply("menu.sign.in")</a></li>
+                                <li class="nav-item"><a class="nav-link" href="@controllers.authentication.routes.AuthenticationController.loginWithOauth()">Login with Discord account</a></li>
+                            }
+                        }
+
+                        </ul>
+                    </div>
                 </div>
             </nav>
         </header>
 
 
         <div id="content">
-        @content
+            @if(flash.get(FlashConstant.MISSING_PERMISSION).isDefined) {
+                <div class="container">
+                    <div class="row">
+                        <div class="col">
+                        @components.misc.alert(flash.get(FlashConstant.MISSING_PERMISSION).get) {
+                            <div></div>
+                        }
+                        </div>
+                    </div>
+                </div>
+            }
+            @content
         </div>
         <div id="footer">
 
         </div>
-        @* And here's where we render the `Html` object containing
-        * the page content. *@
 
     </body>
 </html>
