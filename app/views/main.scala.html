@@ -7,61 +7,68 @@
 <html lang="en">
     <head>
         @* Here's where we render the page title `String`. *@
-        <title>@title</title>
-        <link rel="stylesheet" media="screen" href="@routes.Assets.versioned("stylesheets/main.css")">
-        <link rel="stylesheet" media="screen" href="@routes.Assets.versioned("stylesheets/bootstrap.css")">
-        <link rel="shortcut icon" type="image/png" href="@routes.Assets.versioned("images/favicon.png")">
-        <script src="@routes.Assets.versioned("javascripts/tether.min.js")" type="text/javascript"></script><!-- Tether for Bootstrap -->
-        <script src="@routes.Assets.versioned("javascripts/jquery-3.1.0.min.js")" type="text/javascript"></script>
-        <script src="@routes.Assets.versioned("javascripts/bootstrap.js")" type="text/javascript"></script>
-        <script src='https://www.google.com/recaptcha/api.js'></script>
+    <title>@title</title>
+    <link rel="stylesheet" media="screen" href="@routes.Assets.versioned("stylesheets/main.css")">
+    <link rel="stylesheet" media="screen" href="@routes.Assets.versioned("stylesheets/bootstrap.css")">
+    <link rel="shortcut icon" type="image/png" href="@routes.Assets.versioned("images/favicon.png")">
+    <script src="@routes.Assets.versioned("javascripts/tether.min.js")" type="text/javascript"></script><!-- Tether for Bootstrap -->
+    <script src="@routes.Assets.versioned("javascripts/jquery-3.1.0.min.js")" type="text/javascript"></script>
+    <script src="@routes.Assets.versioned("javascripts/bootstrap.js")" type="text/javascript"></script>
+    <script src='https://www.google.com/recaptcha/api.js'></script>
     </head>
     <body>
         <header>
+            @* MENU *@
+        <nav class="navbar navbar-toggleable-md navbar-inverse bg-inverse">
+            <div class="container">
 
-            <nav class="navbar navbar-toggleable-md navbar-inverse bg-inverse">
-                <div class="container">
-                    <div class="collapse navbar-collapse" id="navbarNavDropdown">
-                        @* mr-auto allow to introduce a margin after this component *@
-                        <ul class="navbar-nav mr-auto">
-                            @user match {
-                                case Some(u) => {
-                                    @if(u.admin) {
-                                        <li class="nav-item dropdown">
-                                            <a class="nav-link dropdown-toggle" href="" id="navbarDropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                            @messagesApi.apply("menu.admin.dropdown")
-                                            </a>
-                                            <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
-                                                <a class="dropdown-item" href="@controllers.forum.routes.ForumController.listJoinCategoryRole()">
-                                                @messagesApi.apply("menu.admin.category")</a>
-                                            </div>
-                                        </li>
-                                    }
-                                }
-                                case None => {}
-
-                            }
-                            <li class="nav-item @if(section.isDefined && section.equals(Section.HOME)) { active}"><a class="nav-link" href="/">@messagesApi.apply("menu.home")</a></li>
-                            <li class="nav-item @if(section.isDefined && section.equals(Section.ROSTER)) { active}"><a class="nav-link" href="/guild">@messagesApi.apply("menu.roster")</a></li>
-                            <li class="nav-item @if(section.isDefined && section.equals(Section.FORUM)) { active}"><a class="nav-link" href="/forum">@messagesApi.apply("menu.forum")</a></li>
-                            <li class="nav-item @if(section.isDefined && section.equals(Section.JOIN_US)) { active}"><a class="nav-link" href="/joinUs">@messagesApi.apply("menu.join.us")</a></li>
-                        </ul>
-                        <ul class="navbar-nav">
-                        @user match {
-                            case Some(u) => {
-                                <li class="nav-item"><a class="nav-link" href="@controllers.authentication.routes.AuthenticationController.logout()">@messagesApi.apply("menu.sign.off")</a></li>
-                            }
-                            case None => {
-                                <li class="nav-item"><a class="nav-link" href="@controllers.authentication.routes.AuthenticationController.login()">@messagesApi.apply("menu.login")</a></li>
-                                <li class="nav-item"><a class="nav-link" href="@routes.UserController.signIn()">@messagesApi.apply("menu.sign.in")</a></li>
-                                <li class="nav-item"><a class="nav-link" href="@controllers.authentication.routes.AuthenticationController.loginWithOauth()">Login with Discord account</a></li>
+                <div class="collapse navbar-collapse" id="navbarNavDropdown">
+                    @* mr-auto allow to introduce a margin after this component *@
+                <ul class="navbar-nav mr-auto">
+                    @* ADMIN *@
+                    @user match {
+                        case Some(u) => {
+                            @if(u.admin) {
+                                <li class="nav-item dropdown">
+                                    <a class="nav-link dropdown-toggle" href="" id="navbarDropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                    @messagesApi.apply("menu.admin.dropdown")
+                                    </a>
+                                    <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
+                                        <a class="dropdown-item" href="@controllers.forum.routes.ForumController.listJoinCategoryRole()">
+                                        @messagesApi.apply("menu.admin.category")</a>
+                                        <a class="dropdown-item" href="@routes.UserController.list()">
+                                        @messagesApi.apply("menu.admin.user")
+                                        </a>
+                                    </div>
+                                </li>
                             }
                         }
+                        case None => {}
 
-                        </ul>
-                    </div>
+                    }
+                    @* LEFT SECTIONS *@
+                <li class="nav-item @if(section.isDefined && section.equals(Section.HOME)) { active}"><a class="nav-link" href="/">@messagesApi.apply("menu.home")</a></li>
+                <li class="nav-item @if(section.isDefined && section.equals(Section.ROSTER)) { active}"><a class="nav-link" href="/guild">@messagesApi.apply("menu.roster")</a></li>
+                <li class="nav-item @if(section.isDefined && section.equals(Section.FORUM)) { active}"><a class="nav-link" href="/forum">@messagesApi.apply("menu.forum")</a></li>
+                <li class="nav-item @if(section.isDefined && section.equals(Section.JOIN_US)) { active}"><a class="nav-link" href="/joinUs">@messagesApi.apply("menu.join.us")</a></li>
+                </ul>
+                    @* RIGHT SECTION *@
+                <ul class="navbar-nav">
+                @user match {
+                    case Some(u) => {
+                        <li class="nav-item"><a class="nav-link" href="@controllers.authentication.routes.AuthenticationController.logout()">@messagesApi.apply("menu.sign.off")</a></li>
+                    }
+                    case None => {
+                        <li class="nav-item"><a class="nav-link" href="@controllers.authentication.routes.AuthenticationController.login()">@messagesApi.apply("menu.login")</a></li>
+                        <li class="nav-item"><a class="nav-link" href="@routes.UserController.signIn()">@messagesApi.apply("menu.sign.in")</a></li>
+                        <li class="nav-item"><a class="nav-link" href="@controllers.authentication.routes.AuthenticationController.loginWithOauth()">Login with Discord account</a></li>
+                    }
+                }
+
+                </ul>
                 </div>
-            </nav>
+            </div>
+        </nav>
         </header>
 
 

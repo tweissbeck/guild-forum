@@ -10,7 +10,8 @@ menu.sign.in=Besoin d'un compte?
 menu.account=Compte
 menu.join.us=Nous rejoindre
 menu.admin.dropdown=Administration
-menu.admin.category=Category
+menu.admin.category=Gestion des categorie
+menu.admin.user=Gestion des utilisateurs
 
 ##### Flash
 flash.missing.right=Vous n''avez pas les droits suffisant pour accéder à la resource {0}.
@@ -59,6 +60,11 @@ join.us.submit=Valider
 
 # Join forum category to role page
 admin.category.association.table.category=Liste des catégories de forum
+
+## Uer
+user.admin.edit=Editer
+user.admin.delete=Supprimer
+user.admin=Administrateur
 
 
 # #### Validation error

@@ -4,6 +4,7 @@ import java.time.format.DateTimeFormatter
 import javax.inject.{Inject, Singleton}
 
 import controllers.composition.{AdminAction, Authenticated}
+import controllers.front.UserList
 import forms.{AdminEditForm, SignInForm}
 import play.api.data.Forms._
 import play.api.data.{Form, OptionalMapping}
@@ -61,7 +62,9 @@ class UserController @Inject()(db: Database, implicit val messagesApi: MessagesA
 
   def list() = Admin { implicit request =>
     db.withConnection { implicit conn =>
-      Ok(views.html.user.admin.list(request.admin, UserService.list()))
+      val users: Seq[User] = UserService.list()
+      val usersListToFront = users.map { u => (new UserList(u), !u.id.equals(request.admin.id)) }
+      Ok(views.html.user.admin.list(request.admin, usersListToFront))
     }
   }
 
