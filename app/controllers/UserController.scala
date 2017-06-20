@@ -1,17 +1,21 @@
 package controllers
 
+import java.sql.SQLException
 import java.time.format.DateTimeFormatter
 import javax.inject.{Inject, Singleton}
 
+import api.{ErrorResponse, Response}
 import controllers.composition.{AdminAction, Authenticated}
 import controllers.front.UserList
 import forms.{AdminEditForm, SignInForm}
+import play.api.Logger
 import play.api.data.Forms._
 import play.api.data.{Form, OptionalMapping}
 import play.api.db.Database
 import play.api.i18n.{I18nSupport, MessagesApi}
 import play.api.libs.json._
 import play.api.mvc.{Action, Controller}
+import services.IdEncryptionUtil
 import services.intern.database.{User, UserService}
 
 
@@ -71,7 +75,7 @@ class UserController @Inject()(db: Database, implicit val messagesApi: MessagesA
   def edit(id: String) = Admin { implicit request =>
     db.withConnection { implicit conn =>
       try {
-        val user: Option[User] = UserService.findById(id.toLong)
+        val user: Option[User] = UserService.findById(IdEncryptionUtil.decodeLong(id))
         user match {
           case Some(_) => Ok(views.html.user.admin.edit(request.admin, editForm.fill(convertUserToEdit(user.get))))
           case None => NotFound
@@ -84,44 +88,96 @@ class UserController @Inject()(db: Database, implicit val messagesApi: MessagesA
 
   def persistModification() = TODO
 
-  def delete(id: String) = TODO
+  def delete(id: String) = Admin { implicit request => {
+    val idAsLong = IdEncryptionUtil.decodeLong(id)
+    db.withConnection {
+      implicit conn => {
+        val user = UserService.findById(idAsLong)
+
+        val response = if (user.isDefined) {
+          val userToDelete = user.get
+          // logged in admin can't delete himself
+          if (!userToDelete.id.equals(request.admin.id)) {
+            Logger.info(s"User ${request.admin.login}:${request.admin.id} have delete the user ${
+              userToDelete.login
+            }:${userToDelete.id}")
+            try {
+              UserService.delete(idAsLong)
+              Response.OK
+            } catch {
+              case e: SQLException =>
+                Logger.error(s"Failed to delete user ${userToDelete.login}:${userToDelete.id}", e)
+                ErrorResponse(503, ErrorResponse.DELETE_USER_FAILED, Some(e.getMessage))
+            }
+          } else {
+            ErrorResponse(403, ErrorResponse.USER_SELF_DELETE)
+          }
+        } else {
+          ErrorResponse(404, ErrorResponse.USER_NOT_EXIST)
+        }
+        response match {
+          case error: ErrorResponse => error.error match {
+            case ErrorResponse.DELETE_USER_FAILED =>
+              InternalServerError(
+                views.html.user.admin.delete(request.admin, ERROR, messagesApi.apply("user.admin.delete.error")))
+            case ErrorResponse.USER_SELF_DELETE =>
+              Forbidden(views.html.user.admin
+                .delete(request.admin, WARN, messagesApi.apply("user.admin.delete.cant.delete.self")))
+            case ErrorResponse.USER_NOT_EXIST =>
+              NotFound(views.html.user.admin
+                .delete(request.admin, ERROR, messagesApi.apply("user.admin.delete.user.notexist")))
+          }
+          case _: Response => Ok(views.html.user.admin.delete(request.admin, INFO,
+            messagesApi.apply("user.admin.delete.ok", user.get.login.getOrElse(user.get.mail))))
+        }
+      }
+    }
+
+  }
+
+
+  }
 
   def jsonList() = Action {
-    db.withConnection { implicit conn =>
-      val users = UserService.list()
-      val json = Json.toJson(users)
-      Ok(json)
+    db.withConnection {
+      implicit conn =>
+        val users = UserService.list()
+        val json = Json.toJson(users)
+        Ok(json)
     }
   }
 
   /**
     * GET SignIn
     */
-  def signIn() = Action { implicit request =>
-    Ok(views.html.user.signIn(signInForm))
+  def signIn() = Action {
+    implicit request =>
+      Ok(views.html.user.signIn(signInForm))
   }
 
   /**
     * POST SignIn
     */
-  def signInPost() = Action { implicit request =>
-    signInForm.bindFromRequest().fold(
-      formWithErrors => {
-        // binding failure, you retrieve the form containing errors:
-        BadRequest(views.html.user.signIn(formWithErrors))
-      },
-      data => {
-        db.withConnection { implicit conn =>
-          // create the user
-          // TODO handle exception like unique constraints
-          val createdUser = UserService.createUser(data)
-          // Redirect the user to login page
-          Redirect(routes.HomeController.index())
-            .withNewSession
-            .withCookies(AuthenticationCookie.generateCookie(createdUser))
+  def signInPost() = Action {
+    implicit request =>
+      signInForm.bindFromRequest().fold(
+        formWithErrors => {
+          // binding failure, you retrieve the form containing errors:
+          BadRequest(views.html.user.signIn(formWithErrors))
+        },
+        data => {
+          db.withConnection {
+            implicit conn =>
+              // create the user
+              // TODO handle exception like unique constraints
+              val createdUser = UserService.createUser(data)
+              // Redirect the user to login page
+              Redirect(routes.HomeController.index())
+                .withNewSession
+                .withCookies(AuthenticationCookie.generateCookie(createdUser))
+          }
         }
-      }
-    )
+      )
   }
 
 }

@@ -6,3 +6,9 @@ package api
 trait Response {
   val code: Int
 }
+
+object Response {
+  val OK = new Response {
+    override val code: Int = 200
+  }
+}

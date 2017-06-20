@@ -1,0 +1,32 @@
+@import services.intern.database.AdminUser
+@(user: AdminUser, level: InfoLevel, message: String)(implicit messagesApi: MessagesApi, flash: Flash)
+
+
+
+@main(messagesApi.apply(""), Some(user), None) {
+    <div class="container">
+        <div class="row">
+            <div class="col">
+            @level match {
+                case ERROR => {
+                    <div class="alert alert-danger" role="alert">
+                    @message
+                    </div>
+                }
+                case WARN => {
+                    <div class="alert alert-warning" role="alert">
+                    @message
+                    </div>
+                }
+                case INFO => {
+                    <div class="alert alert-success" role="alert">
+                    @message
+                    </div>
+                }
+            }
+            </div>
+        </div>
+    </div>
+
+
+}

@@ -32,6 +32,12 @@ object UserService {
   /** Table name */
   private val USER = "Client"
 
+  /**
+    * Return list of users
+    *
+    * @param c sql connection
+    * @return all users
+    */
   def list()(implicit c: Connection): Seq[User] = {
     val query =
       s"""
@@ -50,6 +56,13 @@ object UserService {
     SQL(query).on("login" -> login).as(userParser.singleOpt);
   }
 
+  /**
+    * Find user by its login or mail
+    *
+    * @param value login or mail
+    * @param c     sql connection
+    * @return the user that match the login or email or None if none match
+    */
   def findByLoginOrMail(value: String)(implicit c: Connection): Option[User] = {
     val query =
       s"""
@@ -59,6 +72,13 @@ object UserService {
     SQL(query).on("value" -> value).as(userParser.singleOpt)
   }
 
+  /**
+    * Find user by its primary key
+    *
+    * @param userId user primary key
+    * @param c      sql connection
+    * @return the user that matches the id or None
+    */
   def findById(userId: Long)(implicit c: Connection): Option[User] = {
     val query =
       s"""
@@ -71,10 +91,10 @@ object UserService {
   /**
     * Create new user from discord credentials
     *
-    * @param user
-    * @param password
-    * @param connection
-    * @return
+    * @param user       user data provided by discord.
+    * @param password   user password. This value will be encoded before persist
+    * @param connection sql connection
+    * @return the created user
     */
   def createUser(user: DiscordUser, password: String)(implicit connection: Connection): User = {
     val createdAt = LocalDateTime.now()
@@ -151,9 +171,15 @@ object UserService {
        """
     SQL(changeSaltQuery).on("salt" -> encryptedSalt, "login" -> login).executeUpdate()
   }
+
+
+  /**
+    * Delete user with id given in parameter
+    *
+    * @param id         user primary key
+    * @param connection sql connection
+    */
+  def delete(id: Long)(implicit connection: Connection): Unit = {
+    SQL(s"DELETE FROM $USER WHERE cl_id = {id}").on("id" -> id).execute()
+  }
 }
-
-
-
-
-

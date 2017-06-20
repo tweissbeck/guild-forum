@@ -8,3 +8,9 @@ case class ErrorResponse(val code: Int, error: String, detail: Option[String] = 
     this(code, error, Some(detail))
   }
 }
+
+object ErrorResponse {
+  val USER_SELF_DELETE: String = "ERROR_USER_CANT_DELETE_SELF"
+  val DELETE_USER_FAILED: String = "ERROR_USER_DELETE_FAILED"
+  val USER_NOT_EXIST: String = "USER_NOT_EXIST"
+}

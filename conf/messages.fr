@@ -65,6 +65,10 @@ admin.category.association.table.category=Liste des catégories de forum
 user.admin.edit=Editer
 user.admin.delete=Supprimer
 user.admin=Administrateur
+user.admin.delete.error=Impossible de supprimer cet utilisateur, une erreur s''est produite.
+user.admin.delete.cant.delete.self=Vous ne pouvez pas vous supprimer vous même!
+user.admin.delete.user.notexist=L''utilisateur à supprimer n''exite pas.
+user.admin.delete.ok=L''utilisateur {0} a bien été supprimé.
 
 
 # #### Validation error
