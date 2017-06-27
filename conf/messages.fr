@@ -3,7 +3,7 @@ user.list.page.title=Liste des utilisateurs
 # #### HTTP
 resource.not.found=404 Not Found.
 resource.not.found.title=404 Ressource non trouvée
-resource.not.found.body=La page demandé n''existe pas ou plus, ca dépend.
+resource.not.found.body=La page demandée n''existe pas ou plus, ça dépend.
 
 # #### Main - Menu
 menu.home=Accueil
@@ -15,7 +15,7 @@ menu.sign.in=Besoin d'un compte?
 menu.account=Compte
 menu.join.us=Nous rejoindre
 menu.admin.dropdown=Administration
-menu.admin.category=Gestion des categorie
+menu.admin.category=Gestion des categories
 menu.admin.user=Gestion des utilisateurs
 
 ##### Flash
@@ -71,9 +71,9 @@ join.us.submit=Valider
 # ### ADMIN
 
 # Join forum category to role page
-admin.category.association.table.category=Liste des catégories de forum
+admin.category.association.table.category=Liste des catégories du forum
 
-## Uer
+## User
 user.admin.edit=Editer
 user.admin.delete=Supprimer
 user.admin=Administrateur
