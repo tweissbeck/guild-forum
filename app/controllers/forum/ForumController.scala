@@ -68,8 +68,11 @@ class ForumController @Inject()(db: Database, Auth: Authenticated, implicit val 
                 val categories: Seq[services.intern.database.forum.Category] = Forum.getCategories()
                 val cats = Forum.getCategoriesWithAssociateRoles()
                 val result = for (cat <- categories; role <- roles)
-                  yield (cat, role, cats.exists(catRole => catRole.ca_id == cat.ca_id && catRole.ri_id == role.id))
-                Ok(views.html.forum.admin.associateCategoryToRole(request.user, categories, roles, result))
+                  yield (new controllers.front.Category(cat), new controllers.front.Role(role), cats
+                    .exists(catRole => catRole.ca_id == cat.ca_id && catRole.ri_id == role.id))
+                Ok(views.html.forum.admin
+                  .associateCategoryToRole(request.user, categories.map(e => new controllers.front.Category(e)),
+                    roles.map(role => new controllers.front.Role(role)), result))
             }
           } else {
             Logger.debug(s"User ${request.user} is not admin and cannot have access to resource ${

@@ -1,5 +1,5 @@
-@import services.intern.database.forum.Category
-@import services.intern.database.{Role, User}
+@import controllers.front.{Category, Role}
+@import services.intern.database.User
 @import views.Section
 @(user: Option[User], categories: Seq[Category], roles: Seq[Role], categoryToRole: Seq[(Category, Role, Boolean)])(implicit messagesApi: MessagesApi, flash: Flash)
 @main("", user, Section.ADMIN_ASSOCIATE_CATEGORY_ROLE) {
@@ -18,20 +18,20 @@
                     <tbody>
                     @for(cat <- categories) {
                         <tr>
-                            <td scope="row">@cat.ca_label</td>
+                            <td scope="row">@cat.label</td>
                             @for(role <- roles) {
                                 <td>
                                 @if(categoryToRole.contains((cat, role, true))) {
                                     <input type="checkbox" id="joinCat_@{
-                                        cat.ca_id
+                                        cat.getEncoded()
                                     }_Role_@{
-                                        role.id
+                                        role.getEncoded()
                                     }" checked />
                                 } else {
                                     <input type="checkbox" id="joinCat_@{
-                                        cat.ca_id
+                                        cat.getEncoded()
                                     }_Role_@{
-                                        role.id
+                                        role.getEncoded()
                                     }" />
                                 }
                                 </td>
@@ -44,4 +44,12 @@
         </div>
 
     </div>
+
+    <script>
+            $(':checkbox').change(function () {
+                console.log('changed')
+                // do stuff here. It will fire on any checkbox change
+
+            });
+    </script>
 }
