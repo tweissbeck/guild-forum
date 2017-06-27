@@ -10,7 +10,8 @@ import play.api.mvc._
 import scala.concurrent.ExecutionContext
 
 /**
-  * Created by tweissbeck on 22/06/2016.
+  * Log request time handling
+  * @author tweissbeck
   */
 class LogFilter @Inject()(implicit ec: ExecutionContext) extends EssentialFilter {
   def apply(nextFilter: EssentialAction) = new EssentialAction {
@@ -26,9 +27,9 @@ class LogFilter @Inject()(implicit ec: ExecutionContext) extends EssentialFilter
         val requestTime = endTime - startTime
         val requestUri = requestHeader.uri
         val filteredUri = Seq("/javascripts/", "/images/")
-        if (!filteredUri.filter(uri => uri.containsSlice(requestUri)).isEmpty) {
+        if (filteredUri.exists(uri => uri.containsSlice(requestUri))) {
           Logger.debug(
-            s"${requestHeader.method} ${requestUri} took ${requestTime}ms and returned ${result.header.status}")
+            s"${requestHeader.method} $requestUri took ${requestTime}ms and returned ${result.header.status}")
         }
         result
       }
