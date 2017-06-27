@@ -1,24 +1,25 @@
 package services
 
 import java.security.{Key, MessageDigest}
-import javax.crypto.Cipher
 import javax.crypto.spec.SecretKeySpec
+import javax.crypto.{BadPaddingException, Cipher, IllegalBlockSizeException}
 import javax.xml.bind.DatatypeConverter
 
 import com.typesafe.config.ConfigFactory
+import play.api.Logger
 import play.api.libs.Codecs
 import services.intern.database.User
 
 /**
- * Define an helper to get a SecretKey from its alias and its algorithm
- */
+  * Define an helper to get a SecretKey from its alias and its algorithm
+  */
 trait KeyUser {
   /**
-   * Get the secret key value from the configuration
-   *
-   * @param keyAlias : key usage
-   * @return
-   */
+    * Get the secret key value from the configuration
+    *
+    * @param keyAlias : key usage
+    * @return
+    */
   protected def getKey(keyAlias: String)(implicit algo: String): Key = {
     val keyAsString = ConfigFactory.load().getString(s"crypto.key.$keyAlias")
     val keyData = DatatypeConverter.parseHexBinary(keyAsString)
@@ -26,21 +27,28 @@ trait KeyUser {
   }
 
   /**
-   *
-   * @param mode cipher mode [[Cipher.DECRYPT_MODE]] or [[Cipher.ENCRYPT_MODE]]
-   * @param key  the key to use in [[Cipher]]
-   * @param data
-   * @param transformInput
-   * @param outputTransform
-   * @param algo algorithm to use
-   * @return
-   */
+    *
+    * @param mode cipher mode [[Cipher.DECRYPT_MODE]] or [[Cipher.ENCRYPT_MODE]]
+    * @param key  the key to use in [[Cipher]]
+    * @param data
+    * @param transformInput
+    * @param outputTransform
+    * @param algo algorithm to use
+    * @return
+    */
   protected def cipher(mode: Int, key: Key, data: String,
                        transformInput: (String) => Array[Byte],
                        outputTransform: (Array[Byte]) => String)(implicit algo: String): String = {
     val c = Cipher.getInstance(algo)
     c.init(mode.toInt, key)
-    outputTransform(c.doFinal(transformInput(data)))
+    try {
+      outputTransform(c.doFinal(transformInput(data)))
+    } catch {
+      // Produce a not found on client site
+      case e@(_: BadPaddingException | _: IllegalBlockSizeException) =>
+        Logger.error(s"Failed to decoded encoded primary key: $data. Wrong input param.", e)
+        "-1"
+    }
   }
 }
 
@@ -55,25 +63,26 @@ object Salt extends KeyUser {
 
   def decrypt(encryptedSalt: String, keyAlias: String): String = {
     val key = getKey(keyAlias)
-    this.cipher(Cipher.DECRYPT_MODE, key, encryptedSalt, (s) => DatatypeConverter.parseHexBinary(s), s => new String(s, "utf-8"))
+    this.cipher(Cipher.DECRYPT_MODE, key, encryptedSalt, (s) => DatatypeConverter.parseHexBinary(s),
+      s => new String(s, "utf-8"))
   }
 }
 
 object Password {
   /**
-   * Check the user password
-   *
-   * @return true if the password marches the user password, false otherwise
-   */
+    * Check the user password
+    *
+    * @return true if the password marches the user password, false otherwise
+    */
   def checkPassword(userPassword: String, user: User): Boolean = {
     hash(userPassword, Salt.decrypt(user.salt, "salt")).equalsIgnoreCase(user.password)
   }
 
   /**
-   * Generate the password hash with salt mechanism
-   *
-   * @return the hashed password
-   */
+    * Generate the password hash with salt mechanism
+    *
+    * @return the hashed password
+    */
   def hash(password: String, salt: String): String = {
     val messageDigest = MessageDigest.getInstance("SHA-256")
     val passwordWithSalt = s"$salt:$password"
@@ -82,8 +91,8 @@ object Password {
 }
 
 /**
- * Helper to encode beans id like table identifier.
- */
+  * Helper to encode beans id like table identifier.
+  */
 object IdEncryptionUtil extends KeyUser {
   implicit val ALGO = "AES"
   val key: Key = getKey("id")

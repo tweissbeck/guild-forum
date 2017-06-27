@@ -1,5 +1,10 @@
 user.list.page.title=Liste des utilisateurs
 
+# #### HTTP
+resource.not.found=404 Not Found.
+resource.not.found.title=404 Ressource non trouvée
+resource.not.found.body=La page demandé n''existe pas ou plus, ca dépend.
+
 # #### Main - Menu
 menu.home=Accueil
 menu.roster=Roster
@@ -19,11 +24,18 @@ flash.missing.right=Vous n''avez pas les droits suffisant pour accéder à la re
 
 # #### FORMS
 # login
+form.button.save=Enregistrer
 form.login.login=Identifiant
 form.login.password=Mot de passe
 form.login.login.placeholder=Votre login ou votre email
 form.login.submit=Se connecter
 form.login.not.authenticated=Authentication échoué, merci de réessayer
+form.login.first.name=Prénom
+form.login.last.name=Nom
+form.login.email=Email
+form.login.id=Id primaire
+
+
 # sign in
 form.signIn.login=Identifiant
 form.signIn.mail = Email
@@ -69,6 +81,11 @@ user.admin.delete.error=Impossible de supprimer cet utilisateur, une erreur s''e
 user.admin.delete.cant.delete.self=Vous ne pouvez pas vous supprimer vous même!
 user.admin.delete.user.notexist=L''utilisateur à supprimer n''exite pas.
 user.admin.delete.ok=L''utilisateur {0} a bien été supprimé.
+
+user.admin.edit.name=Edition de l''utilisateur {0} {1}
+user.admin.edit.unknown=Edition de l''utilisateur
+
+
 
 
 # #### Validation error

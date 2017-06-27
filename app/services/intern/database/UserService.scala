@@ -16,7 +16,7 @@ object UserService {
 
 
   private val SALT_KEY = "salt"
-  val userParser = get[Long]("cl_id") ~ get[String]("cl_lastName") ~ get[String]("cl_firstName") ~
+  private val userParser = get[Long]("cl_id") ~ get[String]("cl_lastName") ~ get[String]("cl_firstName") ~
     get[String]("cl_mail") ~ get[Option[String]]("cl_login") ~ get[LocalDateTime]("cl_createdAt") ~
     get[Option[LocalDateTime]]("cl_lastLogin") ~ get[Boolean]("cl_admin") ~ get[String]("cl_password") ~
     get[String]("cl_salt") map {
@@ -181,5 +181,34 @@ object UserService {
     */
   def delete(id: Long)(implicit connection: Connection): Unit = {
     SQL(s"DELETE FROM $USER WHERE cl_id = {id}").on("id" -> id).execute()
+  }
+
+  /**
+    * Update User entiry
+    *
+    * @param id         primary key of the user
+    * @param diffs      list of diff as a map of updated columns where keys are columns name and values the updated values.
+    * @param connection sql connection
+    * @return
+    */
+  def update(id: Long, diffs: Map[String, String])(implicit connection: Connection): Int = {
+    if (diffs.nonEmpty) {
+      val params = diffs.map(e => new NamedParameter(e._1, e._2))
+      val paramsAsString = "SET " + diffs.map(e => s" ${e._1} = {${e._1}}").mkString(", ")
+      val query = SQL(
+        s"""
+        UPDATE $USER $paramsAsString WHERE ${User.ID} = {id}
+      """)
+
+        /**
+          * use the *seq like* to varargs special notation
+          *
+          * @see chapter 4.6.x [repeated paramater]
+          */
+        .on(params.toSeq: _*).on("id" -> id)
+      query.executeUpdate()
+    } else {
+      0
+    }
   }
 }

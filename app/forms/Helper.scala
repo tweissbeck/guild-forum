@@ -6,7 +6,7 @@ import play.api.i18n.MessagesApi
 import scala.xml.Elem
 
 /**
-  * An helper that define commons function to get bootstrap classes related to forms.
+  * An helper that define commons function to apply forms bootstrap classes.
   */
 object Helper {
 

@@ -18,6 +18,8 @@ package object controllers {
 
   object FLASH_SCOPE {
     val MISSING_RIGHT = "missingRight"
+    val OPERATION_STATUS = "operationStatus"
+    val OPERATION_ERROR_CODE = "operationErrorCode"
   }
 
   /**

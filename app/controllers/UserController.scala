@@ -16,12 +16,16 @@ import play.api.i18n.{I18nSupport, MessagesApi}
 import play.api.libs.json._
 import play.api.mvc.{Action, Controller}
 import services.IdEncryptionUtil
-import services.intern.database.{User, UserService}
+import services.intern.database.{AdminUser, CommonUser, User, UserService}
 
 
 @Singleton
 class UserController @Inject()(db: Database, implicit val messagesApi: MessagesApi,
                                Auth: Authenticated, Admin: AdminAction) extends Controller with I18nSupport {
+
+  implicit private def usersToUsersList(users: Seq[User]): Seq[(UserList, Boolean)] = {
+    users.map { u => (new UserList(u), !u.id.equals(0)) }
+  }
 
   val signInForm = Form(
     mapping(
@@ -66,9 +70,7 @@ class UserController @Inject()(db: Database, implicit val messagesApi: MessagesA
 
   def list() = Admin { implicit request =>
     db.withConnection { implicit conn =>
-      val users: Seq[User] = UserService.list()
-      val usersListToFront = users.map { u => (new UserList(u), !u.id.equals(request.admin.id)) }
-      Ok(views.html.user.admin.list(request.admin, usersListToFront))
+      Ok(views.html.user.admin.list(request.admin, UserService.list()))
     }
   }
 
@@ -77,18 +79,54 @@ class UserController @Inject()(db: Database, implicit val messagesApi: MessagesA
       try {
         val user: Option[User] = UserService.findById(IdEncryptionUtil.decodeLong(id))
         user match {
-          case Some(_) => Ok(views.html.user.admin.edit(request.admin, editForm.fill(convertUserToEdit(user.get))))
-          case None => NotFound
+          case Some(_) => Ok(views.html.user.admin.edit(request.admin, editForm.fill(convertUserToEdit(user.get)), id))
+          case None => NotFound(views.html.commons.ResourceNotFound(Some(request.admin), id, None))
         }
       } catch {
-        case e: NumberFormatException => ???
+        case _: NumberFormatException => NotFound(views.html.commons.ResourceNotFound(Some(request.admin), id, None))
       }
     }
   }
 
-  def persistModification() = TODO
+  def persistModification(id: String) = Admin {
+    implicit request =>
+      db.withConnection {
+        implicit connection =>
+          val user = UserService.findById(IdEncryptionUtil.decodeLong(id))
+          user match {
+            case Some(u) => {
+              val form = editForm.bindFromRequest()
+              form.fold(
+                errors => {
+                  Logger.debug("Validation failed for update user form.")
+                  Ok(views.html.user.admin.edit(request.admin, form, id))
+                },
+                data => {
+                  val other = if (form.get.isAdmin) AdminUser(u.id, data.login, data.firstName, data.lastName,
+                    data.email, u.createdAt, u.lastLogin, data.password.getOrElse(u.password),
+                    u.salt) else CommonUser(u.id, data.login,
+                    data.firstName, data.lastName, data.email, u.createdAt, u.lastLogin,
+                    data.password.getOrElse(u.password), u.salt)
+                  val diffs: Map[String, String] = u.diff(other)
+                  if (diffs.isEmpty) {
+                    Logger.debug(s"User ${u.mail}:${u.id} has not been modified because no update was detected")
+                    Redirect(controllers.routes.UserController.list())
+                  } else {
+                    if (UserService.update(u.id, diffs) > 0) {
+                      Logger.info(s"User with id updated on fields: ${diffs.mkString(", ")}")
+                    }
+                    Redirect(controllers.routes.UserController.list())
+                      .flashing("SUCCESS" -> messagesApi.apply("user.update.success"))
+                  }
+                }
+              )
+            }
+            case None => NotFound(views.html.commons.ResourceNotFound(Some(request.admin), id, None))
+          }
+      }
+  }
 
-  def delete(id: String) = Admin { implicit request => {
+  def delete(id: String) = Admin { implicit request =>
     val idAsLong = IdEncryptionUtil.decodeLong(id)
     db.withConnection {
       implicit conn => {
@@ -132,10 +170,6 @@ class UserController @Inject()(db: Database, implicit val messagesApi: MessagesA
         }
       }
     }
-
-  }
-
-
   }
 
   def jsonList() = Action {

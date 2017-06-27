@@ -8,7 +8,7 @@ GET         /                               controllers.HomeController.index
 # Users related routes for admin
 GET         /admin/user/list                controllers.UserController.list
 GET         /admin/user/edit/:id            controllers.UserController.edit(id: String)
-POST        /admin/user/edit/               controllers.UserController.persistModification
+POST        /admin/user/edit/:id            controllers.UserController.persistModification(id:String)
 GET         /admin/user/delete/:id          controllers.UserController.delete(id: String)
 GET         /admin/forum/categories         controllers.forum.ForumController.listJoinCategoryRole
 
