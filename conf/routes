@@ -12,6 +12,10 @@ POST        /admin/user/edit/:id            controllers.UserController.persistMo
 GET         /admin/user/delete/:id          controllers.UserController.delete(id: String)
 GET         /admin/forum/categories         controllers.forum.ForumController.listJoinCategoryRole
 
+#Application
+GET         /admin/application/             controllers.ApplicationController.list
+GET         /admin/application/:id          controllers.ApplicationController.detail(id:String)
+
 
 # JSON api
 GET         /api/admin/user/list            controllers.UserController.jsonList
