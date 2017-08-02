@@ -3,7 +3,7 @@
 -- Schema
 
 CREATE TABLE Authentication (
-  au_id           BIGINT       NOT NULL PRIMARY KEY,
+  au_id           BIGSERIAL NOT NULL PRIMARY KEY,
   au_token        VARCHAR(128) NOT NULL,
   au_refreshToken VARCHAR(128),
   au_createdAt    TIMESTAMP    NOT NULL,
@@ -11,7 +11,7 @@ CREATE TABLE Authentication (
 );
 
 CREATE TABLE Client (
-  cl_id             BIGINT        NOT NULL PRIMARY KEY,
+  cl_id             BIGSERIAL NOT NULL PRIMARY KEY,
   cl_lastName       VARCHAR(60)   NOT NULL,
   cl_firstName      VARCHAR(60)   NOT NULL,
   cl_login          VARCHAR(128),
@@ -30,14 +30,14 @@ CREATE TABLE Client (
 
 
 CREATE TABLE Role (
-  ri_id    BIGINT      NOT NULL  PRIMARY KEY,
+  ri_id    BIGSERIAL NOT NULL PRIMARY KEY,
   ri_label VARCHAR(60) NOT NULL,
 
   UNIQUE (ri_label)
 );
 
 CREATE TABLE Category (
-  ca_id     BIGINT       NOT NULL  PRIMARY KEY,
+  ca_id     BIGSERIAL NOT NULL PRIMARY KEY,
   ca_label  VARCHAR(100) NOT NULL,
   -- ca_childType ENUM ('BOTH', 'MESSAGE', 'CATEGORY'),
   ca_parent BIGINT,
@@ -45,7 +45,7 @@ CREATE TABLE Category (
 );
 
 CREATE TABLE Message (
-  me_id        BIGINT         NOT NULL  PRIMARY KEY,
+  me_id        BIGSERIAL NOT NULL PRIMARY KEY,
   me_message   VARCHAR(64000) NOT NULL              DEFAULT '',
   me_order     INT            NOT NULL,
   me_createdAt TIMESTAMP      NOT NULL,
@@ -56,7 +56,7 @@ CREATE TABLE Message (
 );
 
 CREATE TABLE Topic (
-  to_id        BIGINT       NOT NULL  PRIMARY KEY,
+  to_id        BIGSERIAL NOT NULL PRIMARY KEY,
   to_label     VARCHAR(100) NOT NULL,
   to_author    BIGINT       NOT NULL,
   to_createdAt TIMESTAMP    NOT NULL,
@@ -91,7 +91,7 @@ CREATE TABLE JoinUserRole (
 CREATE TYPE AppStatus AS ENUM ('NEW', 'IN_PROGRESS', 'VALIDATE', 'REFUSED');
 
 CREATE TABLE Application (
-  ap_id           BIGINT         NOT NULL PRIMARY KEY,
+  ap_id           BIGSERIAL NOT NULL PRIMARY KEY,
   ap_user         BIGINT         NOT NULL,
   ap_status       AppStatus,
   ap_creationDate TIMESTAMP      NOT NULL,
@@ -195,3 +195,5 @@ DROP TABLE IF EXISTS Client CASCADE;
 DROP TABLE IF EXISTS Authentication CASCADE;
 DROP TABLE IF EXISTS Role CASCADE;
 DROP TABLE IF EXISTS JoinCategoryRole CASCADE;
+DROP TABLE IF EXISTS Application CASCADE;
+DROP TYPE IF EXISTS AppStatus;
