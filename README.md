@@ -19,6 +19,24 @@ Sub module need to define the scala version to prevent unresolved dependency
 
 ## Basic configuration
 
+### Configuration in application.conf
+
+#### Data base
+
+Create a postgres data base named forum for instance
+Customize your credential :
+
+<pre>
+db {
+  # Postgres sql
+  default.driver = org.postgresql.Driver
+  default.url = "jdbc:postgresql://127.0.0.1/forum"
+  default.user= "Your db user"
+  default.password= "Your db password"
+}
+</pre>
+
+
 Create a local file "reference.conf" and define the following keys <br/>
 
 #### Recaptcha 
