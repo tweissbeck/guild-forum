@@ -14,7 +14,8 @@ libraryDependencies ++= Seq(
   // DATA BASE
   jdbc, //jdbc is not compatible with play slick
   "com.typesafe.play" %% "anorm" % "2.5.2",
-  "com.h2database" % "h2" % "1.4.192",
+//  "com.h2database" % "h2" % "1.4.192",
+  "org.postgresql" % "postgresql" % "42.1.2",
   evolutions,
 
   // PLAY
