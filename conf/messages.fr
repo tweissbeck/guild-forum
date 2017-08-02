@@ -17,6 +17,7 @@ menu.join.us=Nous rejoindre
 menu.admin.dropdown=Administration
 menu.admin.category=Gestion des categories
 menu.admin.user=Gestion des utilisateurs
+menu.admin.application=Gestion des postulations
 
 ##### Flash
 flash.missing.right=Vous n''avez pas les droits suffisant pour accéder à la resource {0}.
