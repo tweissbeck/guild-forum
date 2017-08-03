@@ -23,8 +23,8 @@ Sub module need to define the scala version to prevent unresolved dependency
 
 #### Data base
 
-Create a postgres data base named forum for instance
-Customize your credential :
+Create a postgres data base named "forum" for instance <br/>
+Customize data base credential :
 
 <pre>
 db {
@@ -36,8 +36,10 @@ db {
 }
 </pre>
 
+### Configuration in reference.conf
 
 Create a local file "reference.conf" and define the following keys <br/>
+This file is local to your installation and ignored by git.
 
 #### Recaptcha 
 Can be disabled in main config file<br/>
