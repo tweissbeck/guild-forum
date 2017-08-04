@@ -7,15 +7,20 @@
         @if(!applications.isEmpty) {
             <table class="table">
                 <thead>
-                    <tr>@messagesApi.apply("application.table.th.id")</tr>
-                    <tr>@messagesApi.apply("application.table.th.subject")</tr>
-                    <tr>@messagesApi.apply("application.table.th.user")</tr>
-                    <tr>@messagesApi.apply("application.table.th.creation.date")</tr>
+                    <tr>
+                        <th>@messagesApi.apply("application.table.th.id")</th>
+                        <th>@messagesApi.apply("application.table.th.subject")</th>
+                        <th>@messagesApi.apply("application.table.th.user")</th>
+                        <th>@messagesApi.apply("application.table.th.creation.date")</th>
+                    </tr>
                 </thead>
                 <tbody>
                 @for(application <- applications) {
                     <tr>
-                        <td><a href="@controllers.routes.ApplicationController.detail(application.getEncoded())">@application.subject</a></td>
+                        <td><a href="@controllers.routes.ApplicationController.detail(application.getEncoded())">@application.id</a></td>
+                        <td>@application.subject</td>
+                        <td>@application.userIdentifier</td>
+                        <td>@application.createDate</td>
                     </tr>
                 }
                 </tbody>
