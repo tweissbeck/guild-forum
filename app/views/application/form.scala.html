@@ -7,7 +7,7 @@
 
 @main(messapeApi.apply(""), None, Section.JOIN_US) {
     <div class="container">
-        <form action="@routes.JoinUsController.post()" method="post">
+        <form action="@routes.ApplicationController.post()" method="post">
             @* IRL presentation *@
             <div class="row">
                 <h3>@messapeApi.apply("join.us.irl")</h3>

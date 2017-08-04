@@ -33,8 +33,8 @@ GET         /oauth/authorize/discord        controllers.authentication.Authentic
 GET         /oauth/token/discord            controllers.authentication.AuthenticationController.handleToken
 
 #Join us
-GET         /joinUs                         controllers.JoinUsController.get
-POST        /joinUs                         controllers.JoinUsController.post
+GET         /joinUs                         controllers.ApplicationController.get
+POST        /joinUs                         controllers.ApplicationController.post
 
 # Forum
 GET         /forum                          controllers.forum.ForumController.index

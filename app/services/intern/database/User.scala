@@ -5,7 +5,7 @@ import java.time.LocalDateTime
 import scala.collection.mutable
 
 object User {
-
+  val TABLE_NAME ="Client"
   val ID = "cl_id"
   val LOGIN = "cl_login"
   val LAST_NAME = "cl_lastName"

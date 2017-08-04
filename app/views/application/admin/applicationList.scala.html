@@ -1,0 +1,28 @@
+@import controllers.front.Application
+@import services.intern.database.AdminUser
+@(user: AdminUser, applications: Seq[Application])(implicit messagesApi: MessagesApi, flash: Flash)
+@main(messagesApi.apply("title.application.list"), Some(user), None) {
+    <div class="container">
+        <div class="row">
+        @if(!applications.isEmpty) {
+            <table class="table">
+                <thead>
+                    <tr>@messagesApi.apply("application.table.th.id")</tr>
+                    <tr>@messagesApi.apply("application.table.th.subject")</tr>
+                    <tr>@messagesApi.apply("application.table.th.user")</tr>
+                    <tr>@messagesApi.apply("application.table.th.creation.date")</tr>
+                </thead>
+                <tbody>
+                @for(application <- applications) {
+                    <tr>
+                        <td><a href="@controllers.routes.ApplicationController.detail(application.getEncoded())">@application.subject</a></td>
+                    </tr>
+                }
+                </tbody>
+            </table>
+        } else {
+            <p>@messagesApi.apply("applications.empty")</p>
+        }
+        </div>
+    </div>
+}
