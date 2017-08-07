@@ -11,7 +11,7 @@ import play.api.data.Form
 import play.api.data.Forms._
 import play.api.db.Database
 import play.api.i18n.MessagesApi
-import play.api.mvc.{Action, Controller}
+import play.api.mvc.Controller
 import services.IdEncryptionUtil
 import services.extern.captcha.CaptchaValidator
 import services.intern.ApplicationService
@@ -106,9 +106,14 @@ class ApplicationController @Inject()(db: Database, Auth: Authenticated, Admin: 
     *
     * @return
     */
-  def get() = Action {
+  def get() = Auth {
     implicit request =>
-      Ok(views.html.application.form(FormConfig(), applyForm))
+      if (request.user.isEmpty) {
+        Ok(views.html.application.form(FormConfig(), applyForm))
+      } else {
+        Redirect(controllers.authentication.routes.AuthenticationController.login())
+          .flashing(FlashConstant.REQUESTED_RESOURCE -> controllers.routes.ApplicationController.get().url)
+      }
   }
 
   /**
