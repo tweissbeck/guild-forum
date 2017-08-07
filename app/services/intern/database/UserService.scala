@@ -203,7 +203,7 @@ object UserService {
         /**
           * use the *seq like* to varargs special notation
           *
-          * @see chapter 4.6.x [repeated paramater]
+          * @see chapter 4.6.x [repeated parameter]
           */
         .on(params.toSeq: _*).on("id" -> id)
       query.executeUpdate()
