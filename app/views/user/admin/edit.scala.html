@@ -1,6 +1,6 @@
 @import forms.{AdminEditForm, Helper}
 @import services.intern.database.User
-@(user: User, form: Form[AdminEditForm], encodedId: String)(implicit messagesApi: MessagesApi, flash: Flash)
+@(user: User, form: Form[AdminEditForm], encodedId: String)(implicit lang: Lang, messagesApi: MessagesApi, flash: Flash)
 
 @main(messagesApi.apply("user.view.title"), Some(user), None) {
     <div class="container">

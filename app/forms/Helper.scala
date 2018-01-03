@@ -1,7 +1,7 @@
 package forms
 
 import play.api.data.Form
-import play.api.i18n.MessagesApi
+import play.api.i18n.{Lang, MessagesApi}
 
 import scala.xml.Elem
 
@@ -81,7 +81,8 @@ object Helper {
     !form.data.get(field)
       .get.isEmpty
 
-  def fieldFeedback[A <: AnyRef](form: Form[A], field: String)(implicit messagesApi: MessagesApi): Option[Elem] = {
+  def fieldFeedback[A <: AnyRef](form: Form[A], field: String)
+                                (implicit messagesApi: MessagesApi, lang: Lang): Option[Elem] = {
     if (inError(form, field)) {
       val html = <div class="form-control-feedback">
         {messagesApi.apply(form.error(field).get.messages.head)}

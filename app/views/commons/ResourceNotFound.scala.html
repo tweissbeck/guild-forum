@@ -1,5 +1,5 @@
 @import services.intern.database.User
-@(user: Option[User], resource: String, resourceKey: Option[String])(implicit messagesApi: MessagesApi, flash: Flash)
+@(user: Option[User], resource: String, resourceKey: Option[String])(implicit lang: Lang, messagesApi: MessagesApi, flash: Flash)
 
 @main(messagesApi.apply("resource.not.found.title"), user, None) {
     <div class="container">

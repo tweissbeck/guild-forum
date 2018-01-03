@@ -1,7 +1,7 @@
 @import controllers.front.{Category, Role}
 @import services.intern.database.User
 @import views.Section
-@(user: Option[User], categories: Seq[Category], roles: Seq[Role], categoryToRole: Seq[(Category, Role, Boolean)])(implicit messagesApi: MessagesApi, flash: Flash)
+@(user: Option[User], categories: Seq[Category], roles: Seq[Role], categoryToRole: Seq[(Category, Role, Boolean)])(implicit lang: Lang, messagesApi: MessagesApi, flash: Flash)
 @main("", user, Section.ADMIN_ASSOCIATE_CATEGORY_ROLE) {
     <div class="container">
         <div class="row">

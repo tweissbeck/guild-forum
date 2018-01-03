@@ -1,7 +1,7 @@
 @import controllers.FlashConstant
 @import services.intern.database.User
 @import views.Section
-@(title: String, user: Option[User], section: Option[String])(content: Html)(implicit messagesApi: MessagesApi, flash: Flash)
+@(title: String, user: Option[User], section: Option[String])(content: Html)(implicit lang: Lang, messagesApi: MessagesApi, flash: Flash)
 
 <!DOCTYPE html>
 <html lang="en">
@@ -40,7 +40,7 @@
                                         @messagesApi.apply("menu.admin.user")
                                         </a>
                                         <a class="dropdown-item" href="@routes.ApplicationController.list()">
-                                            @messagesApi.apply("menu.admin.application")
+                                        @messagesApi.apply("menu.admin.application")
                                         </a>
                                     </div>
                                 </li>

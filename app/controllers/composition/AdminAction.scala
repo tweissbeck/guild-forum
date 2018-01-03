@@ -2,19 +2,24 @@ package controllers.composition
 
 import javax.inject.Inject
 
-import controllers.routes
 import play.api.Logger
 import play.api.db.Database
-import play.api.mvc.{ActionBuilder, Request, Result, Results}
+import play.api.mvc._
 import services.intern.database.{AdminUser, User, UserService}
 
-import scala.concurrent.Future
 import scala.concurrent.ExecutionContext.Implicits.global
+import scala.concurrent.{ExecutionContext, Future}
 
 /**
   * Action builder for action accessible by admin.
   */
-class AdminAction @Inject()(implicit db: Database) extends ActionBuilder[AdminRequest] {
+class AdminAction @Inject()(implicit db: Database, cc: ControllerComponents)
+  extends ActionBuilder[AdminRequest, AnyContent] {
+
+  override protected def executionContext: ExecutionContext = cc.executionContext
+
+  override def parser: BodyParser[AnyContent] = cc.parsers.defaultBodyParser
+
   override def invokeBlock[A](request: Request[A], block: (AdminRequest[A]) => Future[Result]): Future[Result] = {
 
     def handleForbidden(user: Option[User] = None): Future[Result] = {
@@ -29,6 +34,7 @@ class AdminAction @Inject()(implicit db: Database) extends ActionBuilder[AdminRe
           .flashing("actionRequested" -> s"${request.uri}")
       }
     }
+
     val userId = getUserFromRequest(request)
     userId match {
       case Some(id) =>

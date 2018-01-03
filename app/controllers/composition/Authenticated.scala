@@ -8,14 +8,19 @@ import play.api.db.Database
 import play.api.mvc._
 import services.intern.database.UserService
 
-import scala.concurrent.Future
+import scala.concurrent.{ExecutionContext, Future}
 
 /**
   * Authenticated action builder: request an Option[User]
   */
-class Authenticated @Inject()(implicit db: Database) extends ActionBuilder[AuthenticatedRequest] {
+class Authenticated @Inject()(implicit db: Database, cc: ControllerComponents)
+  extends ActionBuilder[AuthenticatedRequest, AnyContent] {
+
+  override protected def executionContext: ExecutionContext = cc.executionContext
 
   val AUTHENTICATION_TOKEN_KEY = AuthenticationCookie.NAME
+
+  override def parser: BodyParser[AnyContent] = cc.parsers.defaultBodyParser
 
   def invokeBlock[A](request: Request[A], block: (AuthenticatedRequest[A]) => Future[Result]) = {
 

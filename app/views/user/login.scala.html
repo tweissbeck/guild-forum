@@ -1,6 +1,6 @@
 @import forms.{Helper, LoginForm}
 
-@(form: Form[LoginForm])(implicit messagesApi: MessagesApi, flash: Flash)
+@(form: Form[LoginForm])(implicit lang: Lang, messagesApi: MessagesApi, flash: Flash)
 
 @main(messagesApi.apply("form.login.title"), None, None) {
     @utils.centerContent(6, 3) {

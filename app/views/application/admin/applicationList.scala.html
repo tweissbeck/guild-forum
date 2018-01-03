@@ -1,6 +1,6 @@
 @import controllers.front.Application
 @import services.intern.database.AdminUser
-@(user: AdminUser, applications: Seq[Application])(implicit messagesApi: MessagesApi, flash: Flash)
+@(user: AdminUser, applications: Seq[Application])(implicit lang: Lang, messagesApi: MessagesApi, flash: Flash)
 @main(messagesApi.apply("title.application.list"), Some(user), None) {
     <div class="container">
         <div class="row">

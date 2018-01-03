@@ -1,6 +1,6 @@
 @import controllers.front.UserList
 @import services.intern.database.User
-@(user: User, users: Seq[(UserList, Boolean)])(implicit messagesApi: MessagesApi, flash: Flash)
+@(user: User, users: Seq[(UserList, Boolean)])(implicit lang: Lang, messagesApi: MessagesApi, flash: Flash)
 
 @disabled(user: UserList, canDelete: Boolean) = {
     <a class="btn btn-primary" href="@routes.UserController.edit(user.getEncoded())" role="button">@messagesApi.apply("user.admin.edit")</a>
