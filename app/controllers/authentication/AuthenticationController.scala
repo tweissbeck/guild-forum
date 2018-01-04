@@ -41,19 +41,17 @@ class AuthenticationController @Inject()(val db: Database, implicit val messages
   def login() = Action { implicit request =>
     val cookie = request.cookies.get(AuthenticationCookie.NAME)
     cookie match {
-      case Some(cookie) => {
+      case Some(_) =>
         // FIXME we don't check the token validity here !?
         Logger.info("User already logged")
         Redirect(controllers.routes.HomeController.index())
-      }
-      case None => {
+      case None =>
         val uri = request.flash.get(FlashConstant.REQUESTED_RESOURCE)
         val result = Ok(views.html.user.login(loginForm))
         uri match {
           case Some(_) => result.flashing(FlashConstant.REQUESTED_RESOURCE -> uri.get)
           case None => result
         }
-      }
     }
   }
 
@@ -71,9 +69,9 @@ class AuthenticationController @Inject()(val db: Database, implicit val messages
         db.withConnection { implicit connection =>
           val user = AuthenticationService.authenticateUser(userData.login, userData.pwd)
           user match {
-            case Some(user) =>
+            case Some(someUser) =>
               def applyCookie(result: Result): Result = {
-                result.withNewSession.withCookies(AuthenticationCookie.generateCookie(user))
+                result.withNewSession.withCookies(AuthenticationCookie.generateCookie(someUser))
               }
 
               if (request.flash.get(FlashConstant.REQUESTED_RESOURCE).nonEmpty) {
@@ -81,10 +79,9 @@ class AuthenticationController @Inject()(val db: Database, implicit val messages
               } else {
                 applyCookie(Redirect(controllers.routes.HomeController.index()))
               }
-            case None => {
+            case None =>
               Ok(views.html.user.login(loginForm.withGlobalError("NotAuthenticated")))
                 .discardingCookies(DiscardingCookie("sessionId"))
-            }
           }
         }
       }
@@ -96,43 +93,38 @@ class AuthenticationController @Inject()(val db: Database, implicit val messages
     */
   def logout() = Auth { implicit request =>
     request.user match {
-      case Some(u) => Redirect(controllers.routes.HomeController.index())
+      case Some(_) => Redirect(controllers.routes.HomeController.index())
         .discardingCookies(DiscardingCookie(AuthenticationCookie.NAME))
         .withNewSession
       case None => Redirect(controllers.routes.HomeController.index())
     }
   }
 
-  implicit val responseWrite = new Writes[Response] {
-    override def writes(response: Response): JsValue = {
-      // Is there a better way to do this ? Using instance of is not cool.
-      response match {
-        case login: LoginResponse =>
-          loginResponseWrites.writes(login)
-        case error: ErrorResponse =>
-          errorResponseWrites.writes(error)
-        case _ =>
-          Json.obj(
-            "code" -> response.code
-          )
-      }
+  implicit val loginResponseWrites: Writes[LoginResponse] = (response: LoginResponse) => Json.obj(
+    "code" -> response.code,
+    "token" -> response.token
+  )
+
+  implicit val errorResponseWrites: Writes[ErrorResponse] = (response: ErrorResponse) => Json.obj(
+    "code" -> response.code,
+    "error" -> response.error,
+    "detail" -> response.detail
+  )
+
+  implicit val responseWrite: Writes[Response] = (response: Response) => {
+    // Is there a better way to do this ? Using instance of is not cool.
+    response match {
+      case login: LoginResponse =>
+        loginResponseWrites.writes(login)
+      case error: ErrorResponse =>
+        errorResponseWrites.writes(error)
+      case _ =>
+        Json.obj(
+          "code" -> response.code
+        )
     }
   }
 
-  implicit val loginResponseWrites: Writes[LoginResponse] = new Writes[LoginResponse] {
-    def writes(response: LoginResponse) = Json.obj(
-      "code" -> response.code,
-      "token" -> response.token
-    )
-  }
-
-  implicit val errorResponseWrites: Writes[ErrorResponse] = new Writes[ErrorResponse] {
-    override def writes(response: ErrorResponse): JsValue = Json.obj(
-      "code" -> response.code,
-      "error" -> response.error,
-      "detail" -> response.detail
-    )
-  }
 
   /**
     * Handle json login request
@@ -152,8 +144,8 @@ class AuthenticationController @Inject()(val db: Database, implicit val messages
               implicit conn =>
                 val user = AuthenticationService.authenticateUser(login, password)
                 user match {
-                  case Some(user) =>
-                    val token = JWT.build(user)
+                  case Some(someUser) =>
+                    val token = JWT.build(someUser)
                     LoginResponse(200, token)
                   case None => ErrorResponse(401, "authentication_failed")
                 }
