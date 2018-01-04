@@ -1,2 +1,5 @@
 app/assets/stylesheets/* linguist-vendored
 public/stylesheets/* linguist-vendored
+public/javascripts/bootstrap.js linguist-vendored
+public/javascripts/bootstrap.bundle.js linguist-vendored
+public/javascripts/tether.min.js linguist-vendored
