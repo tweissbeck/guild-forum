@@ -7,7 +7,6 @@ import api.{ErrorResponse, Response}
 import controllers.composition.Authenticated
 import controllers.{AuthenticationCookie, FlashConstant, JWT}
 import forms.LoginForm
-import play.api.Logger
 import play.api.data.Forms._
 import play.api.data._
 import play.api.db.Database
@@ -15,6 +14,7 @@ import play.api.i18n.{I18nSupport, MessagesApi}
 import play.api.libs.json.{JsResultException, JsValue, Json, Writes}
 import play.api.libs.ws.WSClient
 import play.api.mvc.{Action, Controller, DiscardingCookie, Result}
+import play.api.{Environment, Logger}
 import services.intern.AuthenticationService
 
 import scala.concurrent.ExecutionContext
@@ -23,7 +23,7 @@ import scala.concurrent.ExecutionContext
   * Authentication controller
   */
 class AuthenticationController @Inject()(val db: Database, implicit val messagesApi: MessagesApi,
-                                         val Auth: Authenticated,
+                                         val Auth: Authenticated, val environment: Environment,
                                          val ws: WSClient, implicit val context: ExecutionContext)
   extends Controller with I18nSupport with Discord {
 
@@ -42,6 +42,7 @@ class AuthenticationController @Inject()(val db: Database, implicit val messages
     val cookie = request.cookies.get(AuthenticationCookie.NAME)
     cookie match {
       case Some(cookie) => {
+        // FIXME we don't check the token validity here !?
         Logger.info("User already logged")
         Redirect(controllers.routes.HomeController.index())
       }

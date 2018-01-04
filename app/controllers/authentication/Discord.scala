@@ -1,18 +1,19 @@
 package controllers.authentication
 
-import com.tw.discord.api.{DiscordApi, RequestFailedException}
 import com.tw.discord.api.user.DiscordUser
+import com.tw.discord.api.{DiscordApi, RequestFailedException}
 import com.typesafe.config.{Config, ConfigFactory}
 import controllers.AuthenticationCookie
 import controllers.composition.Authenticated
-import play.api.Logger
 import play.api.db.Database
 import play.api.libs.ws._
 import play.api.mvc._
+import play.api.{Environment, Logger, Mode}
 import services.intern.NotificationService
 import services.intern.database.{User, UserService}
 
 import scala.concurrent.{ExecutionContext, Future}
+import scala.util.Random
 
 /**
   * Discord trait defines actions that handle discord OAuth login with provided [[DiscordApi]]
@@ -22,6 +23,10 @@ trait Discord extends Controller {
 
   protected val Auth: Authenticated
   protected val ws: WSClient
+  /**
+    * Play environment. Instance of this class have to given by implementations
+    */
+  protected val environment: Environment
   protected val discordApi: DiscordApi = new DiscordApi(ws, config.getString("discord.user.agent.url"),
     config.getString("discord.user.agent.version"),
     config.getString("discord.client.id"), config.getString("discord.client.secret"))
@@ -32,6 +37,11 @@ trait Discord extends Controller {
   private def serverHost: String = config.getString("server.host")
 
   private def redirectUrl: String = serverHost + "oauth/authorize/discord"
+
+  /**
+    * Define the size of the generated password
+    */
+  private val PASSWORD_SIZE = 8
 
   /**
     * Login with discord oauth api action
@@ -75,8 +85,12 @@ trait Discord extends Controller {
                             .withCookies(AuthenticationCookie.generateCookie(u))
                         case None => {
                           Logger.info(s"Create new user from discord credentials: $user")
-                          // todo randomize password generation
-                          val createdUser: User = UserService.createUser(user, "123")
+                          val generatedPassword = Random.alphanumeric.take(PASSWORD_SIZE).mkString
+                          // log the password in dev environment to be able to log with the new created user easily
+                          if (Mode.Dev == environment.mode) {
+                            Logger.debug(s"Generated password for user ${user.username}: $generatedPassword")
+                          }
+                          val createdUser: User = UserService.createUser(user, generatedPassword)
                           NotificationService.notify("New user created")
                           Redirect(controllers.routes.HomeController.index()).withNewSession
                             .withCookies(AuthenticationCookie.generateCookie(createdUser))
