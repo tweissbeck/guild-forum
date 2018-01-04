@@ -25,6 +25,7 @@ flash.missing.right=Vous n''avez pas les droits suffisant pour accéder à la re
 
 # #### FORMS
 # login
+form.login.banner=Se connecter sur le forum
 form.button.save=Enregistrer
 form.login.login=Identifiant
 form.login.password=Mot de passe
@@ -35,12 +36,18 @@ form.login.first.name=Prénom
 form.login.last.name=Nom
 form.login.email=Email
 form.login.id=Id primaire
+form.login.forgot.password=Mot de passe oublié?
+form.login.new.label=Nouveau sur le site ?
+form.login.new.link=Créer un compte
+form.login.with.discord.link=S''identifier avec Discord ?
+form.login.with.discord.label=Vous pouvez vous identifier à l''aide de votre compte discord.\
+  Une authorisation vous sera demandé. Un compte sera automatiquement créé si besoin.
 
 
 # sign in
 form.signIn.login=Identifiant
-form.signIn.mail = Email
-form.signIn.password =Mot de passe
+form.signIn.mail=Email
+form.signIn.password=Mot de passe
 form.signIn.firstName=Prénom
 form.signIn.lastName=Nom
 
@@ -50,8 +57,8 @@ user.createdAt=Date de création
 user.salt=Salt
 
 # Join us form
-join.us.irl= Mais qui es-tu ?
-join.us.pseudo= Vore prénom/pseudo
+join.us.irl=Mais qui es-tu ?
+join.us.pseudo=Vore prénom/pseudo
 join.us.age=Votre âge
 join.us.share=Ce que vous avez envie de partager avec nous
 

@@ -28,6 +28,7 @@ POST        /login                          controllers.authentication.Authentic
 GET         /signIn                         controllers.UserController.signIn
 POST        /signIn                         controllers.UserController.signInPost
 GET         /logout                         controllers.authentication.AuthenticationController.logout
+GET         /forgotPassword                 controllers.authentication.AuthenticationController.forgotPassword
 GET         /oauth/login                    controllers.authentication.AuthenticationController.loginWithOauth
 GET         /oauth/authorize/discord        controllers.authentication.AuthenticationController.handleAuthorize
 GET         /oauth/token/discord            controllers.authentication.AuthenticationController.handleToken

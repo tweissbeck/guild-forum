@@ -88,6 +88,8 @@ class AuthenticationController @Inject()(val db: Database, implicit val messages
     )
   }
 
+  def forgotPassword() = TODO
+
   /**
     * Disconnect the current user if any.
     */
