@@ -105,3 +105,7 @@ error.charte=Merci de lire la charte!
 
 # ### FLASH message
 flash.error=Une erreur s'est produite lors du traitement de votre requête.
+
+# #### breadcrumb
+breadcrumb.admin.user=Gestion des utilisateurs
+breadcrumb.admin.user.edit=Edition de l''utilisateur {0}

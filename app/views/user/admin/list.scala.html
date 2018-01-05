@@ -3,7 +3,7 @@
 @(user: User, users: Seq[(UserList, Boolean)])(implicit lang: Lang, messagesApi: MessagesApi, flash: Flash)
 
 @disabled(user: UserList, canDelete: Boolean) = {
-    <a class="btn btn-primary" href="@routes.UserController.edit(user.getEncoded())" role="button">@messagesApi.apply("user.admin.edit")</a>
+    <a class="btn btn-warning" href="@routes.UserController.edit(user.getEncoded())" role="button">@messagesApi.apply("user.admin.edit")</a>
 @if(canDelete) {
     <a class="btn btn-danger" href="@routes.UserController.delete(user.getEncoded())" role="button">@messagesApi.apply("user.admin.delete")</a>
 } else {
@@ -11,45 +11,45 @@
 }
 }
 
-@main(messagesApi.apply("user.list.page.title"), Some(user), None) {
-    <div class="container">
-        <div class="row">
-            <div class="col-lg-12">
-                <p>List of users</p>
-                <table class="table table-sm">
-                    <thead>
-                        <tr>
-                            <th></th>
-                            <th>@messagesApi.apply("user.id")</th>
-                            <th>@messagesApi.apply("form.signIn.lastName")</th>
-                            <th>@messagesApi.apply("form.signIn.firstName")</th>
-                            <th>@messagesApi.apply("form.signIn.mail")</th>
-                            <th>@messagesApi.apply("user.createdAt")</th>
-                            <th>@messagesApi.apply("user.admin")</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                    @for(u <- users) {
-                        <tr>
-                            <td>
-                            @disabled(u._1, u._2)
-                            </td>
-                            <th scope="row">@u._1.id</th>
-                            <td>@u._1.lastName</td>
-                            <td>@u._1.firstName</td>
-                            <td>@u._1.mail</td>
-                            <td>@u._1.createdAt</td>
-                            <td>
-                                <input type="checkbox" onclick="return false;" value=""
-                                @if(u._1.admin) {checked} readonly/>
-                            </td>
-                        </tr>
-                    }
-                    </tbody>
-                </table>
+    @main(messagesApi.apply("user.list.page.title"), Some(user), None) {
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-12 mt-4">
+                    <p class="text-center">@messagesApi.apply("user.admin.list.title")</p>
+                    <table class="table table-sm mt-3">
+                        <thead>
+                            <tr>
+                                <th></th>
+                                <th>@messagesApi.apply("user.id")</th>
+                                <th>@messagesApi.apply("form.signIn.lastName")</th>
+                                <th>@messagesApi.apply("form.signIn.firstName")</th>
+                                <th>@messagesApi.apply("form.signIn.mail")</th>
+                                <th>@messagesApi.apply("user.createdAt")</th>
+                                <th>@messagesApi.apply("user.admin")</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                        @for(u <- users) {
+                            <tr>
+                                <td>
+                                @disabled(u._1, u._2)
+                                </td>
+                                <th scope="row">@u._1.id</th>
+                                <td>@u._1.lastName</td>
+                                <td>@u._1.firstName</td>
+                                <td>@u._1.mail</td>
+                                <td>@u._1.createdAt</td>
+                                <td>
+                                    <input type="checkbox" onclick="return false;" value=""
+                                    @if(u._1.admin) {checked} readonly/>
+                                </td>
+                            </tr>
+                        }
+                        </tbody>
+                    </table>
+                </div>
             </div>
         </div>
-    </div>
 
-}
+    }
 

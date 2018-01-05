@@ -3,72 +3,81 @@
 @(user: User, form: Form[AdminEditForm], encodedId: String)(implicit lang: Lang, messagesApi: MessagesApi, flash: Flash)
 
 @main(messagesApi.apply("user.view.title"), Some(user), None) {
-    <div class="container">
-        <div class="row">
-            <div class="col">
-                <p>@messagesApi.apply("user.admin.edit.")</p>
-                <form action="@controllers.routes.UserController.persistModification(encodedId)" method="POST">
-                    <div class="row">
-                        <div class="col-2">
-                            <div class="form-group @Helper.decorateFormGroup(form, "id", true)">
-                                <label class="form-control-label" for="id">@messagesApi.apply("form.login.id")</label>
-                                <input type="text" name="id" class="form-control @Helper.decorateField(form, "id", true)" id="id" readonly @Helper.fieldValue(form, "id")>
-                                @Helper.fieldFeedback(form, "id")
+
+    @utils.centerContent(8, 2) {
+
+        <div class="container">
+            <nav aria-label="breadcrumb">
+                <ol class="breadcrumb">
+                    <li class="breadcrumb-item"><a href="@controllers.routes.UserController.list()">@messagesApi.apply("breadcrumb.admin.user")</a></li>
+                    <li class="breadcrumb-item active">@messagesApi.apply("breadcrumb.admin.user.edit", form.data.get("email").get)</li>
+                </ol>
+            </nav>
+            <div class="row">
+                <div class="col">
+                    <form action="@controllers.routes.UserController.persistModification(encodedId)" method="POST">
+                        <div class="row">
+                            <div class="col-2">
+                                <div class="form-group @Helper.decorateFormGroup(form, "id", true)">
+                                    <label class="form-control-label" for="id">@messagesApi.apply("form.login.id")</label>
+                                    <input type="text" name="id" class="form-control @Helper.decorateField(form, "id", true)" id="id" readonly @Helper.fieldValue(form, "id")>
+                                    @Helper.fieldFeedback(form, "id")
+                                </div>
                             </div>
                         </div>
-                    </div>
-                    <div class="row">
-                        <div class="col-3">
-                            <div class="from-group" @Helper.decorateFormGroup(form, "firstName", true)>
-                                <label class="form-control-label" for="firstName">@messagesApi.apply("form.login.first.name")</label>
-                                <input type="text" name="firstName" id="firstName" class="form-control @Helper.decorateField(form, "firstName", true)" @Helper.fieldValue(form, "firstName")>
-                                @Helper.fieldFeedback(form, "firstName")
+                        <div class="row">
+                            <div class="col-3">
+                                <div class="from-group" @Helper.decorateFormGroup(form, "firstName", true)>
+                                    <label class="form-control-label" for="firstName">@messagesApi.apply("form.login.first.name")</label>
+                                    <input type="text" name="firstName" id="firstName" class="form-control @Helper.decorateField(form, "firstName", true)" @Helper.fieldValue(form, "firstName")>
+                                    @Helper.fieldFeedback(form, "firstName")
+                                </div>
+                            </div>
+                            <div class="col-1"></div>
+                            <div class="col-3">
+                                <div class="from-group" @Helper.decorateFormGroup(form, "lastName", true)>
+                                    <label class="form-control-label" for="lastName">@messagesApi.apply("form.login.last.name")</label>
+                                    <input type="text" name="lastName" id="lastName" class="form-control @Helper.decorateField(form, "lastName", true)" @Helper.fieldValue(form, "lastName")>
+                                    @Helper.fieldFeedback(form, "lastName")
+                                </div>
                             </div>
                         </div>
-                        <div class="col-1"></div>
-                        <div class="col-3">
-                            <div class="from-group" @Helper.decorateFormGroup(form, "lastName", true)>
-                                <label class="form-control-label" for="lastName">@messagesApi.apply("form.login.last.name")</label>
-                                <input type="text" name="lastName" id="lastName" class="form-control @Helper.decorateField(form, "lastName", true)" @Helper.fieldValue(form, "lastName")>
-                                @Helper.fieldFeedback(form, "lastName")
+                        <div class="row">
+                            <div class="col-3">
+                                <div class="from-group" @Helper.decorateFormGroup(form, "login", true)>
+                                    <label class="form-control-label" for="login">@messagesApi.apply("form.login.login")</label>
+                                    <input type="text" name="login" id="login" class="form-control @Helper.decorateField(form, "login", true)" @Helper.fieldValue(form, "login")>
+                                    @Helper.fieldFeedback(form, "login")
+                                </div>
                             </div>
                         </div>
-                    </div>
-                    <div class="row">
-                        <div class="col-3">
-                            <div class="from-group" @Helper.decorateFormGroup(form, "login", true)>
-                                <label class="form-control-label" for="login">@messagesApi.apply("form.login.login")</label>
-                                <input type="text" name="login" id="login" class="form-control @Helper.decorateField(form, "login", true)" @Helper.fieldValue(form, "login")>
-                                @Helper.fieldFeedback(form, "login")
+                        <div class="row">
+                            <div class="col-3">
+                                <div class="from-group" @Helper.decorateFormGroup(form, "email", true)>
+                                    <label class="form-control-label" for="email">@messagesApi.apply("form.login.email")</label>
+                                    <input type="text" name="email" id="email" class="form-control @Helper.decorateField(form, "email", true)" @Helper.fieldValue(form, "email")>
+                                    @Helper.fieldFeedback(form, "email")
+                                </div>
                             </div>
                         </div>
-                    </div>
-                    <div class="row">
-                        <div class="col-3">
-                            <div class="from-group" @Helper.decorateFormGroup(form, "email", true)>
-                                <label class="form-control-label" for="email">@messagesApi.apply("form.login.email")</label>
-                                <input type="text" name="email" id="email" class="form-control @Helper.decorateField(form, "email", true)" @Helper.fieldValue(form, "email")>
-                                @Helper.fieldFeedback(form, "email")
+                        <div class="row">
+                            <div class="col-3">
+                                <div class="form-group @Helper.decorateFormGroup(form, "password", true)">
+                                    <label class="form-control-label" for="password">@messagesApi.apply("form.login.password")</label>
+                                    <input type="password" name="password" class="form-control @Helper.decorateField(form, "password", true)" id="password" @Helper.fieldValue(form, "password")>
+                                    @Helper.fieldFeedback(form, "password")
+                                </div>
                             </div>
                         </div>
-                    </div>
-                    <div class="row">
-                        <div class="col-3">
-                            <div class="form-group @Helper.decorateFormGroup(form, "password", true)">
-                                <label class="form-control-label" for="password">@messagesApi.apply("form.login.password")</label>
-                                <input type="password" name="password" class="form-control @Helper.decorateField(form, "password", true)" id="password" @Helper.fieldValue(form, "password")>
-                                @Helper.fieldFeedback(form, "password")
-                            </div>
-                        </div>
-                    </div>
-                    <button type="submit" class="btn btn-primary">@messagesApi.apply("form.button.save")</button>
+                        <button type="submit" class="btn btn-primary">@messagesApi.apply("form.button.save")</button>
 
 
-                </form>
+                    </form>
 
+                </div>
             </div>
-        </div>
 
-    </div>
+        </div>
+    }
 
 }
