@@ -37,7 +37,7 @@ class OAuth2(val clientId: String, val secret: String, val userAgent: String) {
   }
 
   def includeHeaders(request: WSRequest, token: Token): WSRequest = {
-    request.withHeaders("Authorization" -> token.toString, "User-Agent" -> userAgent)
+    request.addHttpHeaders("Authorization" -> token.toString, "User-Agent" -> userAgent)
   }
 
 

@@ -2,49 +2,54 @@
 @import views.Section
 @(form: Form[LoginForm])(implicit lang: Lang, messagesApi: MessagesApi, flash: Flash)
 
-@main(messagesApi.apply("form.login.title"), None, Section.LOGIN) {
+    @main(messagesApi.apply("form.login.title"), None, Section.LOGIN) {
 
+        @utils.centerContent(5, 4) {
+            <div id="banner" class="mt-4">
+                <p>@messagesApi.apply("form.login.banner")</p>
+            </div>
 
-    @utils.centerContent(5, 4) {
-        <div id="banner" class="mt-4">
-            <p>@messagesApi.apply("form.login.banner")</p>
-        </div>
+            <div class="border mt-4 rounded p-3">
+                <form action="@controllers.authentication.routes.AuthenticationController.loginPost()" method="POST">
+                    @if(form.hasGlobalErrors && form.globalError.get.message.equals("NotAuthenticated")) {
+                        <div class="alert alert-danger" role="alert">
+                        @messagesApi.apply("form.login.not.authenticated")
+                        </div>
+                    }
+                    <div class="form-group @Helper.decorateFormGroup(form, "login", true)">
+                        <label class="form-control-label" for="login">@messagesApi.apply("form.login.login")</label>
+                        <input type="text" name="login" class="form-control @Helper.decorateField(form, "login", true)" id="login"
+                        placeholder="@messagesApi.apply("form.login.login.placeholder")" @Helper.fieldValue(form, "login")>
+                        @Helper.fieldFeedback(form, "login")
+                    </div>
+                    <div class="form-group @Helper.decorateFormGroup(form, "pwd", true)">
+                        <label class="form-control-label" for="pwd">@messagesApi.apply("form.login.password")</label>
+                        <a tabindex="-1" class="float-right" href="@controllers.authentication.routes.AuthenticationController.forgotPassword()">
+                            <span class="font-weight-light">@messagesApi("form.login.forgot.password")</span>
+                        </a>
+                        <input type="password" name="pwd" class="form-control @Helper.decorateField(form, "pwd", true)" id="pwd"/>
+                        @Helper.fieldFeedback(form, "pwd")
+                    </div>
+                    <button type="submit" class="btn btn-success">@messagesApi.apply("form.login.submit")</button>
+                </form>
+            </div>
 
-        <div class="border boder-primary mt-4 rounded p-3">
-            <form action="@controllers.authentication.routes.AuthenticationController.loginPost()" method="POST">
-                @if(form.hasGlobalErrors && form.globalError.get.message.equals("NotAuthenticated")) {
-                    <div class="alert alert-danger" role="alert">
-                    @messagesApi.apply("form.login.not.authenticated")
+            <div class="border @if(flash.data.contains(FLASH_SCOPE.DISCORD_LOGIN_ERROR)) {
+                border-danger
+            } rounded mt-4 p-3">
+                <p>@messagesApi.apply("form.login.with.discord.label")</p>
+                <a class="btn btn-success" href="@controllers.authentication.routes.AuthenticationController.loginWithOauth()">@messagesApi.apply("form.login.with.discord.link")</a>
+                @if(flash.data.contains(FLASH_SCOPE.DISCORD_LOGIN_ERROR)) {
+                    <div class="alert alert-danger mt-2" role="alert" >
+                    @flash.data.get(FLASH_SCOPE.DISCORD_LOGIN_ERROR)
                     </div>
                 }
-                <div class="form-group @Helper.decorateFormGroup(form, "login", true)">
-                    <label class="form-control-label" for="login">@messagesApi.apply("form.login.login")</label>
-                    <input type="text" name="login" class="form-control @Helper.decorateField(form, "login", true)" id="login"
-                    placeholder="@messagesApi.apply("form.login.login.placeholder")" @Helper.fieldValue(form, "login")>
-                    @Helper.fieldFeedback(form, "login")
-                </div>
-                <div class="form-group @Helper.decorateFormGroup(form, "pwd", true)">
-                    <label class="form-control-label" for="pwd">@messagesApi.apply("form.login.password")</label>
-                    <a class="float-right" href="@controllers.authentication.routes.AuthenticationController.forgotPassword()">
-                        <span class="font-weight-light">@messagesApi("form.login.forgot.password")</span>
-                    </a>
-                    <input type="password" name="pwd" class="form-control @Helper.decorateField(form, "pwd", true)" id="pwd"/>
-                    @Helper.fieldFeedback(form, "pwd")
-                </div>
-                <button type="submit" class="btn btn-success">@messagesApi.apply("form.login.submit")</button>
-            </form>
-        </div>
+            </div>
 
-        <div class="border boder-primary rounded mt-4 p-3">
-            <p>@messagesApi.apply("form.login.with.discord.label")</p>
-            <a class="btn btn-success" href="@controllers.authentication.routes.AuthenticationController.loginWithOauth()">@messagesApi.apply("form.login.with.discord.link")</a>
-        </div>
+            <div class="border rounded mt-4 p-3">
+                @messagesApi.apply("form.login.new.label") <a href="@routes.UserController.signIn()">@messagesApi.apply("form.login.new.link")</a>
+            </div>
 
-
-        <div class="border boder-primary rounded mt-4 p-3">
-            @messagesApi.apply("form.login.new.label") <a href="@routes.UserController.signIn()">@messagesApi.apply("form.login.new.link")</a>
-        </div>
+        }
 
     }
-
-}

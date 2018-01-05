@@ -1,7 +1,7 @@
 package controllers.composition
 
-import javax.inject.Inject
 
+import com.google.inject.Inject
 import play.api.Logger
 import play.api.db.Database
 import play.api.mvc._

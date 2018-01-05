@@ -16,7 +16,7 @@ package com.tw.discord.api.user
   * @param verified      whether the email on this account has been verified, require [[com.tw.discord.api.user.OAuth2DiscordScopes.EMAIL]]
   * @param email         the user's email, require [[com.tw.discord.api.user.OAuth2DiscordScopes.EMAIL]]
   */
-case class DiscordUser(id: String, username: String, discriminator: String, avatar: String, bot: Option[Boolean],
+case class DiscordUser(id: String, username: String, discriminator: String, avatar: Option[String], bot: Option[Boolean],
                        mfa_enabled: Boolean,
                        verified: Option[Boolean], email: Option[String]) {
   override def toString: String = {

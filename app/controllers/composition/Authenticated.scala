@@ -1,7 +1,7 @@
 package controllers.composition
 
-import javax.inject.Inject
 
+import com.google.inject.Inject
 import controllers.{AuthenticationCookie, JWT}
 import play.api.Logger
 import play.api.db.Database

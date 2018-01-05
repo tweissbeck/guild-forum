@@ -61,7 +61,7 @@ class DiscordApi(val ws: WSClient, val agentUrl: String, val version: String,
       "client_secret" -> Seq(secret)
     )
     val tokenUrl = discordHost + accessTokenPath
-    val request = ws.url(tokenUrl).withHeaders("Content-Type" -> "application/x-www-form-urlencoded")
+    val request = ws.url(tokenUrl).addHttpHeaders("Content-Type" -> "application/x-www-form-urlencoded")
     val response = f(request).post(params)
     response map {
       resp => {
@@ -88,7 +88,7 @@ class DiscordApi(val ws: WSClient, val agentUrl: String, val version: String,
       (JsPath \ "id").read[String] and
         (JsPath \ "username").read[String] and
         (JsPath \ "discriminator").read[String] and
-        (JsPath \ "avatar").read[String] and
+        (JsPath \ "avatar").readNullable[String] and
         (JsPath \ "bot").readNullable[Boolean] and
         (JsPath \ "mfa_enabled").read[Boolean] and
         (JsPath \ "verified").readNullable[Boolean] and

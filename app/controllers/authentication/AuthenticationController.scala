@@ -1,9 +1,8 @@
 package controllers.authentication
 
-import javax.inject.Inject
-
 import api.authentication.LoginResponse
 import api.{ErrorResponse, Response}
+import com.google.inject.Inject
 import controllers.composition.Authenticated
 import controllers.{AuthenticationCookie, FlashConstant, JWT}
 import forms.LoginForm

@@ -42,6 +42,8 @@ form.login.new.link=Créer un compte
 form.login.with.discord.link=S''identifier avec Discord ?
 form.login.with.discord.label=Vous pouvez vous identifier à l''aide de votre compte discord.\
   Une authorisation vous sera demandé. Un compte sera automatiquement créé si besoin.
+login.form.discord.user.not.verified=Impossible de créer un nouveau compte utilisateur car le compte Discord n''est pas vérifié.
+login.form.discord.user.no.email=Impossible de créer un nouveau utilisateur car il n''y a pas d''email associé au compte Discord.
 
 
 # sign in
