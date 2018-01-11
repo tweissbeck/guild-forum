@@ -1,12 +1,13 @@
 package controllers
 
 
-sealed trait InfoLevel {
+object InfoLevel {
+  def WARN: String = "warning"
 
+  def ERROR: String = "danger"
+
+  def INFO: String = "info"
+
+  def SUCCESS: String = "success"
 }
 
-object WARN extends InfoLevel
-
-object ERROR extends InfoLevel
-
-object INFO extends InfoLevel

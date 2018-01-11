@@ -17,6 +17,7 @@ import play.api.libs.json._
 import play.api.mvc.{Action, Controller}
 import services.IdEncryptionUtil
 import services.intern.database.{AdminUser, CommonUser, User, UserService}
+import views.Section
 
 
 @Singleton
@@ -157,16 +158,14 @@ class UserController @Inject()(db: Database, implicit val messagesApi: MessagesA
           case error: ErrorResponse => error.error match {
             case ErrorResponse.DELETE_USER_FAILED =>
               InternalServerError(
-                views.html.user.admin.delete(request.admin, ERROR, messagesApi.apply("user.admin.delete.error")))
+                views.html.commons.Error(user, None, messagesApi.apply("user.admin.delete.error"), InfoLevel.ERROR, routes.UserController.list()))
             case ErrorResponse.USER_SELF_DELETE =>
-              Forbidden(views.html.user.admin
-                .delete(request.admin, WARN, messagesApi.apply("user.admin.delete.cant.delete.self")))
+              Redirect(routes.UserController.list()).flashing(InfoLevel.WARN -> messagesApi.apply("user.admin.delete.cant.delete.self"))
             case ErrorResponse.USER_NOT_EXIST =>
-              NotFound(views.html.user.admin
-                .delete(request.admin, ERROR, messagesApi.apply("user.admin.delete.user.notexist")))
+              Redirect(routes.UserController.list()).flashing(InfoLevel.WARN -> messagesApi.apply("user.admin.delete.user.notexist"))
           }
-          case _: Response => Ok(views.html.user.admin.delete(request.admin, INFO,
-            messagesApi.apply("user.admin.delete.ok", user.get.login.getOrElse(user.get.mail))))
+          case _: Response =>
+            Redirect(routes.UserController.list()).flashing(InfoLevel.SUCCESS -> messagesApi.apply("user.admin.delete.ok", user.get.login.getOrElse(user.get.mail)))
         }
       }
     }

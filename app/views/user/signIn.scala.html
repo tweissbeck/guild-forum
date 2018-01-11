@@ -2,49 +2,51 @@
 @(form: Form[SignInForm])(implicit lang: Lang, messagesApi: MessagesApi, flash: Flash)
 
 @main(messagesApi.apply("form.signIn.title"), None, None) {
-    @utils.centerContent(6, 3) {
+    @utils.centerContent(5, 4) {
 
-        <form action="@routes.UserController.signInPost()" method="POST">
+        <div class="border mt-4 rounded p-3">
+            <form action="@routes.UserController.signInPost()" method="POST">
 
-            @* FIRST NAME *@
-            <div class="form-group @Helper.decorateFormGroup(form, "firstName", true)">
-                <label class="form-control-label" for="login">@messagesApi.apply("form.signIn.firstName")*</label>
-                <input type="text" name="firstName" class="form-control @Helper.decorateField(form, "firstName")" id="login"
-                    @Helper.fieldValue(form, "firstName")>
-                @Helper.fieldFeedback(form, "firstName")
-            </div>
+                @* FIRST NAME *@
+                <div class="form-group @Helper.decorateFormGroup(form, "firstName", true)">
+                    <label class="form-control-label" for="login">@messagesApi.apply("form.signIn.firstName")</label>
+                    <input type="text" name="firstName" class="form-control @Helper.decorateField(form, "firstName")" id="login"
+                        @Helper.fieldValue(form, "firstName")>
+                    @Helper.fieldFeedback(form, "firstName")
+                </div>
 
-            @* LAST NAME *@
-            <div class="form-group @Helper.decorateFormGroup(form, "lastName", true)">
-                <label class="form-control-label" for="login">@messagesApi.apply("form.signIn.lastName")*</label>
-                <input type="text" name="lastName" class="form-control @Helper.decorateField(form, "lastName")" id="login"
-                    @Helper.fieldValue(form, "lastName")>
-                @Helper.fieldFeedback(form, "lastName")
-            </div>
+                @* LAST NAME *@
+                <div class="form-group @Helper.decorateFormGroup(form, "lastName", true)">
+                    <label class="form-control-label" for="login">@messagesApi.apply("form.signIn.lastName")</label>
+                    <input type="text" name="lastName" class="form-control @Helper.decorateField(form, "lastName")" id="login"
+                        @Helper.fieldValue(form, "lastName")>
+                    @Helper.fieldFeedback(form, "lastName")
+                </div>
 
-            @* MAIL *@
-            <div class="form-group @Helper.decorateFormGroup(form, "mail", true)">
-                <label class="form-control-label" for="login">@messagesApi.apply("form.signIn.mail")*</label>
-                <input type="text" name="mail" class="form-control @Helper.decorateField(form, "mail")" id="login"
-                    @Helper.fieldValue(form, "mail")>
-                @Helper.fieldFeedback(form, "mail")
-            </div>
+                @* MAIL *@
+                <div class="form-group @Helper.decorateFormGroup(form, "mail", true)">
+                    <label class="form-control-label" for="login">@messagesApi.apply("form.signIn.mail")</label>
+                    <input type="text" name="mail" class="form-control @Helper.decorateField(form, "mail")" id="login"
+                        @Helper.fieldValue(form, "mail")>
+                    @Helper.fieldFeedback(form, "mail")
+                </div>
 
-            @* LOGIN *@
-            <div class="form-group @Helper.decorateFormGroup(form, "login", true)">
-                <label class="form-control-label" for="login">@messagesApi.apply("form.signIn.login")</label>
-                <input type="text" name="login" class="form-control @Helper.decorateField(form, "login")" id="login"@Helper.fieldValue(form, "login")>
-                @Helper.fieldFeedback(form, "login")
-            </div>
+                @* LOGIN *@
+                <div class="form-group @Helper.decorateFormGroup(form, "login", true)">
+                    <label class="form-control-label" for="login">@messagesApi.apply("form.signIn.login")</label>
+                    <input type="text" name="login" class="form-control @Helper.decorateField(form, "login")" id="login"@Helper.fieldValue(form, "login")>
+                    @Helper.fieldFeedback(form, "login")
+                </div>
 
-            @* PASSWORD *@
-            <div class="form-group @Helper.decorateFormGroup(form, "password", true)">
-                <label class="form-control-label" for="pwd">@messagesApi.apply("form.signIn.password")*</label>
-                <input type="password" name="password" class="form-control @Helper.decorateField(form, "pwd")" id="pwd"/>
-                @Helper.fieldFeedback(form, "pwd")
-            </div>
-            <button type="submit" class="btn btn-primary">@messagesApi.apply("form.login.submit")</button>
+                @* PASSWORD *@
+                <div class="form-group @Helper.decorateFormGroup(form, "password", true)">
+                    <label class="form-control-label" for="pwd">@messagesApi.apply("form.signIn.password")</label>
+                    <input type="password" name="password" class="form-control @Helper.decorateField(form, "pwd")" id="pwd"/>
+                    @Helper.fieldFeedback(form, "pwd")
+                </div>
+                <button type="submit" class="btn btn-primary">@messagesApi.apply("form.login.submit")</button>
 
-        </form>
+            </form>
+        </div>
     }
 }

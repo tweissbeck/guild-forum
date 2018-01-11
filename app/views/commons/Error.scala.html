@@ -1,0 +1,13 @@
+@import services.intern.database.User
+
+@(user: Option[User], section: Option[String], message: String, level: String, href: Call)(implicit lang: Lang, messagesApi: MessagesApi, flash: Flash)
+    @main("", user, section) {
+        @utils.centerContent(10, 1) {
+            <div class="alert alert-@level" role="alert">
+                <h4 class="alert-heading">@messagesApi.apply("resource.error")</h4>
+                <p>@message</p>
+            </div>
+        }
+
+        <a class="btn btn-success" href="@href.url">Return</a>
+    }

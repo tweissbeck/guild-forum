@@ -11,45 +11,67 @@
 }
 }
 
-    @main(messagesApi.apply("user.list.page.title"), Some(user), None) {
-        <div class="container">
-            <div class="row">
-                <div class="col-lg-12 mt-4">
-                    <p class="text-center">@messagesApi.apply("user.admin.list.title")</p>
-                    <table class="table table-sm mt-3">
-                        <thead>
-                            <tr>
-                                <th></th>
-                                <th>@messagesApi.apply("user.id")</th>
-                                <th>@messagesApi.apply("form.signIn.lastName")</th>
-                                <th>@messagesApi.apply("form.signIn.firstName")</th>
-                                <th>@messagesApi.apply("form.signIn.mail")</th>
-                                <th>@messagesApi.apply("user.createdAt")</th>
-                                <th>@messagesApi.apply("user.admin")</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                        @for(u <- users) {
-                            <tr>
-                                <td>
-                                @disabled(u._1, u._2)
-                                </td>
-                                <th scope="row">@u._1.id</th>
-                                <td>@u._1.lastName</td>
-                                <td>@u._1.firstName</td>
-                                <td>@u._1.mail</td>
-                                <td>@u._1.createdAt</td>
-                                <td>
-                                    <input type="checkbox" onclick="return false;" value=""
-                                    @if(u._1.admin) {checked} readonly/>
-                                </td>
-                            </tr>
-                        }
-                        </tbody>
-                    </table>
-                </div>
+@main(messagesApi.apply("user.list.page.title"), Some(user), None) {
+
+
+    @if(flash.data.contains(InfoLevel.SUCCESS)) {
+        <div class="mt-3 alert alert-success" role="alert">
+        @flash.data.get(InfoLevel.SUCCESS)
+        </div>
+    }
+    @if(flash.data.contains(InfoLevel.WARN)) {
+        <div class="mt-3 alert alert-warning" role="alert">
+        @flash.data.get(InfoLevel.WARN)
+        </div>
+    }
+    @if(flash.data.contains(InfoLevel.INFO)) {
+        <div class="mt-3 alert alert-info" role="alert">
+        @flash.data.get(InfoLevel.INFO)
+        </div>
+    }
+    @if(flash.data.contains(InfoLevel.ERROR)) {
+        <div class="mt-3 alert alert-danger" role="alert">
+        @flash.data.get(InfoLevel.ERROR)
+        </div>
+    }
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-12 mt-4">
+                <p class="text-center">@messagesApi.apply("user.admin.list.title")</p>
+                <table class="table table-sm mt-3">
+                    <thead>
+                        <tr>
+                            <th></th>
+                            <th>@messagesApi.apply("user.id")</th>
+                            <th>@messagesApi.apply("form.signIn.lastName")</th>
+                            <th>@messagesApi.apply("form.signIn.firstName")</th>
+                            <th>@messagesApi.apply("form.signIn.mail")</th>
+                            <th>@messagesApi.apply("user.createdAt")</th>
+                            <th>@messagesApi.apply("user.admin")</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                    @for(u <- users) {
+                        <tr>
+                            <td>
+                            @disabled(u._1, u._2)
+                            </td>
+                            <th scope="row">@u._1.id</th>
+                            <td>@u._1.lastName</td>
+                            <td>@u._1.firstName</td>
+                            <td>@u._1.mail</td>
+                            <td>@u._1.createdAt</td>
+                            <td>
+                                <input type="checkbox" onclick="return false;" value=""
+                                @if(u._1.admin) {checked} readonly/>
+                            </td>
+                        </tr>
+                    }
+                    </tbody>
+                </table>
             </div>
         </div>
+    </div>
 
-    }
+}
 
